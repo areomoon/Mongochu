@@ -3,6 +3,9 @@ import numpy as np
 import pandas as pd
 import joblib
 import albumentations
+import os
+import glob
+import cv2
 
 class ImageDataset:
     def __init__(self,fold_file, pkl_file_path, folds, image_height, image_width, mean, std):
@@ -44,4 +47,29 @@ class ImageDataset:
         return {
             'image':torch.tensor(image, dtype=torch.float),
             'label': torch.tensor(self.labels[item], dtype=torch.long)
+        }
+
+
+
+class ImageTestDataset:
+    def __init__(self, file_path, image_height, image_width, mean, std):
+        self.image_files = glob.glob(os.path.join(file_path, '*.jpg'))
+        self.image_ids = [os.path.basename(f).split('.')[0] for f in self.image_files]
+
+        # validation set
+        self.aug = albumentations.Compose([
+            albumentations.Resize(image_height,image_width,always_apply=True),
+            albumentations.Normalize(mean,std,always_apply=True),
+        ])
+    def __len__(self):
+        return len(self.image_ids)
+
+    def __getitem__(self, item):
+        img_bgr = cv2.imread(self.image_files[item])
+        img_rgb = img_bgr[:, :, [2, 1, 0]]
+        image = self.aug(image=np.array(img_rgb))
+        image = np.transpose(image, [2, 0, 1]).astype(float) # for using torchvision model
+        return {
+            'image' : torch.tensor(image, dtype=torch.float),
+            'image_id' : self.image_ids[item]
         }

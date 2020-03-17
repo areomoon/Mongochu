@@ -9,7 +9,6 @@ from torch.utils.data import DataLoader
 from torch.optim import Adam,lr_scheduler
 from model_dispatcher import MODEL_DISPATCHER
 
-
 MODEL_MEAN = (0.485,0.456,0.406)
 MODEL_STD = (0.229,0.224,0.225)
 
@@ -51,6 +50,8 @@ parser.add_argument('--train_batch_size', default=256, type=int,
 parser.add_argument('--test_batch_size', default=256, type=int,
                     help='Batch size for training')
 
+parser.add_argument('--save_dir', default='weights', type=str,
+                    help='directory to save model')
 
 args = parser.parse_args()
 
@@ -140,7 +141,7 @@ def main():
         train(dataset=train_dataset,dataloader=train_dataloader,model=model,optimizer=optimizer,device=args.device,loss_fn=loss_fn)
         val_score = evaluate(dataset=valid_dataset, dataloader=valid_dataloader, model=model, device=args.device,loss_fn=loss_fn)
         scheduler.step(val_score)
-        torch.save(model.state_dict(),f'{args.base_model}_fold_{VALID_FOLDS[0]}.bin')
+        torch.save(model.state_dict(),os.path.join(args.save_dir,f'{args.base_model}_fold_{VALID_FOLDS[0]}.bin'))
 
 if __name__ == '__main__':
     main()

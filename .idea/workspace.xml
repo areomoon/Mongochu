@@ -1,7 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="a8d33407-d630-4c54-8128-ad6eb66310c2" name="Default Changelist" comment="" />
+    <list default="true" id="a8d33407-d630-4c54-8128-ad6eb66310c2" name="Default Changelist" comment="">
+      <change beforePath="$PROJECT_DIR$/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/bengliai_demo.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/bengliai_demo.iml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/areomoon/src/create_fold.py" beforeDir="false" afterPath="$PROJECT_DIR$/areomoon/src/create_fold.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/areomoon/src/create_image_pkl.py" beforeDir="false" afterPath="$PROJECT_DIR$/areomoon/src/create_image_pkl.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/areomoon/src/dataset.py" beforeDir="false" afterPath="$PROJECT_DIR$/areomoon/src/dataset.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/areomoon/src/eval.py" beforeDir="false" afterPath="$PROJECT_DIR$/areomoon/src/eval.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/areomoon/src/train.py" beforeDir="false" afterPath="$PROJECT_DIR$/areomoon/src/train.py" afterDir="false" />
+    </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -9,7 +18,8 @@
     <option name="LAST_RESOLUTION" value="IGNORE" />
   </component>
   <component name="CoverageDataManager">
-    <SUITE FILE_PATH="coverage/bengliai_demo$ts_dataset.coverage" NAME="ts_dataset Coverage Results" MODIFIED="1583250560769" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
+    <SUITE FILE_PATH="coverage/bengliai_demo$ts_dataset.coverage" NAME="ts_dataset Coverage Results" MODIFIED="1583568218736" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
+    <SUITE FILE_PATH="coverage/bengliai_demo$ts.coverage" NAME="ts Coverage Results" MODIFIED="1583731231655" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
     <SUITE FILE_PATH="coverage/bengliai_demo$create_fold.coverage" NAME="create_fold Coverage Results" MODIFIED="1583164897001" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/src" />
     <SUITE FILE_PATH="coverage/bengliai_demo$create_image_pkl.coverage" NAME="create_image_pkl Coverage Results" MODIFIED="1583237311909" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/src" />
   </component>
@@ -28,12 +38,17 @@
     <select />
   </component>
   <component name="FileEditorManager">
-    <leaf>
+    <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
       <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/ts_dataset.py">
+        <entry file="file://$PROJECT_DIR$/areomoon/requirements.txt">
+          <provider selected="true" editor-type-id="text-editor" />
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/areomoon/ts_dataset.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="270">
-              <caret line="18" column="29" lean-forward="true" selection-start-line="18" selection-start-column="29" selection-end-line="18" selection-end-column="29" />
+            <state relative-caret-position="15">
+              <caret line="3" selection-start-line="3" selection-end-line="3" />
               <folding>
                 <element signature="e#0#18#0" expanded="true" />
               </folding>
@@ -41,22 +56,80 @@
           </provider>
         </entry>
       </file>
-      <file pinned="false" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/.gitignore">
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/areomoon/src/create_fold.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="45">
-              <caret line="3" column="5" selection-start-line="3" selection-start-column="5" selection-end-line="3" selection-end-column="5" />
+            <state relative-caret-position="-24">
+              <caret line="4" selection-start-line="4" selection-end-line="10" />
+              <folding>
+                <element signature="e#0#19#0" expanded="true" />
+              </folding>
             </state>
           </provider>
         </entry>
       </file>
       <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/requirements.txt">
+        <entry file="file://$PROJECT_DIR$/areomoon/src/create_image_pkl.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="90">
-              <caret line="6" column="24" lean-forward="true" selection-start-line="6" selection-start-column="24" selection-end-line="6" selection-end-column="24" />
+            <state relative-caret-position="291">
+              <caret line="25" column="8" lean-forward="true" selection-start-line="25" selection-start-column="8" selection-end-line="26" selection-end-column="42" />
+              <folding>
+                <element signature="e#0#13#0" expanded="true" />
+              </folding>
             </state>
           </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/areomoon/src/models.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state>
+              <folding>
+                <element signature="e#0#21#0" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/areomoon/src/train.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="1890">
+              <caret line="126" selection-start-line="126" selection-end-line="131" selection-end-column="5" />
+              <folding>
+                <element signature="e#0#9#0" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/areomoon/src/dataset.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="343">
+              <caret line="73" column="20" lean-forward="true" selection-start-line="73" selection-start-column="20" selection-end-line="73" selection-end-column="20" />
+              <folding>
+                <element signature="e#0#12#0" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/areomoon/src/eval.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="581">
+              <caret line="67" selection-start-line="67" selection-end-line="73" />
+              <folding>
+                <element signature="e#0#9#0" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/areomoon/AIMango_sample/train_folds.csv">
+          <provider selected="true" editor-type-id="text-editor" />
         </entry>
       </file>
     </leaf>
@@ -89,6 +162,12 @@
         <option value="$PROJECT_DIR$/src/eval.py" />
         <option value="$PROJECT_DIR$/ts_dataset.py" />
         <option value="$PROJECT_DIR$/.gitignore" />
+        <option value="$PROJECT_DIR$/ts.py" />
+        <option value="$PROJECT_DIR$/areomoon/src/create_fold.py" />
+        <option value="$PROJECT_DIR$/areomoon/src/create_image_pkl.py" />
+        <option value="$PROJECT_DIR$/areomoon/src/train.py" />
+        <option value="$PROJECT_DIR$/areomoon/src/dataset.py" />
+        <option value="$PROJECT_DIR$/areomoon/src/eval.py" />
       </list>
     </option>
   </component>
@@ -126,6 +205,7 @@
   </component>
   <component name="RecentsManager">
     <key name="MoveFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/areomoon" />
       <recent name="$PROJECT_DIR$" />
       <recent name="$PROJECT_DIR$/src" />
     </key>
@@ -142,7 +222,7 @@
       </list>
     </option>
   </component>
-  <component name="RunManager" selected="Python.ts_dataset">
+  <component name="RunManager" selected="Python.ts">
     <configuration name="create_fold" type="PythonConfigurationType" factoryName="Python" temporary="true">
       <module name="bengliai_demo" />
       <option name="INTERPRETER_OPTIONS" value="" />
@@ -187,6 +267,28 @@
       <option name="INPUT_FILE" value="" />
       <method v="2" />
     </configuration>
+    <configuration name="ts" type="PythonConfigurationType" factoryName="Python" temporary="true">
+      <module name="bengliai_demo" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
+      <option name="IS_MODULE_SDK" value="true" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/ts.py" />
+      <option name="PARAMETERS" value="" />
+      <option name="SHOW_COMMAND_LINE" value="false" />
+      <option name="EMULATE_TERMINAL" value="false" />
+      <option name="MODULE_MODE" value="false" />
+      <option name="REDIRECT_INPUT" value="false" />
+      <option name="INPUT_FILE" value="" />
+      <method v="2" />
+    </configuration>
     <configuration name="ts_dataset" type="PythonConfigurationType" factoryName="Python" temporary="true">
       <module name="bengliai_demo" />
       <option name="INTERPRETER_OPTIONS" value="" />
@@ -200,7 +302,7 @@
       <option name="ADD_CONTENT_ROOTS" value="true" />
       <option name="ADD_SOURCE_ROOTS" value="true" />
       <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
-      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/ts_dataset.py" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/areomoon/ts_dataset.py" />
       <option name="PARAMETERS" value="" />
       <option name="SHOW_COMMAND_LINE" value="false" />
       <option name="EMULATE_TERMINAL" value="false" />
@@ -211,6 +313,7 @@
     </configuration>
     <recent_temporary>
       <list>
+        <item itemvalue="Python.ts" />
         <item itemvalue="Python.ts_dataset" />
         <item itemvalue="Python.create_image_pkl" />
         <item itemvalue="Python.create_fold" />
@@ -229,15 +332,42 @@
       <updated>1582557227977</updated>
       <workItem from="1582557231787" duration="228000" />
       <workItem from="1583158760540" duration="18382000" />
+      <workItem from="1583729460855" duration="318000" />
+      <workItem from="1583764545820" duration="2371000" />
+      <workItem from="1584192476763" duration="44000" />
+      <workItem from="1584448527015" duration="4007000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="19067000" />
+    <option name="totallyTimeSpent" value="31372000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="17" y="23" width="1423" height="797" extended-state="0" />
     <layout>
+      <window_info active="true" content_ui="combo" id="Project" order="0" visible="true" weight="0.26430124" />
+      <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
+      <window_info id="Favorites" order="2" side_tool="true" />
+      <window_info anchor="bottom" id="Message" order="0" />
+      <window_info anchor="bottom" id="Find" order="1" />
+      <window_info anchor="bottom" id="Run" order="2" weight="0.35460994" />
+      <window_info anchor="bottom" id="Debug" order="3" weight="0.3617021" />
+      <window_info anchor="bottom" id="Cvs" order="4" weight="0.25" />
+      <window_info anchor="bottom" id="Inspection" order="5" weight="0.4" />
+      <window_info anchor="bottom" id="TODO" order="6" />
+      <window_info anchor="bottom" id="Docker" order="7" show_stripe_button="false" />
+      <window_info anchor="bottom" id="Version Control" order="8" />
+      <window_info anchor="bottom" id="Database Changes" order="9" />
+      <window_info anchor="bottom" id="Event Log" order="10" side_tool="true" />
+      <window_info anchor="bottom" id="Terminal" order="11" visible="true" weight="0.32907802" />
+      <window_info anchor="bottom" id="Python Console" order="12" />
+      <window_info anchor="right" id="Commander" internal_type="SLIDING" order="0" type="SLIDING" weight="0.4" />
+      <window_info anchor="right" id="Ant Build" order="1" weight="0.25" />
+      <window_info anchor="right" content_ui="combo" id="Hierarchy" order="2" weight="0.25" />
+      <window_info anchor="right" id="SciView" order="3" weight="0.3294714" />
+      <window_info anchor="right" id="Database" order="4" weight="0.3294714" />
+    </layout>
+    <layout-to-restore>
       <window_info active="true" content_ui="combo" id="Project" order="0" visible="true" weight="0.25343955" />
       <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
       <window_info id="Favorites" order="2" side_tool="true" />
@@ -259,7 +389,7 @@
       <window_info anchor="right" content_ui="combo" id="Hierarchy" order="2" weight="0.25" />
       <window_info anchor="right" id="SciView" order="3" weight="0.3294714" />
       <window_info anchor="right" id="Database" order="4" weight="0.3294714" />
-    </layout>
+    </layout-to-restore>
   </component>
   <component name="TypeScriptGeneratedFilesManager">
     <option name="version" value="1" />
@@ -277,6 +407,11 @@
   </component>
   <component name="debuggerHistoryManager">
     <expressions id="evaluateExpression">
+      <expression>
+        <expression-string>dp</expression-string>
+        <language-id>Python</language-id>
+        <evaluation-mode>EXPRESSION</evaluation-mode>
+      </expression>
       <expression>
         <expression-string>plt.imshow(np.transpose(np_img, (1,2,0)))</expression-string>
         <language-id>Python</language-id>
@@ -317,103 +452,182 @@
         <language-id>Python</language-id>
         <evaluation-mode>EXPRESSION</evaluation-mode>
       </expression>
-      <expression>
-        <expression-string>image.keys()</expression-string>
-        <language-id>Python</language-id>
-        <evaluation-mode>EXPRESSION</evaluation-mode>
-      </expression>
     </expressions>
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/AIMango_sample/sample_image/D-Plant2_0610_320.jpg" />
-    <entry file="file://$PROJECT_DIR$/AIMango_sample/sample_image/D-Plant2_0610_343.jpg" />
-    <entry file="file://$PROJECT_DIR$/AIMango_sample/sample_image/G-Plant2_0616_97.jpg" />
-    <entry file="file://$PROJECT_DIR$/AIMango_sample/sample_image/G-Plant2_0616_94.jpg" />
-    <entry file="file://$PROJECT_DIR$/AIMango_sample/sample_image/D-Plant2_0610_359.jpg" />
-    <entry file="file://$PROJECT_DIR$/AIMango_sample/sample_image/G-Plant2_0616_90.jpg" />
-    <entry file="file://$PROJECT_DIR$/AIMango_sample/sample_image/G-Plant2_0616_99.jpg" />
-    <entry file="file://$PROJECT_DIR$/AIMango_sample/label.csv" />
-    <entry file="file://$PROJECT_DIR$/AIMango_sample/sample_image/D-Plant2_0610_34.jpg" />
-    <entry file="file://$PROJECT_DIR$/AIMango_sample/sample_image/D-Plant2_0610_65.jpg" />
-    <entry file="file://$PROJECT_DIR$/AIMango_sample/sample_image/D-Plant2_0610_80.jpg" />
-    <entry file="file://$PROJECT_DIR$/AIMango_sample/sample_image/D-Plant2_0610_7.jpg" />
-    <entry file="file://$PROJECT_DIR$/AIMango_sample/sample_image/D-Plant2_0610_44.jpg" />
-    <entry file="file://$PROJECT_DIR$/AIMango_sample/sample_image/D-Plant2_0610_64.jpg" />
-    <entry file="file://$PROJECT_DIR$/AIMango_sample/sample_image/D-Plant2_0610_76.jpg" />
-    <entry file="file://$PROJECT_DIR$/AIMango_sample/sample_image/D-Plant2_0610_88.jpg" />
-    <entry file="file://$PROJECT_DIR$/AIMango_sample/sample_image/D-Plant2_0610_326.jpg" />
-    <entry file="file://$PROJECT_DIR$/AIMango_sample/sample_image/D-Plant2_0610_338.jpg" />
-    <entry file="file://$PROJECT_DIR$/AIMango_sample/sample_image/D-Plant2_0610_351.jpg" />
-    <entry file="file://$PROJECT_DIR$/AIMango_sample/sample_image/D-Plant2_0610_358.jpg" />
-    <entry file="file://$PROJECT_DIR$/AIMango_sample/sample_image/D-Plant2_0610_375.jpg" />
-    <entry file="file://$PROJECT_DIR$/AIMango_sample/sample_image/G-Plant2_0616_87.jpg" />
-    <entry file="file://$PROJECT_DIR$/AIMango_sample/sample_image/G-Plant2_0616_93.jpg" />
-    <entry file="file://$PROJECT_DIR$/AIMango_sample/sample_image/G-Plant2_0616_98.jpg" />
-    <entry file="file://$PROJECT_DIR$/AIMango_sample/sample_image/G-Plant2_0616_92.jpg" />
-    <entry file="file://$PROJECT_DIR$/AIMango_sample/sample_image/G-Plant2_0616_88.jpg" />
-    <entry file="file://$PROJECT_DIR$/AIMango_sample/sample_image/G-Plant2_0616_84.jpg" />
-    <entry file="file://$PROJECT_DIR$/AIMango_sample/sample_image/D-Plant2_0610_429.jpg" />
-    <entry file="file://$PROJECT_DIR$/AIMango_sample/sample_image/D-Plant2_0610_413.jpg" />
-    <entry file="file://$PROJECT_DIR$/AIMango_sample/sample_image/D-Plant2_0610_418.jpg" />
-    <entry file="file://$PROJECT_DIR$/AIMango_sample/sample_image/D-Plant2_0610_428.jpg" />
-    <entry file="file://$PROJECT_DIR$/AIMango_sample/sample_image/D-Plant2_0610_300.jpg" />
-    <entry file="file://$PROJECT_DIR$/AIMango_sample/sample_image/D-Plant2_0610_317.jpg" />
-    <entry file="file://$PROJECT_DIR$/AIMango_sample/sample_image/D-Plant2_0610_329.jpg" />
-    <entry file="file://$PROJECT_DIR$/AIMango_sample/sample_image/D-Plant2_0610_336.jpg" />
-    <entry file="file://$PROJECT_DIR$/AIMango_sample/sample_image/D-Plant2_0610_350.jpg" />
-    <entry file="file://$PROJECT_DIR$/AIMango_sample/sample_image/D-Plant2_0610_361.jpg" />
-    <entry file="file://$PROJECT_DIR$/AIMango_sample/sample_image/D-Plant2_0610_405.jpg" />
-    <entry file="file://$PROJECT_DIR$/AIMango_sample/sample_image/G-Plant2_0616_86.jpg" />
-    <entry file="file://$PROJECT_DIR$/AIMango_sample/sample_image/G-Plant2_0616_83.jpg" />
-    <entry file="file://$PROJECT_DIR$/AIMango_sample/sample_image/D-Plant2_0610_438.jpg" />
-    <entry file="file://$PROJECT_DIR$/src/train.py">
+    <entry file="file://$PROJECT_DIR$/areomoon/AIMango_sample/sample_image/D-Plant2_0610_35.jpg">
+      <provider selected="true" editor-type-id="images" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/areomoon/AIMango_sample/sample_image/D-Plant2_0610_44.jpg">
+      <provider selected="true" editor-type-id="images" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/areomoon/AIMango_sample/sample_image/D-Plant2_0610_62.jpg">
+      <provider selected="true" editor-type-id="images" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/areomoon/AIMango_sample/sample_image/D-Plant2_0610_64.jpg">
+      <provider selected="true" editor-type-id="images" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/areomoon/AIMango_sample/sample_image/D-Plant2_0610_74.jpg">
+      <provider selected="true" editor-type-id="images" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/areomoon/AIMango_sample/sample_image/D-Plant2_0610_300.jpg">
+      <provider selected="true" editor-type-id="images" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/areomoon/AIMango_sample/sample_image/D-Plant2_0610_335.jpg">
+      <provider selected="true" editor-type-id="images" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/areomoon/AIMango_sample/sample_image/D-Plant2_0610_342.jpg">
+      <provider selected="true" editor-type-id="images" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/areomoon/AIMango_sample/sample_image/D-Plant2_0610_429.jpg">
+      <provider selected="true" editor-type-id="images" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/areomoon/AIMango_sample/sample_image/G-Plant2_0616_86.jpg">
+      <provider selected="true" editor-type-id="images" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/areomoon/AIMango_sample/sample_image/G-Plant2_0616_95.jpg">
+      <provider selected="true" editor-type-id="images" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/areomoon/AIMango_sample/sample_image/G-Plant2_0616_85.jpg">
+      <provider selected="true" editor-type-id="images" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/areomoon/AIMango_sample/sample_image/D-Plant2_0610_310.jpg">
+      <provider selected="true" editor-type-id="images" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/areomoon/AIMango_sample/sample_image/D-Plant2_0610_327.jpg">
+      <provider selected="true" editor-type-id="images" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/areomoon/AIMango_sample/sample_image/D-Plant2_0610_343.jpg">
+      <provider selected="true" editor-type-id="images" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/areomoon/AIMango_sample/sample_image/D-Plant2_0610_405.jpg">
+      <provider selected="true" editor-type-id="images" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/areomoon/AIMango_sample/sample_image/D-Plant2_0610_358.jpg">
+      <provider selected="true" editor-type-id="images" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/areomoon/AIMango_sample/sample_image/D-Plant2_0610_30.jpg">
+      <provider selected="true" editor-type-id="images" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/areomoon/AIMango_sample/sample_image/D-Plant2_0610_4.jpg">
+      <provider selected="true" editor-type-id="images" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/areomoon/AIMango_sample/sample_image/D-Plant2_0610_69.jpg">
+      <provider selected="true" editor-type-id="images" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/areomoon/AIMango_sample/sample_image/D-Plant2_0610_71.jpg">
+      <provider selected="true" editor-type-id="images" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/.gitignore">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="400">
-          <caret line="106" column="4" selection-start-line="106" selection-start-column="4" selection-end-line="106" selection-end-column="4" />
+        <state relative-caret-position="45">
+          <caret line="3" column="5" selection-start-line="3" selection-start-column="5" selection-end-line="3" selection-end-column="5" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/areomoon/AIMango_sample/sample_image/D-Plant2_0610_34.jpg">
+      <provider selected="true" editor-type-id="images" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/areomoon/AIMango_sample/sample_image/D-Plant2_0610_39.jpg">
+      <provider selected="true" editor-type-id="images" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/areomoon/AIMango_sample/sample_image/D-Plant2_0610_63.jpg">
+      <provider selected="true" editor-type-id="images" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/areomoon/AIMango_sample/sample_image/D-Plant2_0610_66.jpg">
+      <provider selected="true" editor-type-id="images" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/areomoon/AIMango_sample/sample_image/D-Plant2_0610_72.jpg">
+      <provider selected="true" editor-type-id="images" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/areomoon/AIMango_sample/sample_image/D-Plant2_0610_81.jpg">
+      <provider selected="true" editor-type-id="images" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/areomoon/AIMango_sample/sample_image/D-Plant2_0610_87.jpg">
+      <provider selected="true" editor-type-id="images" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/areomoon/AIMango_sample/sample_image/D-Plant2_0610_307.jpg">
+      <provider selected="true" editor-type-id="images" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/areomoon/AIMango_sample/sample_image/D-Plant2_0610_324.jpg">
+      <provider selected="true" editor-type-id="images" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/areomoon/AIMango_sample/sample_image/D-Plant2_0610_363.jpg">
+      <provider selected="true" editor-type-id="images" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/areomoon/AIMango_sample/sample_image/D-Plant2_0610_365.jpg">
+      <provider selected="true" editor-type-id="images" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/areomoon/AIMango_sample/sample_image/D-Plant2_0610_375.jpg">
+      <provider selected="true" editor-type-id="images" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/areomoon/AIMango_sample/sample_image/D-Plant2_0610_372.jpg">
+      <provider selected="true" editor-type-id="images" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/areomoon/AIMango_sample/sample_image/D-Plant2_0610_367.jpg">
+      <provider selected="true" editor-type-id="images" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/run.sh">
+      <provider selected="true" editor-type-id="text-editor" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/ts.py" />
+    <entry file="file://$PROJECT_DIR$/areomoon/AIMango_sample/sample_image/D-Plant2_0610_359.jpg">
+      <provider selected="true" editor-type-id="images" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/areomoon/AIMango_sample/sample_image/D-Plant2_0610_7.jpg">
+      <provider selected="true" editor-type-id="images" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/areomoon/requirements.txt">
+      <provider selected="true" editor-type-id="text-editor" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/areomoon/ts_dataset.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="15">
+          <caret line="3" selection-start-line="3" selection-end-line="3" />
           <folding>
-            <element signature="e#0#9#0" expanded="true" />
+            <element signature="e#0#18#0" expanded="true" />
           </folding>
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/create_fold.py">
+    <entry file="file://$PROJECT_DIR$/areomoon/src/create_fold.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="45">
-          <caret line="3" column="16" selection-start-line="3" selection-start-column="16" selection-end-line="3" selection-end-column="16" />
+        <state relative-caret-position="-24">
+          <caret line="4" selection-start-line="4" selection-end-line="10" />
           <folding>
             <element signature="e#0#19#0" expanded="true" />
           </folding>
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/create_image_pkl.py">
+    <entry file="file://$PROJECT_DIR$/areomoon/src/model_dispatcher.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="60">
-          <caret line="8" column="19" selection-start-line="8" selection-start-column="19" selection-end-line="8" selection-end-column="19" />
+        <state>
+          <caret selection-end-column="13" />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/run.sh">
-      <provider selected="true" editor-type-id="text-editor" />
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/dataset.py">
+    <entry file="file://$PROJECT_DIR$/areomoon/src/dataset.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="420">
-          <caret line="32" column="55" lean-forward="true" selection-start-line="32" selection-start-column="55" selection-end-line="32" selection-end-column="55" />
+        <state relative-caret-position="343">
+          <caret line="73" column="20" lean-forward="true" selection-start-line="73" selection-start-column="20" selection-end-line="73" selection-end-column="20" />
+          <folding>
+            <element signature="e#0#12#0" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/eval.py">
-      <provider selected="true" editor-type-id="text-editor" />
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/model_dispatcher.py">
+    <entry file="file://$PROJECT_DIR$/areomoon/src/create_image_pkl.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="45">
-          <caret line="3" column="5" lean-forward="true" selection-start-line="3" selection-start-column="5" selection-end-line="3" selection-end-column="13" />
+        <state relative-caret-position="291">
+          <caret line="25" column="8" lean-forward="true" selection-start-line="25" selection-start-column="8" selection-end-line="26" selection-end-column="42" />
+          <folding>
+            <element signature="e#0#13#0" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/models.py">
+    <entry file="file://$PROJECT_DIR$/areomoon/src/models.py">
       <provider selected="true" editor-type-id="text-editor">
         <state>
           <folding>
@@ -422,19 +636,28 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/requirements.txt">
+    <entry file="file://$PROJECT_DIR$/areomoon/AIMango_sample/train_folds.csv">
+      <provider selected="true" editor-type-id="text-editor" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/areomoon/AIMango_sample/label.csv">
+      <provider selected="true" editor-type-id="text-editor" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/areomoon/src/eval.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="90">
-          <caret line="6" column="24" lean-forward="true" selection-start-line="6" selection-start-column="24" selection-end-line="6" selection-end-column="24" />
+        <state relative-caret-position="581">
+          <caret line="67" selection-start-line="67" selection-end-line="73" />
+          <folding>
+            <element signature="e#0#9#0" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/ts_dataset.py">
+    <entry file="file://$PROJECT_DIR$/areomoon/src/train.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="270">
-          <caret line="18" column="29" lean-forward="true" selection-start-line="18" selection-start-column="29" selection-end-line="18" selection-end-column="29" />
+        <state relative-caret-position="1890">
+          <caret line="126" selection-start-line="126" selection-end-line="131" selection-end-column="5" />
           <folding>
-            <element signature="e#0#18#0" expanded="true" />
+            <element signature="e#0#9#0" expanded="true" />
           </folding>
         </state>
       </provider>
