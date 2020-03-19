@@ -138,7 +138,7 @@ def main():
     if torch.cuda.device_count() > 1 :
         model = nn.DataParallel()
 
-    for epoch in range(args.epoch):
+    for epoch in range(args.epochs):
         train(dataset=train_dataset,dataloader=train_dataloader,model=model,optimizer=optimizer,device=args.device,loss_fn=loss_fn)
         val_score = evaluate(dataset=valid_dataset, dataloader=valid_dataloader, model=model, device=args.device,loss_fn=loss_fn)
         scheduler.step(val_score)
