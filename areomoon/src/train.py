@@ -1,5 +1,6 @@
 import os
 import ast
+import models
 import torch
 import torch.nn as nn
 from tqdm import tqdm
@@ -95,9 +96,7 @@ def evaluate(dataset, dataloader, model, device,loss_fn):
 
 def main():
     model = MODEL_DISPATCHER[args.base_model]
-
-    if torch.cuda.is_available():
-        model.to(args.device)
+    model.to(args.device)
 
     train_dataset = ImageDataset(
         fold_file = args.fold_file,
