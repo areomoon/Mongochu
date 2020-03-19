@@ -6,7 +6,7 @@ import cv2
 import os
 
 parser = argparse.ArgumentParser(description='Mango Defection Classification With Pytorch')
-parser.add_argument('--jpg_file_path ', default='../AIMango_sample/sample_image', type=str,
+parser.add_argument('--jpg_file_path', default='../AIMango_sample/sample_image', type=str,
                     help='path to input data')
 parser.add_argument('--pkl_file_path', default='../AIMango_sample/pkl_files', type=str,
                     help='path to input data')

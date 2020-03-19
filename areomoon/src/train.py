@@ -95,7 +95,9 @@ def evaluate(dataset, dataloader, model, device,loss_fn):
 
 def main():
     model = MODEL_DISPATCHER[args.base_model]
-    model.to(args.device)
+
+    if torch.cuda.is_available():
+        model.to(args.device)
 
     train_dataset = ImageDataset(
         fold_file = args.fold_file,
