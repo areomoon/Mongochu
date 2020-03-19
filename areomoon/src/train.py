@@ -1,6 +1,4 @@
 import os
-import ast
-import models
 import torch
 import torch.nn as nn
 from tqdm import tqdm
@@ -140,8 +138,9 @@ def main():
 
     for epoch in range(args.epochs):
         train(dataset=train_dataset,dataloader=train_dataloader,model=model,optimizer=optimizer,device=args.device,loss_fn=loss_fn)
-        val_score = evaluate(dataset=valid_dataset, dataloader=valid_dataloader, model=model, device=args.device,loss_fn=loss_fn)
-        scheduler.step(val_score)
+        val_loss = evaluate(dataset=valid_dataset, dataloader=valid_dataloader, model=model, device=args.device,loss_fn=loss_fn)
+        print(f'Epoch_{epoch+1} Loss:{val_loss}')
+        scheduler.step(val_loss)
         torch.save(model.state_dict(),os.path.join(args.save_dir,f'{args.base_model}_fold_{VALID_FOLDS[0]}.bin'))
 
 if __name__ == '__main__':

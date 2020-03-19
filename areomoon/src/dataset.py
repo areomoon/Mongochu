@@ -16,8 +16,10 @@ class ImageDataset:
         df = df[['image_id','labels','kfold']]
         df = df[df['kfold'].isin(folds)].reset_index(drop= True)
 
+        class_map = {'A':0,'B':1,'C':2}
+
         self.img_id = df['image_id'].apply(lambda x: x.split('.')[0]).values
-        self.labels = pd.get_dummies(df['labels'].apply(lambda x: x[-1])).values
+        self.labels = df['labels'].apply(lambda x: x[-1]).map(class_map).values
 
         if len(folds)==1:
             # validation set
