@@ -25,7 +25,7 @@ WIP
 ## File Structure
  ./   
 ├── areomoon       
-│    └── AImongo_img    
+│    └── AImongo_img      
 │       └── C1-P1-Train  
 │       └──C1-P1-Dev  
 │       └──..      

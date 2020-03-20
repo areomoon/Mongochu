@@ -46,7 +46,7 @@ parser.add_argument('--epochs', default=10, type=int,
 parser.add_argument('--train_batch_size', default=128, type=int,
                     help='Batch size for training')
 
-parser.add_argument('--test_batch_size', default=4, type=int,
+parser.add_argument('--test_batch_size', default=128, type=int,
                     help='Batch size for training')
 
 parser.add_argument('--save_dir', default='../weights', type=str,
@@ -78,16 +78,17 @@ def evaluate(dataset, dataloader, model, device,loss_fn):
     model.eval()
     final_loss = 0
     counter = 0
-    for batch_ind, d in tqdm(enumerate(dataloader),total=int(len(dataset))/dataloader.batch_size):
-        counter += 1
-        image = d['image']
-        label = d['label']
-        image = image.to(device,dtype=torch.float)
-        target = label.to(device, dtype=torch.long)
-        outputs = model(image)
+    with torch.no_grad():
+        for batch_ind, d in tqdm(enumerate(dataloader),total=int(len(dataset))/dataloader.batch_size):
+            counter += 1
+            image = d['image']
+            label = d['label']
+            image = image.to(device,dtype=torch.float)
+            target = label.to(device, dtype=torch.long)
+            outputs = model(image)
 
-        loss = loss_fn(outputs,target)
-        final_loss += loss
+            loss = loss_fn(outputs,target)
+            final_loss += loss
     return final_loss/counter
 
 
