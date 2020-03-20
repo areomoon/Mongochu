@@ -1,4 +1,5 @@
 import os
+from itertools import chain
 import numpy as np
 import pandas as pd
 import torch
@@ -89,7 +90,9 @@ def main():
             image_pred_list.append(pred_label)
 
     preds = torch.cat(image_pred_list).cpu().numpy()
-    ids = torch.cat(image_id_list)
+
+    ids = list(chain(*image_id_list))
+
     sub = pd.DataFrame({'image_ids':ids, 'labels':preds})
     sub.to_csv('submission.csv',index=False)
 
