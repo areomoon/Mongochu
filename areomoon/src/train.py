@@ -95,8 +95,7 @@ def evaluate(dataset, dataloader, model, device,loss_fn):
             loss = loss_fn(outputs,target)
             final_loss += loss
 
-            outputs_cpu = outputs.cpu().numpy()
-            pred_label = np.argmax(outputs_cpu, axis=1)
+            pred_label = torch.argmax(outputs, axis=1)
             image_pred_list.append(pred_label)
             image_target_list.append(target)
 
