@@ -2,7 +2,6 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="a8d33407-d630-4c54-8128-ad6eb66310c2" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/README.md" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/areomoon/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/areomoon/README.md" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/areomoon/src/train.py" beforeDir="false" afterPath="$PROJECT_DIR$/areomoon/src/train.py" afterDir="false" />
     </list>
@@ -48,23 +47,11 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/areomoon/src/train.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="-342">
-              <caret line="62" column="17" selection-start-line="62" selection-start-column="17" selection-end-line="62" selection-end-column="17" />
+            <state relative-caret-position="272">
+              <caret line="48" column="50" selection-start-line="48" selection-start-column="50" selection-end-line="48" selection-end-column="50" />
               <folding>
                 <element signature="e#0#9#0" expanded="true" />
               </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/README.md">
-          <provider selected="true" editor-type-id="split-provider[text-editor;markdown-preview-editor]">
-            <state split_layout="SPLIT">
-              <first_editor relative-caret-position="60">
-                <caret line="4" selection-start-line="4" selection-end-line="4" />
-              </first_editor>
-              <second_editor />
             </state>
           </provider>
         </entry>
@@ -73,8 +60,8 @@
         <entry file="file://$PROJECT_DIR$/areomoon/README.md">
           <provider selected="true" editor-type-id="split-provider[text-editor;markdown-preview-editor]">
             <state split_layout="SPLIT">
-              <first_editor relative-caret-position="221">
-                <caret line="26" column="93" selection-start-line="26" selection-start-column="93" selection-end-line="26" selection-end-column="93" />
+              <first_editor relative-caret-position="-151">
+                <caret line="25" column="1" lean-forward="true" selection-start-line="25" selection-start-column="1" selection-end-line="25" selection-end-column="1" />
               </first_editor>
               <second_editor />
             </state>
@@ -180,12 +167,6 @@
               <item name="bengliai_demo" type="b2602c69:ProjectViewProjectNode" />
               <item name="bengliai_demo" type="462c0819:PsiDirectoryNode" />
               <item name="areomoon" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="bengliai_demo" type="b2602c69:ProjectViewProjectNode" />
-              <item name="bengliai_demo" type="462c0819:PsiDirectoryNode" />
-              <item name="areomoon" type="462c0819:PsiDirectoryNode" />
-              <item name="AIMango_sample" type="462c0819:PsiDirectoryNode" />
             </path>
           </expand>
           <select />
@@ -365,12 +346,12 @@
       <workItem from="1583764545820" duration="2371000" />
       <workItem from="1584192476763" duration="44000" />
       <workItem from="1584448527015" duration="8548000" />
-      <workItem from="1584632998537" duration="4296000" />
+      <workItem from="1584632998537" duration="5368000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="40209000" />
+    <option name="totallyTimeSpent" value="41281000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="17" y="23" width="1423" height="797" extended-state="0" />
@@ -680,13 +661,10 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/areomoon/src/train.py">
+    <entry file="file://$PROJECT_DIR$/areomoon/requirements.txt">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-342">
-          <caret line="62" column="17" selection-start-line="62" selection-start-column="17" selection-end-line="62" selection-end-column="17" />
-          <folding>
-            <element signature="e#0#9#0" expanded="true" />
-          </folding>
+        <state>
+          <caret selection-end-line="7" />
         </state>
       </provider>
     </entry>
@@ -700,18 +678,21 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/areomoon/requirements.txt">
+    <entry file="file://$PROJECT_DIR$/areomoon/src/train.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state>
-          <caret selection-end-line="7" />
+        <state relative-caret-position="272">
+          <caret line="48" column="50" selection-start-line="48" selection-start-column="50" selection-end-line="48" selection-end-column="50" />
+          <folding>
+            <element signature="e#0#9#0" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/areomoon/README.md">
       <provider selected="true" editor-type-id="split-provider[text-editor;markdown-preview-editor]">
         <state split_layout="SPLIT">
-          <first_editor relative-caret-position="221">
-            <caret line="26" column="93" selection-start-line="26" selection-start-column="93" selection-end-line="26" selection-end-column="93" />
+          <first_editor relative-caret-position="-151">
+            <caret line="25" column="1" lean-forward="true" selection-start-line="25" selection-start-column="1" selection-end-line="25" selection-end-column="1" />
           </first_editor>
           <second_editor />
         </state>

@@ -46,7 +46,7 @@ parser.add_argument('--epochs', default=10, type=int,
 parser.add_argument('--train_batch_size', default=128, type=int,
                     help='Batch size for training')
 
-parser.add_argument('--test_batch_size', default=32, type=int,
+parser.add_argument('--test_batch_size', default=4, type=int,
                     help='Batch size for training')
 
 parser.add_argument('--save_dir', default='../weights', type=str,
