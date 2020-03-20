@@ -1,10 +1,10 @@
 import numpy as np
 import matplotlib.pyplot as plt
-from dataset import ImageDataset
+from dataset import ImageExpDataset
 
-dataset = ImageDataset(
-    fold_file='../AIMango_sample/train_folds.csv',
-    pkl_file_path='..AIMango_sample/pkl_files',
+dataset = ImageExpDataset(
+    fold_file='AIMango_sample/train_folds.csv',
+    pkl_file_path='AIMango_sample/pkl_files',
     folds=[0,1],
     image_height=137,
     image_width=236,
