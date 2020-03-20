@@ -69,10 +69,10 @@ class ImageTestDataset:
     def __getitem__(self, item):
         img_bgr = cv2.imread(self.image_files[item])
         img_rgb = img_bgr[:, :, [2, 1, 0]]
-        image = self.aug(image=np.array(img_rgb))
-        image = np.transpose(image, [2, 0, 1]).astype(float) # for using torchvision model
+        img = self.aug(image=np.array(img_rgb))['image']
+        img_float = np.transpose(img, [2, 0, 1]).astype(float) # for using torchvision model
         return {
-            'image' : torch.tensor(image, dtype=torch.float),
+            'image' : torch.tensor(img_float, dtype=torch.float),
             'image_id' : self.image_ids[item]
         }
 

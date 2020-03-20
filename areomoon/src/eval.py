@@ -80,6 +80,7 @@ def main():
         for batch_id, d in enumerate(tqdm(test_dataset)):
             image = d['image']
             img_id = d['image_id']
+
             image = image.to(args.device, dtype=torch.float)
             outputs = model(image)
 
@@ -88,7 +89,9 @@ def main():
             image_pred_list.append(pred_label)
 
     preds = torch.cat(image_pred_list).cpu().numpy()
-    ids = torch.cat(image_id_list).cpu().numpy()
 
-    sub = pd.DataFrame({'image_ids':ids, 'labels':preds})
+    sub = pd.DataFrame({'image_ids':image_id_list, 'labels':preds})
     sub.to_csv('submission.csv',index=False)
+
+if __name__ == '__main__':
+    main()
