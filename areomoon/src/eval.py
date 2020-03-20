@@ -5,8 +5,8 @@ import torch
 from tqdm import tqdm
 import argparse
 from dataset import ImageTestDataset
+from model_dispatcher import MODEL_DISPATCHER
 from torch.utils.data import DataLoader
-from models import ResNet34
 
 MODEL_MEAN = (0.485,0.456,0.406)
 MODEL_STD = (0.229,0.224,0.225)
@@ -53,7 +53,8 @@ args = parser.parse_args()
 
 
 def main():
-    model = ResNet34(pretrained=False)
+    model = MODEL_DISPATCHER[args.base_model]
+    model.to(args.device)
     model.load_state_dict(torch.load(os.path.join(args.save_dir,args.model_weights)))
     model.eval()
 
@@ -75,15 +76,19 @@ def main():
     image_id_list = []
     image_pred_list = []
 
-    for batch_id, d in enumerate(tqdm(test_dataset)):
-        image = d['image']
-        img_id = d['image_id']
-        image = image.to(args.device, dtype=torch.float)
-        outputs = model(image)
+    with torch.no_grad():
+        for batch_id, d in enumerate(tqdm(test_dataset)):
+            image = d['image']
+            img_id = d['image_id']
+            image = image.to(args.device, dtype=torch.float)
+            outputs = model(image)
 
-        pred_label = np.argmax(outputs, axis=1)
-        image_id_list.append(img_id)
-        image_pred_list.append(pred_label)
+            pred_label = np.argmax(outputs, axis=1)
+            image_id_list.append(img_id)
+            image_pred_list.append(pred_label)
 
-    sub = pd.DataFrame({'image_ids':image_id_list, 'labels':image_pred_list})
+    preds = torch.cat(image_pred_list).cpu().numpy()
+    ids = torch.cat(image_id_list).cpu().numpy()
+
+    sub = pd.DataFrame({'image_ids':ids, 'labels':preds})
     sub.to_csv('submission.csv',index=False)
