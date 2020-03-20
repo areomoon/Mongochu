@@ -63,4 +63,6 @@ python train.py --fold_file ../AImongo_img/train_folds.csv  --pkl_file ../AImong
 
 ## Inference
 
-WIP
+```
+python eval.py --image_file ../AImongo_img/C1-P1_Dev  --model_weights resnet34_fold_4.bin
+```
