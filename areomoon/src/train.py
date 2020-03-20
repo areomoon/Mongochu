@@ -102,7 +102,7 @@ def evaluate(dataset, dataloader, model, device,loss_fn):
     # Evaludation Metrics
     pred = torch.cat(image_pred_list).cpu().numpy()
     tgt = torch.cat(image_target_list).cpu().numpy()
-    cfm = np.round(confusion_matrix(y_true=tgt,y_pred=pred,labels=[0,1,2],normalize='all'),3)
+    cfm = np.round(confusion_matrix(y_true=tgt,y_pred=pred,labels=[0,1,2]),3)
     accu = accuracy_score(y_true=tgt,y_pred=pred)
     print(cfm)
     print('General Accuracy score: {:5.4f}'.format(accu))
