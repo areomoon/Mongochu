@@ -43,13 +43,13 @@ parser.add_argument('--lr', default=1e-4, type=float,
 parser.add_argument('--epochs', default=10, type=int,
                     help='Number of epoch for training')
 
-parser.add_argument('--train_batch_size', default=256, type=int,
+parser.add_argument('--train_batch_size', default=128, type=int,
                     help='Batch size for training')
 
-parser.add_argument('--test_batch_size', default=256, type=int,
+parser.add_argument('--test_batch_size', default=128, type=int,
                     help='Batch size for training')
 
-parser.add_argument('--save_dir', default='weights', type=str,
+parser.add_argument('--save_dir', default='../weights', type=str,
                     help='directory to save model')
 
 args = parser.parse_args()
@@ -93,6 +93,11 @@ def evaluate(dataset, dataloader, model, device,loss_fn):
 
 
 def main():
+
+    if args.device =='cuda':
+        torch.backends.cudnn.benchmark = True # Good optimizer when input array shape doesn't vary
+        print('Using cudnn.benchmark.')
+
     model = MODEL_DISPATCHER[args.base_model]
     model.to(args.device)
 

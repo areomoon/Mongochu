@@ -37,13 +37,13 @@ parser.add_argument('--lr', default=1e-4, type=float,
 parser.add_argument('--epochs', default=10, type=int,
                     help='Number of epoch for training')
 
-parser.add_argument('--train_batch_size', default=256, type=int,
+parser.add_argument('--train_batch_size', default=128, type=int,
                     help='Batch size for training')
 
-parser.add_argument('--test_batch_size', default=256, type=int,
+parser.add_argument('--test_batch_size', default=128, type=int,
                     help='Batch size for training')
 
-parser.add_argument('--save_dir', default='weights', type=str,
+parser.add_argument('--save_dir', default='../weights', type=str,
                     help='directory to save model')
 
 parser.add_argument('--model_weights', default=None, type=str,
