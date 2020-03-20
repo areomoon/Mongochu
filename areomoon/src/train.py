@@ -95,7 +95,8 @@ def evaluate(dataset, dataloader, model, device,loss_fn):
             loss = loss_fn(outputs,target)
             final_loss += loss
 
-            pred_label = np.argmax(outputs, axis=1)
+            outputs_cpu = outputs.cpu().numpy()
+            pred_label = np.argmax(outputs_cpu, axis=1)
             image_pred_list.append(pred_label)
             image_target_list.append(target)
 
@@ -112,7 +113,7 @@ def evaluate(dataset, dataloader, model, device,loss_fn):
 def main():
 
     if args.device =='cuda':
-        torch.backends.cudnn.benchmark = True # Good optimizer when input array shape doesn't vary
+        torch.backends.cudnn.benchmark = True #  should add to speed up the code when input array shape doesn't vary
         print('Using cudnn.benchmark.')
 
     model = MODEL_DISPATCHER[args.base_model]
