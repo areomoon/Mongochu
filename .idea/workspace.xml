@@ -3,7 +3,6 @@
   <component name="ChangeListManager">
     <list default="true" id="a8d33407-d630-4c54-8128-ad6eb66310c2" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/areomoon/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/areomoon/README.md" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/areomoon/src/train.py" beforeDir="false" afterPath="$PROJECT_DIR$/areomoon/src/train.py" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -60,8 +59,8 @@
         <entry file="file://$PROJECT_DIR$/areomoon/README.md">
           <provider selected="true" editor-type-id="split-provider[text-editor;markdown-preview-editor]">
             <state split_layout="SPLIT">
-              <first_editor relative-caret-position="-151">
-                <caret line="25" column="1" lean-forward="true" selection-start-line="25" selection-start-column="1" selection-end-line="25" selection-end-column="1" />
+              <first_editor relative-caret-position="303">
+                <caret line="30" selection-start-line="30" selection-end-line="30" selection-end-column="11" />
               </first_editor>
               <second_editor />
             </state>
@@ -346,12 +345,12 @@
       <workItem from="1583764545820" duration="2371000" />
       <workItem from="1584192476763" duration="44000" />
       <workItem from="1584448527015" duration="8548000" />
-      <workItem from="1584632998537" duration="5368000" />
+      <workItem from="1584632998537" duration="5622000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="41281000" />
+    <option name="totallyTimeSpent" value="41535000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="17" y="23" width="1423" height="797" extended-state="0" />
@@ -371,7 +370,7 @@
       <window_info anchor="bottom" id="Version Control" order="8" />
       <window_info anchor="bottom" id="Database Changes" order="9" />
       <window_info anchor="bottom" id="Event Log" order="10" side_tool="true" />
-      <window_info anchor="bottom" id="Terminal" order="11" visible="true" weight="0.32907802" />
+      <window_info active="true" anchor="bottom" id="Terminal" order="11" visible="true" weight="0.32907802" />
       <window_info anchor="bottom" id="Python Console" order="12" />
       <window_info anchor="right" id="Commander" internal_type="SLIDING" order="0" type="SLIDING" weight="0.4" />
       <window_info anchor="right" id="Ant Build" order="1" weight="0.25" />
@@ -691,8 +690,8 @@
     <entry file="file://$PROJECT_DIR$/areomoon/README.md">
       <provider selected="true" editor-type-id="split-provider[text-editor;markdown-preview-editor]">
         <state split_layout="SPLIT">
-          <first_editor relative-caret-position="-151">
-            <caret line="25" column="1" lean-forward="true" selection-start-line="25" selection-start-column="1" selection-end-line="25" selection-end-column="1" />
+          <first_editor relative-caret-position="303">
+            <caret line="30" selection-start-line="30" selection-end-line="30" selection-end-column="11" />
           </first_editor>
           <second_editor />
         </state>

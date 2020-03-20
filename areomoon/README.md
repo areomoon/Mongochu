@@ -25,10 +25,10 @@ WIP
 ## File Structure
  ./   
 ├── areomoon       
-│   ├── AImongo_img    
-├───────├──C1-P1-Train  
-├───────├──C1-P1-Dev  
-├───────├──..      
+│    └── AImongo_img    
+│       └── C1-P1-Train  
+│       └──C1-P1-Dev  
+│       └──..      
 │   └── src   
 │   └── weights  
 │   └── requirements.txt
