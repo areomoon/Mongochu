@@ -5,4 +5,4 @@ venv/
 .idea/
 .ipynb_checkpoints/
 *.csv
-*.ipynb
+.ipynb

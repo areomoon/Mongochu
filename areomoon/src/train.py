@@ -42,7 +42,7 @@ parser.add_argument('--base_model', default='resnet34', type=str,
 parser.add_argument('--lr', default=1e-4, type=float,
                     help='learning rate')
 
-parser.add_argument('--epochs', default=10, type=int,
+parser.add_argument('--epochs', default=3, type=int,
                     help='Number of epoch for training')
 
 parser.add_argument('--train_batch_size', default=256, type=int,
