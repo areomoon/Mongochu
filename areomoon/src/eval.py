@@ -66,18 +66,18 @@ def main():
         std = MODEL_STD
     )
 
-    # test_dataloader = DataLoader(
-    #     dataset=test_dataset,
-    #     batch_size=args.test_batch_size,
-    #     shuffle=False,
-    #     num_workers=args.num_workers,
-    # )
+    test_dataloader = DataLoader(
+        dataset=test_dataset,
+        batch_size=args.test_batch_size,
+        shuffle=False,
+        num_workers=args.num_workers,
+    )
 
     image_id_list = []
     image_pred_list = []
 
     with torch.no_grad():
-        for batch_id, d in enumerate(tqdm(test_dataset)):
+        for batch_id, d in enumerate(tqdm(test_dataloader)):
             image = d['image']
             img_id = d['image_id']
 
@@ -89,8 +89,8 @@ def main():
             image_pred_list.append(pred_label)
 
     preds = torch.cat(image_pred_list).cpu().numpy()
-
-    sub = pd.DataFrame({'image_ids':image_id_list, 'labels':preds})
+    ids = torch.cat(image_id_list)
+    sub = pd.DataFrame({'image_ids':ids, 'labels':preds})
     sub.to_csv('submission.csv',index=False)
 
 if __name__ == '__main__':
