@@ -46,7 +46,7 @@ parser.add_argument('--epochs', default=10, type=int,
 parser.add_argument('--train_batch_size', default=128, type=int,
                     help='Batch size for training')
 
-parser.add_argument('--test_batch_size', default=128, type=int,
+parser.add_argument('--test_batch_size', default=32, type=int,
                     help='Batch size for training')
 
 parser.add_argument('--save_dir', default='../weights', type=str,
@@ -61,7 +61,6 @@ def loss_fn(outputs,target):
 
 def train(dataset, dataloader, model, optimizer, device, loss_fn):
     model.train()
-
     for batch_ind, d in tqdm(enumerate(dataloader),total=int(len(dataset))/dataloader.batch_size):
         image = d['image']
         label = d['label']
