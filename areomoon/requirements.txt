@@ -5,4 +5,5 @@ opencv-python
 albumentations
 pretrainedmodels
 iterative-stratification
+scikit-learn
 

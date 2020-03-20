@@ -1,4 +1,5 @@
 import os
+import numpy as np
 import torch
 import torch.nn as nn
 from tqdm import tqdm
@@ -7,6 +8,7 @@ from dataset import ImageDataset
 from torch.utils.data import DataLoader
 from torch.optim import Adam,lr_scheduler
 from model_dispatcher import MODEL_DISPATCHER
+from sklearn.metrics import confusion_matrix,accuracy_score
 
 MODEL_MEAN = (0.485,0.456,0.406)
 MODEL_STD = (0.229,0.224,0.225)
@@ -43,7 +45,7 @@ parser.add_argument('--lr', default=1e-4, type=float,
 parser.add_argument('--epochs', default=10, type=int,
                     help='Number of epoch for training')
 
-parser.add_argument('--train_batch_size', default=128, type=int,
+parser.add_argument('--train_batch_size', default=256, type=int,
                     help='Batch size for training')
 
 parser.add_argument('--test_batch_size', default=128, type=int,
@@ -53,6 +55,7 @@ parser.add_argument('--save_dir', default='../weights', type=str,
                     help='directory to save model')
 
 args = parser.parse_args()
+
 
 def loss_fn(outputs,target):
     loss = nn.CrossEntropyLoss()(outputs, target)
@@ -78,6 +81,8 @@ def evaluate(dataset, dataloader, model, device,loss_fn):
     model.eval()
     final_loss = 0
     counter = 0
+    image_pred_list = []
+    image_target_list = []
     with torch.no_grad():
         for batch_ind, d in tqdm(enumerate(dataloader),total=int(len(dataset))/dataloader.batch_size):
             counter += 1
@@ -89,6 +94,18 @@ def evaluate(dataset, dataloader, model, device,loss_fn):
 
             loss = loss_fn(outputs,target)
             final_loss += loss
+
+            pred_label = np.argmax(outputs, axis=1)
+            image_pred_list.append(pred_label)
+            image_target_list.append(target)
+
+    # Evaludation Metrics
+    pred = torch.cat(image_pred_list).cpu().numpy()
+    tgt = torch.cat(image_target_list).cpu().numpy()
+    cfm = np.round(confusion_matrix(y_true=tgt,y_pred=pred,labels=[0,1,2],normalize='all'),3)
+    accu = accuracy_score(y_true=tgt,y_pred=pred)
+    print(cfm)
+    print('General Accuracy score: {:5.4f}'.format(accu))
     return final_loss/counter
 
 

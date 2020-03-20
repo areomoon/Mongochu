@@ -80,8 +80,8 @@ def main():
         img_id = d['image_id']
         image = image.to(args.device, dtype=torch.float)
         outputs = model(image)
-        pred_label = np.argmax(outputs, axis=1)
 
+        pred_label = np.argmax(outputs, axis=1)
         image_id_list.append(img_id)
         image_pred_list.append(pred_label)
 
