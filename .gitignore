@@ -3,3 +3,6 @@ areomoon/C1-P1_Train Dev
 run.sh
 venv/
 .idea/
+.ipynb_checkpoints/
+*.csv
+*.ipynb

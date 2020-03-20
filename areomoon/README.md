@@ -25,13 +25,13 @@ WIP
 ## File Structure
  ./   
 ├── areomoon       
-│    └── AImongo_img      
-│       └── C1-P1-Train  
-│       └──C1-P1-Dev  
-│       └──..      
-│   └── src   
-│   └── weights  
-│   └── requirements.txt
+│&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;└── AImongo_img      
+│&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;└─ C1-P1-Train  
+│&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;└──C1-P1-Dev  
+│&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;└──..      
+│&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;└── src   
+│&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;└── weights  
+│&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;└── requirements.txt
    
 
 ## Image Data Preprocess
@@ -62,7 +62,11 @@ python train.py --fold_file ../AImongo_img/train_folds.csv  --pkl_file ../AImong
 ```
 
 ## Inference
-
+Run the following code and save the ```submission.csv``` file in working directory ```areomoon/src/```
 ```
 python eval.py --image_file ../AImongo_img/C1-P1_Dev  --model_weights resnet34_fold_4.bin
 ```
+
+## Evaluation 
+
+Refer to ```areomoon/eval_metrics.ipynb```
