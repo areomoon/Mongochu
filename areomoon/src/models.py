@@ -28,7 +28,7 @@ class VGG16(nn.Module):
         else:
             self.model = pretrainedmodels.__dict__["vgg16"](pretrained=None)
 
-        self.l0 = nn.Linear(4096,n_class)
+        self.l0 = nn.Linear(512,n_class)
 
     def forward(self, x):
         batch_size, _, _, _ = x.shape
