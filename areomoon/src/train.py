@@ -36,7 +36,7 @@ parser.add_argument('--num_workers', default=4, type=int,
 parser.add_argument('--device', default='cuda', type=str,
                     help='device for train and eval')
 
-parser.add_argument('--base_model', default='resnet34', type=str,
+parser.add_argument('--base_model', default='vgg16', type=str,
                     help='base model to use')
 
 parser.add_argument('--lr', default=1e-4, type=float,
@@ -117,6 +117,7 @@ def main():
 
     model = MODEL_DISPATCHER[args.base_model]
     model.to(args.device)
+    print(f'Loading pretrained model: {args.base_model}')
 
     train_dataset = ImageDataset(
         fold_file = args.fold_file,
