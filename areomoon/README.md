@@ -70,3 +70,24 @@ python eval.py --image_file ../AImongo_img/C1-P1_Dev  --model_weights resnet34_f
 ## Evaluation 
 
 Refer to ```areomoon/eval_metrics.ipynb```
+   
+#### Model Experiment and Arguments 
+- Resnet34  
+```
+- image_width = 236
+- image_height = 137
+- epochs = 2
+- batch_size = 256  
+
+Accuracy on Dev :0.74375
+``` 
+ 
+- VGG16 
+```
+- image_width = 224
+- image_height = 224
+- epochs = 3
+- batch_size = 64    
+
+Accuracy on Dev : 0.77125
+``` 

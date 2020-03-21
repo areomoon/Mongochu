@@ -35,11 +35,11 @@ parser.add_argument('--base_model', default='vgg16_eval', type=str,
 parser.add_argument('--lr', default=1e-4, type=float,
                     help='learning rate')
 
-parser.add_argument('--epochs', default=3, type=int,
-                    help='Number of epoch for training')
-
-parser.add_argument('--train_batch_size', default=128, type=int,
-                    help='Batch size for training')
+# parser.add_argument('--epochs', default=3, type=int,
+#                     help='Number of epoch for training')
+#
+# parser.add_argument('--train_batch_size', default=128, type=int,
+#                     help='Batch size for training')
 
 parser.add_argument('--test_batch_size', default=128, type=int,
                     help='Batch size for training')
@@ -58,6 +58,7 @@ def main():
     model.to(args.device)
     model.load_state_dict(torch.load(os.path.join(args.save_dir,args.model_weights)))
     model.eval()
+    print(f'Loading pretrained model: {args.base_model} for eval')
 
     test_dataset = ImageTestDataset(
         file_path = args.image_file,
@@ -94,7 +95,7 @@ def main():
     ids = list(chain(*image_id_list))
 
     sub = pd.DataFrame({'image_ids':ids, 'labels':preds})
-    sub.to_csv('submission.csv',index=False)
+    sub.to_csv('resnet34_submission.csv',index=False)
 
 if __name__ == '__main__':
     main()
