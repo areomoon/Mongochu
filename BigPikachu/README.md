@@ -24,13 +24,13 @@ WIP
 
 ## File Structure
  ./   
-├── areomoon       
+├── BigPikachu       
 │&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;└── AImongo_img      
 │&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;└─ C1-P1-Train  
 │&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;└──C1-P1-Dev  
 │&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;└──..      
 │&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;└── src   
-│&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;└── weights  
+│&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;└── weights  
 │&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;└── requirements.txt
    
 
