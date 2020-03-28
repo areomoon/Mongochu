@@ -21,7 +21,7 @@ parser = argparse.ArgumentParser(description='Mango Defection Classification Wit
 parser.add_argument('--fold_file', default='../AIMango_sample/train_folds.csv', type=str,
                     help='path to input data')
 
-parser.add_argument('--pkl_file', default='../AIMango_sample/pkl_files', type=str,
+parser.add_argument('--image_file', default='../AIMango_sample/C1-P1_Train', type=str,
                     help='path to input data')
 
 parser.add_argument('--image_height', default=137, type=int,
@@ -117,11 +117,11 @@ def main():
 
     model = MODEL_DISPATCHER[args.base_model]
     model.to(args.device)
-    print(f'Loading pretrained model: {args.base_model}')
+    # print(f'Loading pretrained model: {args.base_model}')
 
     train_dataset = ImageDataset(
         fold_file = args.fold_file,
-        pkl_file_path = args.pkl_file,
+        image_file_path = args.image_file,
         folds=TRAIN_FOLDS,
         image_height=args.image_height,
         image_width=args.image_width,
@@ -138,7 +138,7 @@ def main():
 
     valid_dataset = ImageDataset(
         fold_file=args.fold_file,
-        pkl_file_path=args.pkl_file,
+        image_file_path=args.image_file,
         folds=VALID_FOLDS,
         image_height=args.image_height,
         image_width=args.image_width,
