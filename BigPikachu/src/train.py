@@ -173,7 +173,7 @@ def main():
         val_accu_list.append(accu)
         if val_loss < val_loss_benchmark:
             torch.save(model.state_dict(), os.path.join(args.save_dir, f'{args.base_model}_fold_{VALID_FOLDS[0]}.bin'))
-        val_loss_benchmark = val_loss
+            val_loss_benchmark = val_loss
 
     val_metrics = {'val_loss_list': val_loss_list, 'val_accu_list': val_accu_list}
 
