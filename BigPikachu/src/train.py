@@ -1,4 +1,5 @@
 import os
+import pickle
 import numpy as np
 import torch
 import torch.nn as nn
@@ -106,7 +107,7 @@ def evaluate(dataset, dataloader, model, device,loss_fn):
     accu = accuracy_score(y_true=tgt,y_pred=pred)
     print(cfm)
     print('General Accuracy score: {:5.4f}'.format(accu))
-    return final_loss/counter
+    return final_loss/counter, accu
 
 
 def main():
@@ -159,12 +160,27 @@ def main():
     if torch.cuda.device_count() > 1 :
         model = nn.DataParallel()
 
+    val_loss_benchmark = 1
+    val_loss_list = []
+    val_accu_list = []
     for epoch in range(args.epochs):
         train(dataset=train_dataset,dataloader=train_dataloader,model=model,optimizer=optimizer,device=args.device,loss_fn=loss_fn)
-        val_loss = evaluate(dataset=valid_dataset, dataloader=valid_dataloader, model=model, device=args.device,loss_fn=loss_fn)
-        print(f'Epoch_{epoch+1} Loss:{val_loss}')
+        val_loss, accu = evaluate(dataset=valid_dataset, dataloader=valid_dataloader, model=model, device=args.device,loss_fn=loss_fn)
+        print(f'Epoch_{epoch+1} Valid Loss:{val_loss}')
         scheduler.step(val_loss)
-        torch.save(model.state_dict(),os.path.join(args.save_dir,f'{args.base_model}_fold_{VALID_FOLDS[0]}.bin'))
+        
+        val_loss_list.append(val_loss)
+        val_accu_list.append(accu)
+        if val_loss < val_loss_benchmark:
+            torch.save(model.state_dict(), os.path.join(args.save_dir, f'{args.base_model}_fold_{VALID_FOLDS[0]}_epoch_{epoch+1}.bin'))
+        val_loss_benchmark = val_loss
+
+    val_metrics = {'val_loss_list': val_loss_list, 'val_accu_list': val_accu_list}
+
+    # pickle a variable to a file
+    file = open('val_metrics.pickle', 'wb')
+    pickle.dump(val_metrics, file)
+    file.close()
 
 if __name__ == '__main__':
     main()
