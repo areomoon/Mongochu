@@ -78,7 +78,7 @@ def train(dataset, dataloader, model, optimizer, device, loss_fn):
         optimizer.step()
 
 
-def evaluate(dataset, dataloader, model, device,loss_fn):
+def evaluate(dataset, dataloader, model, device,loss_fn, tag):
     model.eval()
     final_loss = 0
     counter = 0
@@ -105,9 +105,14 @@ def evaluate(dataset, dataloader, model, device,loss_fn):
     tgt = torch.cat(image_target_list).cpu().numpy()
     cfm = np.round(confusion_matrix(y_true=tgt,y_pred=pred,labels=[0,1,2]),3)
     accu = accuracy_score(y_true=tgt,y_pred=pred)
-    print(cfm)
-    print('General Accuracy score on Valid: {:5.4f}'.format(accu))
-    return final_loss/counter, accu
+    if tag == 'train':
+        print(cfm)
+        print('General Accuracy score on Train: {:5.4f}'.format(accu))
+        return final_loss/counter, accu
+    elif tag == 'valid':
+        print(cfm)
+        print('General Accuracy score on Valid: {:5.4f}'.format(accu))
+        return final_loss/counter, accu
 
 
 def main():
@@ -163,24 +168,35 @@ def main():
     val_accu_benchmark = 0.34
     val_loss_list = []
     val_accu_list = []
+    tr_loss_list = []
+    tr_accu_list = []
     for epoch in range(args.epochs):
         train(dataset=train_dataset,dataloader=train_dataloader,model=model,optimizer=optimizer,device=args.device,loss_fn=loss_fn)
-        val_loss, accu = evaluate(dataset=valid_dataset, dataloader=valid_dataloader, model=model, device=args.device,loss_fn=loss_fn)
+        tr_loss, tr_accu = evaluate(dataset=valid_dataset, dataloader=valid_dataloader, model=model, device=args.device,loss_fn=loss_fn, tag='train')
+        val_loss, val_accu = evaluate(dataset=valid_dataset, dataloader=valid_dataloader, model=model, device=args.device,loss_fn=loss_fn, tag='valid')
         print(f'Epoch_{epoch+1} Valid Loss:{val_loss}')
         scheduler.step(val_loss)
         
+        tr_loss_list.append(tr_loss)
+        tr_accu_list.append(tr_accu)        
         val_loss_list.append(val_loss)
-        val_accu_list.append(accu)
-        if accu > val_accu_benchmark:
+        val_accu_list.append(val_accu)
+        if val_accu > val_accu_benchmark:
             print(f'save {args.base_model} model on epoch {epoch+1}')
             torch.save(model.state_dict(), os.path.join(args.save_dir, f'{args.base_model}_fold_{VALID_FOLDS[0]}.bin'))
-            val_accu_benchmark = accu
+            val_accu_benchmark = val_accu
 
-    val_metrics = {'val_loss_list': val_loss_list, 'val_accu_list': val_accu_list}
+    stored_metrics = {'train': {
+                                'tr_loss_list': tr_loss_list, 'tr_accu_list': tr_accu_list
+                            },
+                    'valid': {
+                                'val_loss_list': val_loss_list, 'val_accu_list': val_accu_list
+                             }
+                  }
 
     # pickle a variable to a file
-    file = open('val_metrics.pickle', 'wb')
-    pickle.dump(val_metrics, file)
+    file = open('stored_metrics.pickle', 'wb')
+    pickle.dump(stored_metrics, file)
     file.close()
 
 if __name__ == '__main__':
