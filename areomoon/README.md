@@ -84,10 +84,24 @@ Accuracy on Dev :0.74375
  
 - VGG16 
 ```
+- mean=[0.485, 0.456, 0.406]
+- std=[0.229, 0.224, 0.225]
 - image_width = 224
 - image_height = 224
 - epochs = 3
 - batch_size = 64    
 
 Accuracy on Dev : 0.77125
+``` 
+
+- SE-ResNext101-32x4d
+```
+- mean=[0.485, 0.456, 0.406]
+- std=[0.229, 0.224, 0.225]
+- image_width = 224
+- image_height = 224
+- epochs = 1
+- batch_size = 64    
+
+Accuracy on Dev : 0.7925
 ``` 
