@@ -24,7 +24,7 @@ WIP
 
 ## File Structure
  ./   
-├── areomoon       
+├── BigPikachu       
 │&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;└── AImongo_img      
 │&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;└─ C1-P1-Train  
 │&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;└──C1-P1-Dev  

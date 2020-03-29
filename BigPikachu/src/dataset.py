@@ -8,8 +8,8 @@ import glob
 import cv2
 
 class ImageDataset:
-    def __init__(self,fold_file, pkl_file_path, folds, image_height, image_width, mean, std):
-        self.pkl_file_path = pkl_file_path
+    def __init__(self, fold_file, image_file_path, folds, image_height, image_width, mean, std):
+        self.image_file_path = image_file_path
         self.fold_file = fold_file
 
         df = pd.read_csv(self.fold_file)
@@ -18,8 +18,8 @@ class ImageDataset:
 
         class_map = {'A':0,'B':1,'C':2}
 
-        self.img_id = df['image_id'].apply(lambda x: x.split('.')[0]).values
-        self.labels = df['labels'].apply(lambda x: x[-1]).map(class_map).values
+        self.img_id = df['image_id'].apply(lambda x: x.split('.')[0]).values # just take id of image_id
+        self.labels = df['labels'].apply(lambda x: x[-1]).map(class_map).values # encoding labels
 
         if len(folds)==1:
             # validation set
@@ -43,8 +43,9 @@ class ImageDataset:
         return len(self.img_id)
 
     def __getitem__(self, item):
-        image = joblib.load(f"{self.pkl_file_path}/{self.img_id[item]}.pkl")
-        image = self.aug(image=np.array(image))['image']
+        img_bgr = cv2.imread(f"{self.image_file_path}/{self.img_id[item]}.jpg")
+        img_rgb = img_bgr[:, :, [2, 1, 0]]
+        image = self.aug(image=np.array(img_rgb))['image']
         image = np.transpose(image, [2,0,1]).astype(float) # for using torchvision model
         return {
             'image':torch.tensor(image, dtype=torch.float),
@@ -77,8 +78,8 @@ class ImageTestDataset:
         }
 
 class ImageExpDataset:
-    def __init__(self,fold_file, pkl_file_path, folds, image_height, image_width, mean, std):
-        self.pkl_file_path = pkl_file_path
+    def __init__(self,fold_file, image_file_path, folds, image_height, image_width, mean, std):
+        self.image_file_path = image_file_path
         self.fold_file = fold_file
 
         df = pd.read_csv(self.fold_file)
@@ -107,7 +108,7 @@ class ImageExpDataset:
         return len(self.img_id)
 
     def __getitem__(self, item):
-        image = joblib.load(f"{self.pkl_file_path}/{self.img_id[item]}.pkl")
+        image = joblib.load(f"{self.image_file_path}/{self.img_id[item]}.pkl")
         image = self.aug(image=np.array(image))['image']
         image = np.transpose(image, [2,0,1]).astype(float) # for using torchvision model
         return {
