@@ -106,7 +106,7 @@ def evaluate(dataset, dataloader, model, device,loss_fn):
     cfm = np.round(confusion_matrix(y_true=tgt,y_pred=pred,labels=[0,1,2]),3)
     accu = accuracy_score(y_true=tgt,y_pred=pred)
     print(cfm)
-    print('General Accuracy score: {:5.4f}'.format(accu))
+    print('General Accuracy score on Valid: {:5.4f}'.format(accu))
     return final_loss/counter, accu
 
 
@@ -160,7 +160,7 @@ def main():
     if torch.cuda.device_count() > 1 :
         model = nn.DataParallel()
 
-    val_loss_benchmark = 1
+    val_accu_benchmark = 0.34
     val_loss_list = []
     val_accu_list = []
     for epoch in range(args.epochs):
@@ -171,9 +171,10 @@ def main():
         
         val_loss_list.append(val_loss)
         val_accu_list.append(accu)
-        if val_loss < val_loss_benchmark:
+        if accu > val_accu_benchmark:
+            print(f'save {args.base_model} model on epoch {epoch+1}')
             torch.save(model.state_dict(), os.path.join(args.save_dir, f'{args.base_model}_fold_{VALID_FOLDS[0]}.bin'))
-            val_loss_benchmark = val_loss
+            val_accu_benchmark = accu
 
     val_metrics = {'val_loss_list': val_loss_list, 'val_accu_list': val_accu_list}
 
