@@ -67,7 +67,7 @@ class  EfficientNet_B5(nn.Module):
     def __init__(self,pretrained, n_class):
         super(EfficientNet_B5, self).__init__()
         if pretrained is True:
-            self.model = EfficientNet.from_pretrained('efficientnet-b4')
+            self.model = EfficientNet.from_pretrained('efficientnet-b5')
 
         self.l0 = nn.Linear(1792,n_class)
 
@@ -84,26 +84,26 @@ class  EfficientNet_B5(nn.Module):
 
 
 
-class  EfficientNet_B6(nn.Module):
-    def __init__(self,pretrained, n_class):
-        super(EfficientNet_B6, self).__init__()
-        if pretrained is True:
-            self.model = EfficientNet.from_pretrained('efficientnet-b6')
-
-        self.l0 = nn.Linear(2304,n_class)
-
-    def forward(self, x):
-        '''
-        WIP
-        :param x:
-        :return:
-        '''
-        batch_size, _, _, _ = x.shape
-        x = self.model.extract_features(x)
-        x = F.adaptive_avg_pool2d(x, 1).reshape(batch_size,-1)
-        output = self.l0(x)
-
-        return output
+# class  EfficientNet_B6(nn.Module):
+#     def __init__(self,pretrained, n_class):
+#         super(EfficientNet_B6, self).__init__()
+#         if pretrained is True:
+#             self.model = EfficientNet.from_pretrained('efficientnet-b6')
+#
+#         self.l0 = nn.Linear(2304,n_class)
+#
+#     def forward(self, x):
+#         '''
+#         WIP
+#         :param x:
+#         :return:
+#         '''
+#         batch_size, _, _, _ = x.shape
+#         x = self.model.extract_features(x)
+#         x = F.adaptive_avg_pool2d(x, 1).reshape(batch_size,-1)
+#         output = self.l0(x)
+#
+#         return output
 
 
 
