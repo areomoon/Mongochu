@@ -29,7 +29,7 @@ parser.add_argument('--num_workers', default=4, type=int,
 parser.add_argument('--device', default='cuda', type=str,
                     help='device for train and eval')
 
-parser.add_argument('--base_model', default='se_resnext101_32x4d_eval', type=str,
+parser.add_argument('--base_model', default='efficientnet_b6_eval', type=str,
                     help='base model to use')
 
 parser.add_argument('--lr', default=1e-4, type=float,
