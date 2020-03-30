@@ -153,7 +153,6 @@ def main():
         num_workers=args.num_workers,
     )
 
-    # optimizer = Adam(model.parameters(),lr=args.lr)
     optimizer = Adam(model.parameters(), lr=0.001, betas=(0.9, 0.999), eps=1e-08, weight_decay=0.01, amsgrad=False)
     scheduler = lr_scheduler.ReduceLROnPlateau(optimizer, mode='max', patience=5, factor=0.3)
 
