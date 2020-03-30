@@ -6,7 +6,7 @@ from tqdm import tqdm
 import argparse
 from dataset import ImageDataset
 from torch.utils.data import DataLoader
-from torch.optim import Adam,lr_scheduler
+from torch.optim import Adam, lr_scheduler
 from model_dispatcher import MODEL_DISPATCHER
 from sklearn.metrics import confusion_matrix,accuracy_score
 
@@ -24,10 +24,10 @@ parser.add_argument('--fold_file', default='../AIMango_sample/train_folds.csv', 
 parser.add_argument('--pkl_file', default='../AIMango_sample/pkl_files', type=str,
                     help='path to input data')
 
-parser.add_argument('--image_height', default=137, type=int,
+parser.add_argument('--image_height', default=224, type=int,
                     help='input image height')
 
-parser.add_argument('--image_width', default=236, type=int,
+parser.add_argument('--image_width', default=224, type=int,
                     help='input image width')
 
 parser.add_argument('--num_workers', default=4, type=int,
@@ -45,7 +45,7 @@ parser.add_argument('--lr', default=1e-4, type=float,
 parser.add_argument('--epochs', default=3, type=int,
                     help='Number of epoch for training')
 
-parser.add_argument('--train_batch_size', default=256, type=int,
+parser.add_argument('--train_batch_size', default=64, type=int,
                     help='Batch size for training')
 
 parser.add_argument('--test_batch_size', default=128, type=int,
@@ -153,7 +153,7 @@ def main():
         num_workers=args.num_workers,
     )
 
-    optimizer = Adam(model.parameters(),lr=args.lr)
+    optimizer = Adam(model.parameters(), lr=0.001, betas=(0.9, 0.999), eps=1e-08, weight_decay=0.01, amsgrad=False)
     scheduler = lr_scheduler.ReduceLROnPlateau(optimizer, mode='max', patience=5, factor=0.3)
 
     if torch.cuda.device_count() > 1 :

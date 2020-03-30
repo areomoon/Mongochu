@@ -1,6 +1,7 @@
 # Mongochu
 
 Hi all, please feel free to add notes
+- [areomoon pipeline documentation](https://github.com/areomoon/Mongochu/tree/master/areomoon)
 
 ## Reference
 - [HackMD Group Note](https://hackmd.io/dzIfUXFIR5KU-0vfSTUE_w)
