@@ -63,9 +63,9 @@ class SE_ResNext101_32x4d(nn.Module):
 
         return output
 
-class  EfficientNet_B4(nn.Module):
+class  EfficientNet_B5(nn.Module):
     def __init__(self,pretrained, n_class):
-        super(EfficientNet_B4, self).__init__()
+        super(EfficientNet_B5, self).__init__()
         if pretrained is True:
             self.model = EfficientNet.from_pretrained('efficientnet-b4')
 

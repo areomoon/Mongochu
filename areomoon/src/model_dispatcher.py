@@ -9,6 +9,6 @@ MODEL_DISPATCHER = {
     'se_resnext101_32x4d_eval':models.SE_ResNext101_32x4d(pretrained=False, n_class=3),
     'efficientnet_b6':models.EfficientNet_B6(pretrained=True, n_class=3),
     'efficientnet_b6_eval':models.EfficientNet_B6(pretrained=True, n_class=3),
-    'efficientnet_b4': models.EfficientNet_B4(pretrained=True, n_class=3),
-    'efficientnet_b4_eval': models.EfficientNet_B4(pretrained=True, n_class=3)
+    'efficientnet_b5': models.EfficientNet_B5(pretrained=True, n_class=3),
+    'efficientnet_b5_eval': models.EfficientNet_B5(pretrained=True, n_class=3)
 }
