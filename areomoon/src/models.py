@@ -9,7 +9,7 @@ class  EfficientNet_B6(nn.Module):
         if pretrained is True:
             self.model = EfficientNet.from_pretrained('efficientnet-b6')
 
-        self.l0 = nn.Linear(1280,n_class)
+        self.l0 = nn.Linear(2304,n_class)
 
     def forward(self, x):
         '''
