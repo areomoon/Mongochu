@@ -1,6 +1,29 @@
 import torch.nn as nn
 import pretrainedmodels
+from efficientnet_pytorch import EfficientNet
 from torch.nn import functional as F
+
+class  EfficientNet_B6(nn.Module):
+    def __init__(self,pretrained, n_class):
+        super(EfficientNet_B6, self).__init__()
+        if pretrained is True:
+            self.model = EfficientNet.from_pretrained('efficientnet-b6')
+
+        self.l0 = nn.Linear(1280,n_class)
+
+    def forward(self, x):
+        '''
+        WIP
+        :param x:
+        :return:
+        '''
+        batch_size, _, _, _ = x.shape
+        x = self.model.extract_features(x)
+        x = F.adaptive_avg_pool2d(x, 1).reshape(batch_size,-1)
+        output = self.l0(x)
+
+        return output
+
 
 class ResNet34(nn.Module):
     def __init__(self,pretrained, n_class):
@@ -60,4 +83,8 @@ class SE_ResNext101_32x4d(nn.Module):
         output = self.l0(x)
 
         return output
+
+
+
+
 

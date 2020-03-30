@@ -24,10 +24,10 @@ parser.add_argument('--fold_file', default='../AIMango_sample/train_folds.csv', 
 parser.add_argument('--pkl_file', default='../AIMango_sample/pkl_files', type=str,
                     help='path to input data')
 
-parser.add_argument('--image_height', default=137, type=int,
+parser.add_argument('--image_height', default=224, type=int,
                     help='input image height')
 
-parser.add_argument('--image_width', default=236, type=int,
+parser.add_argument('--image_width', default=224, type=int,
                     help='input image width')
 
 parser.add_argument('--num_workers', default=4, type=int,
@@ -36,7 +36,7 @@ parser.add_argument('--num_workers', default=4, type=int,
 parser.add_argument('--device', default='cuda', type=str,
                     help='device for train and eval')
 
-parser.add_argument('--base_model', default='se_resnext101_32x4d', type=str,
+parser.add_argument('--base_model', default='efficientnet_b6', type=str,
                     help='base model to use')
 
 parser.add_argument('--lr', default=1e-4, type=float,
