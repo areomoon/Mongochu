@@ -69,7 +69,7 @@ class  EfficientNet_B4(nn.Module):
         if pretrained is True:
             self.model = EfficientNet.from_pretrained('efficientnet-b4')
 
-        self.l0 = nn.Linear(2304,n_class)
+        self.l0 = nn.Linear(1792,n_class)
 
     def forward(self, x):
         '''
