@@ -36,7 +36,7 @@ parser.add_argument('--num_workers', default=4, type=int,
 parser.add_argument('--device', default='cuda', type=str,
                     help='device for train and eval')
 
-parser.add_argument('--base_model', default='efficientnet_b6', type=str,
+parser.add_argument('--base_model', default='efficientnet_b4', type=str,
                     help='base model to use')
 
 parser.add_argument('--lr', default=1e-4, type=float,
@@ -45,7 +45,7 @@ parser.add_argument('--lr', default=1e-4, type=float,
 parser.add_argument('--epochs', default=3, type=int,
                     help='Number of epoch for training')
 
-parser.add_argument('--train_batch_size', default=256, type=int,
+parser.add_argument('--train_batch_size', default=64, type=int,
                     help='Batch size for training')
 
 parser.add_argument('--test_batch_size', default=128, type=int,
