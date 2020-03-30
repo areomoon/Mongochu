@@ -6,7 +6,7 @@ from tqdm import tqdm
 import argparse
 from dataset import ImageDataset
 from torch.utils.data import DataLoader
-from torch.optim import Adam,lr_scheduler
+from torch.optim import Adam, AdamW, lr_scheduler
 from model_dispatcher import MODEL_DISPATCHER
 from sklearn.metrics import confusion_matrix,accuracy_score
 
@@ -153,7 +153,8 @@ def main():
         num_workers=args.num_workers,
     )
 
-    optimizer = Adam(model.parameters(),lr=args.lr)
+    # optimizer = Adam(model.parameters(),lr=args.lr)
+    optimizer = AdamW(model.parameters(), lr=0.001, betas=(0.9, 0.999), eps=1e-08, weight_decay=0.01, amsgrad=False)
     scheduler = lr_scheduler.ReduceLROnPlateau(optimizer, mode='max', patience=5, factor=0.3)
 
     if torch.cuda.device_count() > 1 :
