@@ -67,9 +67,9 @@ class  EfficientNet_B5(nn.Module):
     def __init__(self,pretrained, n_class):
         super(EfficientNet_B5, self).__init__()
         if pretrained is True:
-            self.model = EfficientNet.from_pretrained('efficientnet-b4')
+            self.model = EfficientNet.from_pretrained('efficientnet-b5')
 
-        self.l0 = nn.Linear(1792,n_class)
+        self.l0 = nn.Linear(2048,n_class)
 
     def forward(self, x):
         '''
