@@ -39,7 +39,7 @@ parser.add_argument('--device', default='cuda', type=str,
 parser.add_argument('--base_model', default='se_resnext101_32x4d', type=str,
                     help='base model to use')
 
-parser.add_argument('--lr', default=1e-4, type=float,
+parser.add_argument('--lr', default=1e-3, type=float,
                     help='learning rate')
 
 parser.add_argument('--epochs', default=3, type=int,
@@ -153,7 +153,7 @@ def main():
         num_workers=args.num_workers,
     )
 
-    optimizer = Adam(model.parameters(), lr=0.001, betas=(0.9, 0.999), eps=1e-08, weight_decay=0.01, amsgrad=False)
+    optimizer = Adam(model.parameters(), lr=args.lr, betas=(0.9, 0.999), eps=1e-08, weight_decay=0.0001, amsgrad=False)
     scheduler = lr_scheduler.ReduceLROnPlateau(optimizer, mode='max', patience=5, factor=0.3)
 
     if torch.cuda.device_count() > 1 :
