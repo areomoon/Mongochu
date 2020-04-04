@@ -19,10 +19,10 @@ VALID_FOLDS = [4]
 
 parser = argparse.ArgumentParser(description='Mango Defection Classification With Pytorch')
 
-parser.add_argument('--fold_file', default='../AIMango_sample/train_folds.csv', type=str,
+parser.add_argument('--fold_file', default='../AIMango_img/train_folds.csv', type=str,
                     help='path to input data')
 
-parser.add_argument('--image_file', default='../AIMango_sample/C1-P1_Train', type=str,
+parser.add_argument('--image_file', default='../AIMango_img/C1-P1_Train', type=str,
                     help='path to input data')
 
 parser.add_argument('--image_height', default=137, type=int,
