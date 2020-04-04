@@ -176,6 +176,7 @@ def main():
     val_accu_list = []
     tr_loss_list = []
     # tr_accu_list = []
+    best_epoch = 0
     for epoch in range(args.epochs):
         tr_loss = train(dataset=train_dataset,dataloader=train_dataloader,model=model,optimizer=optimizer,device=args.device,loss_fn=loss_fn)
         print(f'Epoch_{epoch+1} Train Loss:{tr_loss}')
@@ -189,9 +190,11 @@ def main():
         val_loss_list.append(val_loss)
         val_accu_list.append(val_accu)
         if val_accu > val_accu_benchmark:
+            best_epoch = epoch+1
             print(f'save {args.base_model} model on epoch {epoch+1}')
-            torch.save(model.state_dict(), os.path.join(args.save_dir, f'{args.base_model}_fold_{VALID_FOLDS[0]}_epoch_{epoch+1}.bin'))
+            torch.save(model.state_dict(), os.path.join(args.save_dir, f'{args.base_model}_fold_{VALID_FOLDS[0]}.bin'))
             val_accu_benchmark = val_accu
+    print(f'Save the best model on epoch {best_epoch}')
 
     stored_metrics = {'train': {
                                 'tr_loss_list': tr_loss_list
