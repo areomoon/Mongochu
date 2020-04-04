@@ -112,10 +112,12 @@ def evaluate(dataset, dataloader, model, device,loss_fn, tag):
     cfm = np.round(confusion_matrix(y_true=tgt,y_pred=pred,labels=[0,1,2]),3)
     accu = accuracy_score(y_true=tgt,y_pred=pred)
     if tag == 'train':
+        print(f'Confusion Matrix of {tag}')
         print(cfm)
         print('General Accuracy score on Train: {:5.4f}'.format(accu))
         return final_loss/counter, accu
     elif tag == 'valid':
+        print(f'Confusion Matrix of {tag}')
         print(cfm)
         print('General Accuracy score on Valid: {:5.4f}'.format(accu))
         return final_loss/counter, accu
@@ -179,9 +181,9 @@ def main():
     best_epoch = 0
     for epoch in range(args.epochs):
         tr_loss = train(dataset=train_dataset,dataloader=train_dataloader,model=model,optimizer=optimizer,device=args.device,loss_fn=loss_fn)
-        print(f'Epoch_{epoch+1} Train Loss:{tr_loss}')
         # tr_loss, tr_accu = evaluate(dataset=train_dataset, dataloader=train_dataloader, model=model, device=args.device,loss_fn=loss_fn, tag='train')
         val_loss, val_accu = evaluate(dataset=valid_dataset, dataloader=valid_dataloader, model=model, device=args.device,loss_fn=loss_fn, tag='valid')
+        print(f'Epoch_{epoch+1} Train Loss:{tr_loss}')
         print(f'Epoch_{epoch+1} Valid Loss:{val_loss}')
         scheduler.step(val_loss)
         
