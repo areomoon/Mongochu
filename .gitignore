@@ -10,3 +10,4 @@ venv/
 .DS_Store
 *.zip
 AImongo_img
+.vscode
