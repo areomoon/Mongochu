@@ -43,7 +43,10 @@ class ImageDataset:
         return len(self.img_id)
 
     def __getitem__(self, item):
+        print(f"{self.image_file_path}/{self.img_id[item]}.jpg")
         img_bgr = cv2.imread(f"{self.image_file_path}/{self.img_id[item]}.jpg")
+        print('===')
+        print(img_bgr)
         img_rgb = img_bgr[:, :, [2, 1, 0]]
         image = self.aug(image=np.array(img_rgb))['image']
         image = np.transpose(image, [2,0,1]).astype(float) # for using torchvision model
