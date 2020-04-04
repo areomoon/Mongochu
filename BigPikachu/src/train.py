@@ -65,7 +65,10 @@ def loss_fn(outputs,target):
 
 def train(dataset, dataloader, model, optimizer, device, loss_fn):
     model.train()
+    final_loss = 0
+    counter = 0
     for batch_ind, d in tqdm(enumerate(dataloader),total=int(len(dataset))/dataloader.batch_size):
+        counter += 1
         image = d['image']
         label = d['label']
         image = image.to(device,dtype=torch.float)
@@ -74,8 +77,11 @@ def train(dataset, dataloader, model, optimizer, device, loss_fn):
         outputs = model(image)
 
         loss = loss_fn(outputs,target)
+        final_loss += loss
+
         loss.backward()
-        optimizer.step()
+        optimizer.step()       
+    return final_loss/counter
 
 
 def evaluate(dataset, dataloader, model, device,loss_fn, tag):
@@ -169,16 +175,17 @@ def main():
     val_loss_list = []
     val_accu_list = []
     tr_loss_list = []
-    tr_accu_list = []
+    # tr_accu_list = []
     for epoch in range(args.epochs):
-        train(dataset=train_dataset,dataloader=train_dataloader,model=model,optimizer=optimizer,device=args.device,loss_fn=loss_fn)
-        tr_loss, tr_accu = evaluate(dataset=train_dataset, dataloader=train_dataloader, model=model, device=args.device,loss_fn=loss_fn, tag='train')
+        tr_loss = train(dataset=train_dataset,dataloader=train_dataloader,model=model,optimizer=optimizer,device=args.device,loss_fn=loss_fn)
+        print(f'Epoch_{epoch+1} Train Loss:{tr_loss}')
+        # tr_loss, tr_accu = evaluate(dataset=train_dataset, dataloader=train_dataloader, model=model, device=args.device,loss_fn=loss_fn, tag='train')
         val_loss, val_accu = evaluate(dataset=valid_dataset, dataloader=valid_dataloader, model=model, device=args.device,loss_fn=loss_fn, tag='valid')
         print(f'Epoch_{epoch+1} Valid Loss:{val_loss}')
         scheduler.step(val_loss)
         
         tr_loss_list.append(tr_loss)
-        tr_accu_list.append(tr_accu)        
+        # tr_accu_list.append(tr_accu)       
         val_loss_list.append(val_loss)
         val_accu_list.append(val_accu)
         if val_accu > val_accu_benchmark:
@@ -187,7 +194,8 @@ def main():
             val_accu_benchmark = val_accu
 
     stored_metrics = {'train': {
-                                'tr_loss_list': tr_loss_list, 'tr_accu_list': tr_accu_list
+                                'tr_loss_list': tr_loss_list
+                                # , 'tr_accu_list': tr_accu_list
                             },
                     'valid': {
                                 'val_loss_list': val_loss_list, 'val_accu_list': val_accu_list
@@ -195,7 +203,7 @@ def main():
                   }
 
     # pickle a variable to a file
-    file = open('stored_metrics.pickle', 'wb')
+    file = open(os.path.join(args.save_dir, 'stored_metrics.pickle'), 'wb')
     pickle.dump(stored_metrics, file)
     file.close()
 
