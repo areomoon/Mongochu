@@ -27,7 +27,7 @@ class CAM:
 
     def _forward(self, img):
         with torch.no_grad():
-            features = self.model.model._features(img)  # (1, c, h, w)
+            features = self.model.model.features(img)  # (1, c, h, w)
             conv_features = F.adaptive_avg_pool2d(features, 1).reshape(1, -1)
             logits = self.model.l0(conv_features)  # (1, n_classes)
             prediction = F.softmax(logits, dim=-1)
