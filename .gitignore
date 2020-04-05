@@ -10,3 +10,5 @@ venv/
 .DS_Store
 *.zip
 AImongo_img
+.vscode
+BigPikachu/src/__pycache__

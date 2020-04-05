@@ -19,10 +19,10 @@ VALID_FOLDS = [4]
 
 parser = argparse.ArgumentParser(description='Mango Defection Classification With Pytorch')
 
-parser.add_argument('--fold_file', default='../AIMango_sample/train_folds.csv', type=str,
+parser.add_argument('--fold_file', default='../AIMango_img/train_folds.csv', type=str,
                     help='path to input data')
 
-parser.add_argument('--image_file', default='../AIMango_sample/C1-P1_Train', type=str,
+parser.add_argument('--image_file', default='../AIMango_img/C1-P1_Train', type=str,
                     help='path to input data')
 
 parser.add_argument('--image_height', default=137, type=int,
@@ -65,7 +65,10 @@ def loss_fn(outputs,target):
 
 def train(dataset, dataloader, model, optimizer, device, loss_fn):
     model.train()
+    final_loss = 0
+    counter = 0
     for batch_ind, d in tqdm(enumerate(dataloader),total=int(len(dataset))/dataloader.batch_size):
+        counter += 1
         image = d['image']
         label = d['label']
         image = image.to(device,dtype=torch.float)
@@ -74,8 +77,11 @@ def train(dataset, dataloader, model, optimizer, device, loss_fn):
         outputs = model(image)
 
         loss = loss_fn(outputs,target)
+        final_loss += loss
+
         loss.backward()
-        optimizer.step()
+        optimizer.step()       
+    return final_loss/counter
 
 
 def evaluate(dataset, dataloader, model, device,loss_fn, tag):
@@ -106,10 +112,12 @@ def evaluate(dataset, dataloader, model, device,loss_fn, tag):
     cfm = np.round(confusion_matrix(y_true=tgt,y_pred=pred,labels=[0,1,2]),3)
     accu = accuracy_score(y_true=tgt,y_pred=pred)
     if tag == 'train':
+        print(f'Confusion Matrix of {tag}')
         print(cfm)
         print('General Accuracy score on Train: {:5.4f}'.format(accu))
         return final_loss/counter, accu
     elif tag == 'valid':
+        print(f'Confusion Matrix of {tag}')
         print(cfm)
         print('General Accuracy score on Valid: {:5.4f}'.format(accu))
         return final_loss/counter, accu
@@ -169,25 +177,30 @@ def main():
     val_loss_list = []
     val_accu_list = []
     tr_loss_list = []
-    tr_accu_list = []
+    # tr_accu_list = []
+    best_epoch = 0
     for epoch in range(args.epochs):
-        train(dataset=train_dataset,dataloader=train_dataloader,model=model,optimizer=optimizer,device=args.device,loss_fn=loss_fn)
-        tr_loss, tr_accu = evaluate(dataset=train_dataset, dataloader=train_dataloader, model=model, device=args.device,loss_fn=loss_fn, tag='train')
+        tr_loss = train(dataset=train_dataset,dataloader=train_dataloader,model=model,optimizer=optimizer,device=args.device,loss_fn=loss_fn)
+        # tr_loss, tr_accu = evaluate(dataset=train_dataset, dataloader=train_dataloader, model=model, device=args.device,loss_fn=loss_fn, tag='train')
         val_loss, val_accu = evaluate(dataset=valid_dataset, dataloader=valid_dataloader, model=model, device=args.device,loss_fn=loss_fn, tag='valid')
+        print(f'Epoch_{epoch+1} Train Loss:{tr_loss}')
         print(f'Epoch_{epoch+1} Valid Loss:{val_loss}')
         scheduler.step(val_loss)
         
         tr_loss_list.append(tr_loss)
-        tr_accu_list.append(tr_accu)        
+        # tr_accu_list.append(tr_accu)       
         val_loss_list.append(val_loss)
         val_accu_list.append(val_accu)
         if val_accu > val_accu_benchmark:
+            best_epoch = epoch+1
             print(f'save {args.base_model} model on epoch {epoch+1}')
             torch.save(model.state_dict(), os.path.join(args.save_dir, f'{args.base_model}_fold_{VALID_FOLDS[0]}.bin'))
             val_accu_benchmark = val_accu
+    print(f'Save the best model on epoch {best_epoch}')
 
     stored_metrics = {'train': {
-                                'tr_loss_list': tr_loss_list, 'tr_accu_list': tr_accu_list
+                                'tr_loss_list': tr_loss_list
+                                # , 'tr_accu_list': tr_accu_list
                             },
                     'valid': {
                                 'val_loss_list': val_loss_list, 'val_accu_list': val_accu_list
@@ -195,7 +208,7 @@ def main():
                   }
 
     # pickle a variable to a file
-    file = open('stored_metrics.pickle', 'wb')
+    file = open(os.path.join(args.save_dir, 'stored_metrics.pickle'), 'wb')
     pickle.dump(stored_metrics, file)
     file.close()
 
