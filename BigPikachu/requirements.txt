@@ -6,4 +6,4 @@ albumentations
 pretrainedmodels
 iterative-stratification
 scikit-learn
-
+jupyter
