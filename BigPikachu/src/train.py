@@ -5,7 +5,7 @@ import torch
 import torch.nn as nn
 from tqdm import tqdm
 import argparse
-from dataset import ImageDataset
+from dataset import ImageExpDataset
 from torch.utils.data import DataLoader
 from torch.optim import Adam,lr_scheduler
 from model_dispatcher import MODEL_DISPATCHER
@@ -133,7 +133,7 @@ def main():
     model.to(args.device)
     # print(f'Loading pretrained model: {args.base_model}')
 
-    train_dataset = ImageDataset(
+    train_dataset = ImageExpDataset(
         fold_file = args.fold_file,
         image_file_path = args.image_file,
         folds=TRAIN_FOLDS,
@@ -150,7 +150,7 @@ def main():
         num_workers=args.num_workers,
     )
 
-    valid_dataset = ImageDataset(
+    valid_dataset = ImageExpDataset(
         fold_file=args.fold_file,
         image_file_path=args.image_file,
         folds=VALID_FOLDS,

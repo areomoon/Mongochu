@@ -9,7 +9,6 @@ class ResNet34(nn.Module):
             self.model = pretrainedmodels.__dict__["resnet34"](pretrained='imagenet')
         else:
             self.model = pretrainedmodels.__dict__["resnet34"](pretrained=None)
-
         self.l0 = nn.Linear(512,n_class)
 
     def forward(self, x):
