@@ -6,6 +6,25 @@ import albumentations
 import os
 import glob
 import cv2
+from albumentations.core.transforms_interface import ImageOnlyTransform
+
+def cutoutside(img,bin_width, fill_value):
+    # Make a copy of the input image since we don't want to modify it directly
+    img = img.copy()
+    h, w = img.shape[:2]
+    img[:,0:bin_width,:] = fill_value
+    img[:,h-bin_width:h,:] = fill_value
+    img[0:bin_width,:,:] = fill_value
+    img[w-bin_width:w,:,:] = fill_value
+    return img
+
+class OutsideCutout(ImageOnlyTransform):
+    def __init__(self, bin_size=30, always_apply=False, fill_value=0, p=0.5):
+        super(OutsideCutout, self).__init__(always_apply, p)
+        self.bin_size= bin_size
+        self.fill_values = fill_value
+    def apply(self, image, **params):
+        return cutoutside(image,bin_width=self.bin_size, fill_value=self.fill_values)
 
 class ImageDataset:
     def __init__(self,fold_file, pkl_file_path, folds, image_height, image_width, mean, std):
@@ -89,25 +108,19 @@ class ImageExpDataset:
         self.img_id = df['image_id'].apply(lambda x: x.split('.')[0]).values
         self.labels = df['labels'].apply(lambda x: x[-1]).map(class_map).values
 
-        if len(folds)==1:
-            # validation set
-            self.aug = albumentations.Compose([
-                albumentations.Resize(image_height,image_width,always_apply=True),
-                albumentations.Normalize(mean,std,always_apply=True),
 
-            ])
-        else:
-            # training set
-            self.aug = albumentations.Compose([
-                albumentations.Resize(image_height, image_width, always_apply=True),
-                albumentations.RandomShadow(shadow_roi=(0, 0.85, 1, 1), p=0.5),
-                albumentations.RandomBrightnessContrast(brightness_limit=0.1, contrast_limit=0.1, p=0.5),
-                albumentations.ShiftScaleRotate(shift_limit=0.0625,
-                                                scale_limit=0.1,
-                                                rotate_limit=5,
-                                                p=0.9),
-                albumentations.Normalize(mean, std, always_apply=True)
-            ])
+        # training set
+        self.aug = albumentations.Compose([
+            albumentations.Resize(image_height, image_width, always_apply=True),
+            albumentations.RandomShadow(shadow_roi=(0, 0.85, 1, 1), p=0.5),
+            albumentations.RandomBrightnessContrast(brightness_limit=0.1, contrast_limit=0.1, p=0.5),
+            albumentations.ShiftScaleRotate(shift_limit=0.0625,
+                                            scale_limit=0.1,
+                                            rotate_limit=5,
+                                            p=0.9),
+            OutsideCutout(bin_size=30, always_apply=True),
+            albumentations.Normalize(mean, std, always_apply=True)
+        ])
 
     def __len__(self):
         return len(self.img_id)
