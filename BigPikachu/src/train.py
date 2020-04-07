@@ -177,7 +177,6 @@ def main():
         model = nn.DataParallel()
 
     val_accu_benchmark = 0.34
-    val_loss_benchmark = 99999
     val_loss_list = []
     val_accu_list = []
     tr_loss_list = []
@@ -195,11 +194,11 @@ def main():
         # tr_accu_list.append(tr_accu)       
         val_loss_list.append(val_loss)
         val_accu_list.append(val_accu)
-        if val_loss > val_loss_benchmark:
+        if val_accu > val_accu_benchmark:
             best_epoch = epoch+1
             print(f'save {args.base_model} model on epoch {epoch+1}')
             torch.save(model.state_dict(), os.path.join(args.save_dir, f'{args.base_model}_fold_{VALID_FOLDS[0]}.bin'))
-            val_loss_benchmark = val_loss
+            val_accu_benchmark = val_accu
     print(f'Save the best model on epoch {best_epoch}')
 
     stored_metrics = {'train': {
