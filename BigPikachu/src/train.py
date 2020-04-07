@@ -10,6 +10,7 @@ from torch.utils.data import DataLoader
 from torch.optim import Adam,lr_scheduler
 from model_dispatcher import MODEL_DISPATCHER
 from sklearn.metrics import confusion_matrix,accuracy_score
+from torchtoolbox.nn import LabelSmoothingLoss
 
 MODEL_MEAN = (0.485,0.456,0.406)
 MODEL_STD = (0.229,0.224,0.225)
@@ -60,6 +61,8 @@ parser.add_argument('--save_dir', default='../weights', type=str,
 
 args = parser.parse_args()
 
+
+LSLoss = LabelSmoothingLoss(3, smoothing=0.1)
 
 def loss_fn(outputs,target):
     loss = nn.CrossEntropyLoss()(outputs, target)
@@ -183,7 +186,7 @@ def main():
     # tr_accu_list = []
     best_epoch = 0
     for epoch in range(args.epochs):
-        tr_loss = train(dataset=train_dataset,dataloader=train_dataloader,model=model,optimizer=optimizer,device=args.device,loss_fn=loss_fn)
+        tr_loss = train(dataset=train_dataset,dataloader=train_dataloader,model=model,optimizer=optimizer,device=args.device,loss_fn= LSLoss)
         # tr_loss, tr_accu = evaluate(dataset=train_dataset, dataloader=train_dataloader, model=model, device=args.device,loss_fn=loss_fn, tag='train')
         val_loss, val_accu = evaluate(dataset=valid_dataset, dataloader=valid_dataloader, model=model, device=args.device,loss_fn=loss_fn, tag='valid')
         print(f'Epoch_{epoch+1} Train Loss:{tr_loss}')

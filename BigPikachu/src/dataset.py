@@ -124,7 +124,7 @@ class ImageExpDataset:
                 albumentations.RandomShadow(shadow_roi=(0, 0.85, 1, 1), p=0.5),
                 albumentations.VerticalFlip(p=0.5),
                 albumentations.HorizontalFlip(p=0.5),
-                albumentations.RandomRotate90(p=0.5),
+                albumentations.OpticalDistortion(distort_limit=0.10,shift_limit=0.10,p=0.5),
                 albumentations.RandomBrightnessContrast(brightness_limit=0.10, contrast_limit=0.10, p=0.5),
                 albumentations.ShiftScaleRotate(shift_limit=0.0625,
                                                 scale_limit=0.1,
