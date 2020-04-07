@@ -43,6 +43,9 @@ parser.add_argument('--base_model', default='vgg16', type=str,
 parser.add_argument('--lr', default=1e-4, type=float,
                     help='learning rate')
 
+parser.add_argument('--weight_decay', default=5e-5, type=float,
+                    help='regularization')
+
 parser.add_argument('--epochs', default=3, type=int,
                     help='Number of epoch for training')
 
@@ -167,7 +170,7 @@ def main():
         num_workers=args.num_workers,
     )
 
-    optimizer = Adam(model.parameters(),lr=args.lr)
+    optimizer = Adam(model.parameters(),lr=args.lr, weight_decay=args.weight_decay)
     scheduler = lr_scheduler.ReduceLROnPlateau(optimizer, mode='max', patience=5, factor=0.3)
 
     if torch.cuda.device_count() > 1 :
