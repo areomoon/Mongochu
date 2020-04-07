@@ -6,6 +6,25 @@ import albumentations
 import os
 import glob
 import cv2
+from albumentations.core.transforms_interface import ImageOnlyTransform
+
+def cutoutside(img,bin_width, fill_value):
+    # Make a copy of the input image since we don't want to modify it directly
+    img = img.copy()
+    h, w = img.shape[:2]
+    img[:,0:bin_width,:] = fill_value
+    img[:,h-bin_width:h,:] = fill_value
+    img[0:bin_width,:,:] = fill_value
+    img[w-bin_width:w,:,:] = fill_value
+    return img
+
+class OutsideCutout(ImageOnlyTransform):
+    def __init__(self, bin_size=30, always_apply=False, fill_value=0, p=0.5):
+        super(OutsideCutout, self).__init__(always_apply, p)
+        self.bin_size= bin_size
+        self.fill_values = fill_value
+    def apply(self, image, **params):
+        return cutoutside(image,bin_width=self.bin_size, fill_value=self.fill_values)
 
 class ImageDataset:
     def __init__(self,fold_file, pkl_file_path, folds, image_height, image_width, mean, std):
@@ -50,7 +69,6 @@ class ImageDataset:
             'image':torch.tensor(image, dtype=torch.float),
             'label': torch.tensor(self.labels[item], dtype=torch.long)
         }
-
 
 
 class ImageTestDataset:
@@ -100,6 +118,7 @@ class ImageExpDataset:
                                             scale_limit=0.1,
                                             rotate_limit=5,
                                             p=0.9),
+            OutsideCutout(bin_size=30, always_apply=True),
             albumentations.Normalize(mean, std, always_apply=True)
         ])
 

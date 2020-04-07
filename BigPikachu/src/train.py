@@ -5,11 +5,12 @@ import torch
 import torch.nn as nn
 from tqdm import tqdm
 import argparse
-from dataset import ImageDataset
+from dataset import ImageExpDataset
 from torch.utils.data import DataLoader
 from torch.optim import Adam,lr_scheduler
 from model_dispatcher import MODEL_DISPATCHER
 from sklearn.metrics import confusion_matrix,accuracy_score
+from torchtoolbox.nn import LabelSmoothingLoss
 
 MODEL_MEAN = (0.485,0.456,0.406)
 MODEL_STD = (0.229,0.224,0.225)
@@ -43,6 +44,9 @@ parser.add_argument('--base_model', default='vgg16', type=str,
 parser.add_argument('--lr', default=1e-4, type=float,
                     help='learning rate')
 
+parser.add_argument('--weight_decay', default=5e-5, type=float,
+                    help='regularization')
+
 parser.add_argument('--epochs', default=3, type=int,
                     help='Number of epoch for training')
 
@@ -57,6 +61,8 @@ parser.add_argument('--save_dir', default='../weights', type=str,
 
 args = parser.parse_args()
 
+
+LSLoss = LabelSmoothingLoss(3, smoothing=0.1)
 
 def loss_fn(outputs,target):
     loss = nn.CrossEntropyLoss()(outputs, target)
@@ -133,7 +139,7 @@ def main():
     model.to(args.device)
     # print(f'Loading pretrained model: {args.base_model}')
 
-    train_dataset = ImageDataset(
+    train_dataset = ImageExpDataset(
         fold_file = args.fold_file,
         image_file_path = args.image_file,
         folds=TRAIN_FOLDS,
@@ -150,7 +156,7 @@ def main():
         num_workers=args.num_workers,
     )
 
-    valid_dataset = ImageDataset(
+    valid_dataset = ImageExpDataset(
         fold_file=args.fold_file,
         image_file_path=args.image_file,
         folds=VALID_FOLDS,
@@ -167,7 +173,7 @@ def main():
         num_workers=args.num_workers,
     )
 
-    optimizer = Adam(model.parameters(),lr=args.lr)
+    optimizer = Adam(model.parameters(),lr=args.lr, weight_decay=args.weight_decay)
     scheduler = lr_scheduler.ReduceLROnPlateau(optimizer, mode='max', patience=5, factor=0.3)
 
     if torch.cuda.device_count() > 1 :
