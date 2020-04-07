@@ -62,7 +62,7 @@ parser.add_argument('--save_dir', default='../weights', type=str,
 args = parser.parse_args()
 
 
-LSLoss = LabelSmoothingLoss(3, smoothing=0.3)
+LSLoss = LabelSmoothingLoss(3, smoothing=0.1)
 
 def loss_fn(outputs,target):
     loss = nn.CrossEntropyLoss()(outputs, target)
