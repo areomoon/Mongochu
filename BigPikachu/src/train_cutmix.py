@@ -121,7 +121,7 @@ def train(dataset, dataloader, model, optimizer, device, loss_fn):
             loss = loss_fn(output, target_a) * lam + loss_fn(output, target_b) * (1. - lam)
         else:
             # compute output
-            outputs = model(image)
+            output = model(image)
             loss = loss_fn(output, target)
 
         final_loss += loss
