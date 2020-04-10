@@ -8,7 +8,7 @@ import argparse
 from dataset import ImageExpDataset
 from torch.utils.data import DataLoader
 from torch.optim import Adam,lr_scheduler
-from model_dispatcher import MODEL_DISPATCHER
+# from model_dispatcher import MODEL_DISPATCHER
 from sklearn.metrics import confusion_matrix,accuracy_score
 from torchtoolbox.nn import LabelSmoothingLoss
 
@@ -170,6 +170,15 @@ def evaluate(dataset, dataloader, model, device,loss_fn, tag):
         print('General Accuracy score on Valid: {:5.4f}'.format(accu))
         return final_loss/counter, accu
 
+def model_dispatcher(args.base_model):
+    if args.base_model == 'se_resnext101_32x4d':
+        return models.SE_ResNext101_32x4d(pretrained=True, n_class=3)
+
+    elif args.base_model == 'vgg16':
+        return models.VGG16(pretrained=True, n_class=3)
+
+    elif args.base_model == 'resnet34': 
+        return models.ResNet34(pretrained=True, n_class=3)
 
 def main():
 
@@ -177,7 +186,7 @@ def main():
         torch.backends.cudnn.benchmark = True #  should add to speed up the code when input array shape doesn't vary
         print('Using cudnn.benchmark.')
 
-    model = MODEL_DISPATCHER[args.base_model]
+    model = model_dispatcher(args.base_model)
     model.to(args.device)
     # print(f'Loading pretrained model: {args.base_model}')
 
