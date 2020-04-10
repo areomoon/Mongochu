@@ -107,6 +107,7 @@ def train(dataset, dataloader, model, optimizer, device, loss_fn):
 
         r = np.random.rand(1)
         if args.beta > 0 and r < args.cutmix_prob:
+            print('cutmix')
             # generate mixed sample
             lam = np.random.beta(args.beta, args.beta)
             rand_index = torch.randperm(image.size()[0]).cuda()
