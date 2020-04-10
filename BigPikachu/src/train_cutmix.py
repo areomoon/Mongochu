@@ -1,5 +1,6 @@
 import os
 import pickle
+import models
 import numpy as np
 import torch
 import torch.nn as nn
@@ -171,13 +172,13 @@ def evaluate(dataset, dataloader, model, device,loss_fn, tag):
         return final_loss/counter, accu
 
 def model_dispatcher(base_model):
-    if args.base_model == 'se_resnext101_32x4d':
+    if base_model == 'se_resnext101_32x4d':
         return models.SE_ResNext101_32x4d(pretrained=True, n_class=3)
 
-    elif args.base_model == 'vgg16':
+    elif base_model == 'vgg16':
         return models.VGG16(pretrained=True, n_class=3)
 
-    elif args.base_model == 'resnet34': 
+    elif base_model == 'resnet34': 
         return models.ResNet34(pretrained=True, n_class=3)
 
 def main():
