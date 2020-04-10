@@ -170,7 +170,7 @@ def evaluate(dataset, dataloader, model, device,loss_fn, tag):
         print('General Accuracy score on Valid: {:5.4f}'.format(accu))
         return final_loss/counter, accu
 
-def model_dispatcher(args.base_model):
+def model_dispatcher(base_model):
     if args.base_model == 'se_resnext101_32x4d':
         return models.SE_ResNext101_32x4d(pretrained=True, n_class=3)
 
