@@ -118,7 +118,7 @@ class ImageExpDataset:
                                             scale_limit=0.1,
                                             rotate_limit=5,
                                             p=0.9),
-            # OutsideCutout(bin_size=30, always_apply=True),
+            OutsideCutout(bin_size=30, always_apply=True),
             albumentations.Normalize(mean, std, always_apply=True)
         ])
 
