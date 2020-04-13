@@ -95,7 +95,7 @@ def main():
     ids = list(chain(*image_id_list))
 
     sub = pd.DataFrame({'image_ids':ids, 'labels':preds})
-    sub.to_csv('resnet34_submission.csv',index=False)
+    sub.to_csv(f'{args.base_model}_submission.csv',index=False)
 
 if __name__ == '__main__':
     main()
