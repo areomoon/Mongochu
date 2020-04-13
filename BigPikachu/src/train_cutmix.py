@@ -97,10 +97,9 @@ def loss_fn(outputs,target):
 
 def train(dataset, dataloader, model, optimizer, device, loss_fn):
     model.train()
-    final_loss = 0
-    counter = 0
+    losses = AverageMeter()
+
     for batch_ind, d in tqdm(enumerate(dataloader),total=int(len(dataset))/dataloader.batch_size):
-        counter += 1
         image = d['image']
         label = d['label']
         image = image.to(device,dtype=torch.float)
@@ -125,23 +124,21 @@ def train(dataset, dataloader, model, optimizer, device, loss_fn):
             output = model(image)
             loss = loss_fn(output, target)
 
-        final_loss += loss
+        losses.update(loss.item(), image.size(0))
 
         optimizer.zero_grad()
         loss.backward()
         optimizer.step()       
-    return final_loss/counter
+    return losses.avg
 
 
 def evaluate(dataset, dataloader, model, device,loss_fn, tag):
     model.eval()
-    final_loss = 0
-    counter = 0
+    losses = AverageMeter()
     image_pred_list = []
     image_target_list = []
     with torch.no_grad():
         for batch_ind, d in tqdm(enumerate(dataloader),total=int(len(dataset))/dataloader.batch_size):
-            counter += 1
             image = d['image']
             label = d['label']
             image = image.to(device,dtype=torch.float)
@@ -149,7 +146,7 @@ def evaluate(dataset, dataloader, model, device,loss_fn, tag):
             outputs = model(image)
 
             loss = loss_fn(outputs,target)
-            final_loss += loss
+            losses.update(loss.item(), image.size(0))
 
             pred_label = torch.argmax(outputs, dim=1)
             image_pred_list.append(pred_label)
@@ -169,7 +166,7 @@ def evaluate(dataset, dataloader, model, device,loss_fn, tag):
         print(f'Confusion Matrix of {tag}')
         print(cfm)
         print('General Accuracy score on Valid: {:5.4f}'.format(accu))
-        return final_loss/counter, accu
+        return losses.avg, accu
 
 def model_dispatcher(base_model):
     if base_model == 'se_resnext101_32x4d':
@@ -180,6 +177,24 @@ def model_dispatcher(base_model):
 
     elif base_model == 'resnet34': 
         return models.ResNet34(pretrained=True, n_class=3)
+
+class AverageMeter(object):
+    """Computes and stores the average and current value"""
+
+    def __init__(self):
+        self.reset()
+
+    def reset(self):
+        self.val = 0
+        self.avg = 0
+        self.sum = 0
+        self.count = 0
+
+    def update(self, val, n=1):
+        self.val = val
+        self.sum += val * n
+        self.count += n
+        self.avg = self.sum / self.count
 
 def main():
 
