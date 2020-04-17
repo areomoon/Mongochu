@@ -80,7 +80,6 @@ class ImageTestDataset:
 
         # validation set
         self.aug = albumentations.Compose([
-            albumentations.CenterCrop(height=600, width=600),
             albumentations.Resize(image_height,image_width,always_apply=True),
             albumentations.Normalize(mean,std,always_apply=True),
         ])

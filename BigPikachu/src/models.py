@@ -20,7 +20,7 @@ class ResNet34(nn.Module):
         return output
 
 class VGG16(nn.Module):
-    def __init__(self,pretrained, n_class):
+    def __init__(self, pretrained, n_class):
         super(VGG16, self).__init__()
         if pretrained is True:
             self.model = pretrainedmodels.__dict__["vgg16"](pretrained='imagenet')
