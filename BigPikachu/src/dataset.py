@@ -80,7 +80,7 @@ class ImageTestDataset:
 
         # validation set
         self.aug = albumentations.Compose([
-            albumentations.CenterCrop(height=768, width=768),
+            albumentations.CenterCrop(height=600, width=600),
             albumentations.Resize(image_height,image_width,always_apply=True),
             albumentations.Normalize(mean,std,always_apply=True),
         ])
@@ -161,7 +161,7 @@ class ImageCutMixDataset:
         if len(folds)==1:
             # validation set
             self.aug = albumentations.Compose([
-                albumentations.CenterCrop(height=768, width=768),
+                albumentations.CenterCrop(height=600, width=600),
                 albumentations.Resize(image_height,image_width,always_apply=True),
                 albumentations.Normalize(mean,std,always_apply=True),
 
@@ -169,7 +169,7 @@ class ImageCutMixDataset:
         else:
             # training set
             self.aug = albumentations.Compose([
-                albumentations.CenterCrop(height=768, width=768),
+                albumentations.CenterCrop(height=600, width=600),
                 albumentations.Resize(image_height, image_width, always_apply=True),
                 albumentations.RandomShadow(shadow_roi=(0, 0.85, 1, 1), p=0.5),
                 albumentations.RandomBrightnessContrast(brightness_limit=0.10, contrast_limit=0.10, p=0.5),
