@@ -6,7 +6,7 @@ import torch
 import torch.nn as nn
 from tqdm import tqdm
 import argparse
-from dataset import ImageExpDataset
+from dataset import ImageCutMixDataset
 from torch.utils.data import DataLoader
 from torch.optim import Adam,lr_scheduler
 # from model_dispatcher import MODEL_DISPATCHER
@@ -206,7 +206,7 @@ def main():
     model.to(args.device)
     # print(f'Loading pretrained model: {args.base_model}')
 
-    train_dataset = ImageExpDataset(
+    train_dataset = ImageCutMixDataset(
         fold_file = args.fold_file,
         image_file_path = args.image_file,
         folds=TRAIN_FOLDS,
@@ -223,7 +223,7 @@ def main():
         num_workers=args.num_workers,
     )
 
-    valid_dataset = ImageExpDataset(
+    valid_dataset = ImageCutMixDataset(
         fold_file=args.fold_file,
         image_file_path=args.image_file,
         folds=VALID_FOLDS,

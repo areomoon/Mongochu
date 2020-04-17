@@ -80,6 +80,7 @@ class ImageTestDataset:
 
         # validation set
         self.aug = albumentations.Compose([
+            albumentations.crop(x_min=image_width*0.2, y_min=image_height *0.2, x_max=image_width*0.8, y_max=image_height*0.8),
             albumentations.Resize(image_height,image_width,always_apply=True),
             albumentations.Normalize(mean,std,always_apply=True),
         ])
@@ -120,6 +121,55 @@ class ImageExpDataset:
         else:
             # training set
             self.aug = albumentations.Compose([
+                albumentations.Resize(image_height, image_width, always_apply=True),
+                albumentations.RandomShadow(shadow_roi=(0, 0.85, 1, 1), p=0.5),
+                albumentations.RandomBrightnessContrast(brightness_limit=0.10, contrast_limit=0.10, p=0.5),
+                albumentations.ShiftScaleRotate(shift_limit=0.0625,
+                                                scale_limit=0.1,
+                                                rotate_limit=5,
+                                                p=0.9),
+                albumentations.Normalize(mean, std, always_apply=True)
+            ])
+
+    def __len__(self):
+        return len(self.img_id)
+
+    def __getitem__(self, item):
+        img_bgr = cv2.imread(f"{self.image_file_path}/{self.img_id[item]}.jpg")
+        img_rgb = img_bgr[:, :, [2, 1, 0]]
+        image = self.aug(image=np.array(img_rgb))['image']
+        image = np.transpose(image, [2, 0, 1]).astype(float)  # for using torchvision model
+        return {
+            'image': torch.tensor(image, dtype=torch.float),
+            'label': torch.tensor(self.labels[item], dtype=torch.long)
+        }
+
+class ImageCutMixDataset:
+    def __init__(self,fold_file, image_file_path, folds, image_height, image_width, mean, std):
+        self.image_file_path = image_file_path
+        self.fold_file = fold_file
+
+        df = pd.read_csv(self.fold_file)
+        df = df[['image_id','labels','kfold']]
+        df = df[df['kfold'].isin(folds)].reset_index(drop= True)
+
+        class_map = {'A':0,'B':1,'C':2}
+
+        self.img_id = df['image_id'].apply(lambda x: x.split('.')[0]).values # just take id of image_id
+        self.labels = df['labels'].apply(lambda x: x[-1]).map(class_map).values # encoding labels
+
+        if len(folds)==1:
+            # validation set
+            self.aug = albumentations.Compose([
+                albumentations.crop(x_min=image_width*0.2, y_min=image_height *0.2, x_max=image_width*0.8, y_max=image_height*0.8),
+                albumentations.Resize(image_height,image_width,always_apply=True),
+                albumentations.Normalize(mean,std,always_apply=True),
+
+            ])
+        else:
+            # training set
+            self.aug = albumentations.Compose([
+                albumentations.crop(x_min=image_width*0.2, y_min=image_height *0.2, x_max=image_width*0.8, y_max=image_height*0.8),
                 albumentations.Resize(image_height, image_width, always_apply=True),
                 albumentations.RandomShadow(shadow_roi=(0, 0.85, 1, 1), p=0.5),
                 albumentations.RandomBrightnessContrast(brightness_limit=0.10, contrast_limit=0.10, p=0.5),
