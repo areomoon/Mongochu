@@ -241,7 +241,6 @@ def main():
     train_dataloader = DataLoader(
         dataset=train_dataset,
         batch_size=args.train_batch_size,
-        shuffle=True,
         num_workers=args.num_workers,
         sampler=train_sampler
     )
@@ -261,7 +260,6 @@ def main():
     valid_dataloader = DataLoader(
         dataset=valid_dataset,
         batch_size=args.test_batch_size,
-        shuffle=False,
         num_workers=args.num_workers,
         sampler=valid_sampler
     )
