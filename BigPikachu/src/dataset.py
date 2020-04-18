@@ -143,32 +143,28 @@ class ImageExpDataset:
             'label': torch.tensor(self.labels[item], dtype=torch.long)
         }
 
-class ImageCutMixDataset:
-    def __init__(self,fold_file, image_file_path, folds, image_height, image_width, mean, std):
+class ImageExp2Dataset:
+    def __init__(self, phase, image_file_path, image_height, image_width, mean, std):
         self.image_file_path = image_file_path
-        self.fold_file = fold_file
+        self.train_label_path = os.path.join('../AIMango_img', 'train.csv') 
 
-        df = pd.read_csv(self.fold_file)
-        df = df[['image_id','labels','kfold']]
-        df = df[df['kfold'].isin(folds)].reset_index(drop= True)
+        df = pd.read_csv(self.train_label_path)
 
         class_map = {'A':0,'B':1,'C':2}
 
         self.img_id = df['image_id'].apply(lambda x: x.split('.')[0]).values # just take id of image_id
-        self.labels = df['labels'].apply(lambda x: x[-1]).map(class_map).values # encoding labels
+        self.labels = df['label'].apply(lambda x: x[-1]).map(class_map).values # encoding labels
 
-        if len(folds)==1:
+        if phase == 'valid':
             # validation set
             self.aug = albumentations.Compose([
-                albumentations.CenterCrop(height=600, width=600),
                 albumentations.Resize(image_height,image_width,always_apply=True),
                 albumentations.Normalize(mean,std,always_apply=True),
 
             ])
-        else:
+        elif phase == 'train':
             # training set
             self.aug = albumentations.Compose([
-                albumentations.CenterCrop(height=600, width=600),
                 albumentations.Resize(image_height, image_width, always_apply=True),
                 albumentations.RandomShadow(shadow_roi=(0, 0.85, 1, 1), p=0.5),
                 albumentations.RandomBrightnessContrast(brightness_limit=0.10, contrast_limit=0.10, p=0.5),
