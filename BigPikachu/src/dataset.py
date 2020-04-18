@@ -144,11 +144,10 @@ class ImageExpDataset:
         }
 
 class ImageExp2Dataset:
-    def __init__(self, phase, image_file_path, image_height, image_width, mean, std):
+    def __init__(self, phase, train_file, image_file_path, image_height, image_width, mean, std):
         self.image_file_path = image_file_path
-        self.train_label_path = os.path.join('../AIMango_img', 'train.csv') 
 
-        df = pd.read_csv(self.train_label_path)
+        df = pd.read_csv(train_file)
 
         class_map = {'A':0,'B':1,'C':2}
 

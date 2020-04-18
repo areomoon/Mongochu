@@ -23,7 +23,7 @@ VALID_FOLDS = [4]
 
 parser = argparse.ArgumentParser(description='Mango Defection Classification With Pytorch')
 
-parser.add_argument('--fold_file', default='../AIMango_img/train_folds.csv', type=str,
+parser.add_argument('--train_file', default='../AIMango_img/train.csv', type=str,
                     help='path to input data')
 
 parser.add_argument('--image_file', default='../AIMango_img/C1-P1_Train', type=str,
@@ -59,7 +59,7 @@ parser.add_argument('--train_batch_size', default=256, type=int,
 parser.add_argument('--test_batch_size', default=128, type=int,
                     help='Batch size for training')
 
-parser.add_argument('--test_size', default=0.2, type=int,
+parser.add_argument('--test_size', default=0.2, type=float,
                     help='proportion of test size')
 
 parser.add_argument('--save_dir', default='../weights', type=str,
@@ -202,8 +202,7 @@ class AverageMeter(object):
         self.avg = self.sum / self.count
 
 def get_train_valid_indice(dataset_size=581777, test_size=0.2):
-    train_label_path = os.path.join('../AIMango_img', 'train.csv') 
-    df_tr = pd.read_csv(train_label_path)
+    df_tr = pd.read_csv(args.train_file)
     
     indice = df_tr.index
     label = df_tr.label
@@ -230,6 +229,7 @@ def main():
     train_dataset = ImageExp2Dataset(
         # fold_file = args.fold_file,
         phase = 'train',
+        train_file = args.train_file,
         image_file_path = args.image_file,
         # folds=TRAIN_FOLDS,
         image_height=args.image_height,
@@ -249,6 +249,7 @@ def main():
     valid_dataset = ImageExp2Dataset(
         # fold_file=args.fold_file,
         phase = 'valid',
+        train_file = args.train_file,
         image_file_path=args.image_file,
         # folds=VALID_FOLDS,
         image_height=args.image_height,
