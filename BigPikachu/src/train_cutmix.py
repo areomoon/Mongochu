@@ -177,6 +177,9 @@ def model_dispatcher(base_model):
 
     elif base_model == 'resnet34': 
         return models.ResNet34(pretrained=True, n_class=3)
+        
+    elif base_model == 'se_resnext101_32x4d_sSE': 
+        return models.se_resnext101_32x4d_sSE(pretrained=True, n_class=3)
 
 class AverageMeter(object):
     """Computes and stores the average and current value"""
