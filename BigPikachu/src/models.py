@@ -84,8 +84,10 @@ class SE_ResNext101_32x4d_sSE(nn.Module):
             self.model = pretrainedmodels.__dict__["se_resnext101_32x4d"](pretrained=None)
 
         self.sSE_Block = sSE_Block()
-        self.dropout = nn.Dropout(0.2)
-        self.l0 = nn.Linear(2048,n_class)
+        self.dense = nn.Linear(2048,128)
+        self.dropout = nn.Dropout(0.3)
+
+        self.l0 = nn.Linear(128,n_class)
 
     def forward(self, x):
         '''
@@ -97,6 +99,7 @@ class SE_ResNext101_32x4d_sSE(nn.Module):
         x = self.model.features(x)
         x = self.sSE_Block(x)
         x = F.adaptive_avg_pool2d(x, 1).reshape(batch_size,-1)
+        x = self.dense(x)
         x = F.relu(x)
         x = self.dropout(x)
         output = self.l0(x)
