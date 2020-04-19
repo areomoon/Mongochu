@@ -86,3 +86,49 @@ class SE_ResNext101_32x4d(nn.Module):
 
         return output
 
+class sSE_Block(nn.Module):
+    """
+       Re-implementation of Concurrent Spatial and Channel Squeeze & Excitation in Fully Convolutional Networks
+       (Abhijit Guha Roy, et al., MICCAI 2018)
+    """
+    def __init__(self):
+        super(sSE_Block, self).__init__()
+        self.conv2d = nn.Conv2d(in_channels=2048, out_channels=2048, kernel_size=(1,1))
+        self.sigmoid = nn.Sigmoid()
+
+    def forward(self, x):
+        x1 = self.conv2d(x)
+        x1 = self.sigmoid(x1)
+        return x * x1
+
+class SE_ResNext101_32x4d_sSE(nn.Module):
+    def __init__(self,pretrained, n_class):
+        super(SE_ResNext101_32x4d_sSE, self).__init__()
+        if pretrained is True:
+            self.model = pretrainedmodels.__dict__["se_resnext101_32x4d"](pretrained='imagenet')
+        else:
+            self.model = pretrainedmodels.__dict__["se_resnext101_32x4d"](pretrained=None)
+
+        self.sSE_Block = sSE_Block()
+        self.dense = nn.Linear(2048,128)
+        self.dropout = nn.Dropout(0.3)
+
+        self.l0 = nn.Linear(128,n_class)
+
+    def forward(self, x):
+        '''
+        WIP
+        :param x:
+        :return:
+        '''
+        batch_size, _, _, _ = x.shape
+        x = self.model.features(x)
+        x = self.sSE_Block(x)
+        x = F.adaptive_avg_pool2d(x, 1).reshape(batch_size,-1)
+        x = self.dense(x)
+        x = F.relu(x)
+        x = self.dropout(x)
+        output = self.l0(x)
+
+        return output
+
