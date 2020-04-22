@@ -7,7 +7,8 @@ import argparse
 from dataset import ImageDataset
 from torch.utils.data import DataLoader
 from torch.optim import Adam, lr_scheduler
-from model_dispatcher import MODEL_DISPATCHER
+# from model_dispatcher import MODEL_DISPATCHER
+from models import SE_ResNext101_32x4d_sSE
 from sklearn.metrics import confusion_matrix,accuracy_score
 
 MODEL_MEAN = (0.485,0.456,0.406)
@@ -41,6 +42,9 @@ parser.add_argument('--base_model', default='se_resnext101_32x4d', type=str,
 
 parser.add_argument('--lr', default=1e-4, type=float,
                     help='learning rate')
+
+parser.add_argument('--weight_decay', default=5e-5, type=float,
+                    help='regularization')
 
 parser.add_argument('--epochs', default=3, type=int,
                     help='Number of epoch for training')
@@ -115,7 +119,8 @@ def main():
         torch.backends.cudnn.benchmark = True #  should add to speed up the code when input array shape doesn't vary
         print('Using cudnn.benchmark.')
 
-    model = MODEL_DISPATCHER[args.base_model]
+    # model = MODEL_DISPATCHER[args.base_model]
+    model = SE_ResNext101_32x4d_sSE(pretrained=False, n_class=3)
     model.to(args.device)
     print(f'Loading pretrained model: {args.base_model}')
 
@@ -153,7 +158,7 @@ def main():
         num_workers=args.num_workers,
     )
 
-    optimizer = Adam(model.parameters(), lr=args.lr)
+    optimizer = Adam(model.parameters(), lr=args.lr, weight_decay=args.weight_decay)
     scheduler = lr_scheduler.ReduceLROnPlateau(optimizer, mode='max', patience=5, factor=0.3)
 
     if torch.cuda.device_count() > 1 :

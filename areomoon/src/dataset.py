@@ -112,13 +112,14 @@ class ImageExpDataset:
         # training set
         self.aug = albumentations.Compose([
             albumentations.Resize(image_height, image_width, always_apply=True),
-            albumentations.RandomShadow(shadow_roi=(0, 0.85, 1, 1), p=0.5),
-            albumentations.RandomBrightnessContrast(brightness_limit=0.1, contrast_limit=0.1, p=0.5),
+            albumentations.Cutout(num_holes=8,max_h_size=30,max_w_size=60,always_apply=False,p=0.9),
+            albumentations.Equalize(always_apply=False, p=0.9),
+            albumentations.RandomShadow(shadow_roi=(0, 0.85, 1, 1), p=0.9),
+            albumentations.RandomBrightnessContrast(brightness_limit=0.1, contrast_limit=0.1, p=0.9),
             albumentations.ShiftScaleRotate(shift_limit=0.0625,
                                             scale_limit=0.1,
                                             rotate_limit=5,
                                             p=0.9),
-            OutsideCutout(bin_size=30, always_apply=True),
             albumentations.Normalize(mean, std, always_apply=True)
         ])
 
