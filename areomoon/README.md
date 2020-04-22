@@ -103,7 +103,7 @@ Accuracy on Dev : 0.77125
 - epochs = 1
 - batch_size = 64    
 
-Accuracy on Dev : 0.7925
+Accuracy on Dev : 0.83
 ``` 
 
 - EfficientNet-B6
