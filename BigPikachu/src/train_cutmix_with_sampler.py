@@ -1,16 +1,18 @@
 import os
 import pickle
 import models
+import pandas as pd
 import numpy as np
 import torch
 import torch.nn as nn
 from tqdm import tqdm
 import argparse
-from dataset import ImageExpDataset
+from dataset import ImageExp2Dataset
 from torch.utils.data import DataLoader
 from torch.optim import Adam,lr_scheduler
-# from model_dispatcher import MODEL_DISPATCHER
+from torch.utils.data.sampler import SubsetRandomSampler
 from sklearn.metrics import confusion_matrix,accuracy_score
+from sklearn.model_selection import train_test_split
 from torchtoolbox.nn import LabelSmoothingLoss
 
 MODEL_MEAN = (0.485,0.456,0.406)
@@ -21,7 +23,7 @@ VALID_FOLDS = [4]
 
 parser = argparse.ArgumentParser(description='Mango Defection Classification With Pytorch')
 
-parser.add_argument('--fold_file', default='../AIMango_img/train_folds.csv', type=str,
+parser.add_argument('--train_file', default='../AIMango_img/train.csv', type=str,
                     help='path to input data')
 
 parser.add_argument('--image_file', default='../AIMango_img/C1-P1_Train', type=str,
@@ -56,6 +58,12 @@ parser.add_argument('--train_batch_size', default=256, type=int,
 
 parser.add_argument('--test_batch_size', default=128, type=int,
                     help='Batch size for training')
+
+parser.add_argument('--test_size', default=0.2, type=float,
+                    help='proportion of test size')
+
+parser.add_argument('--random_state', default=42, type=float,
+                    help='random seed for train test split')
 
 parser.add_argument('--save_dir', default='../weights', type=str,
                     help='directory to save model')
@@ -95,11 +103,11 @@ def loss_fn(outputs,target):
     return loss
 
 
-def train(dataset, dataloader, model, optimizer, device, loss_fn):
+def train(dataset_size, dataloader, model, optimizer, device, loss_fn):
     model.train()
     losses = AverageMeter()
 
-    for batch_ind, d in tqdm(enumerate(dataloader),total=int(len(dataset))/dataloader.batch_size):
+    for batch_ind, d in tqdm(enumerate(dataloader), total=dataset_size/dataloader.batch_size):
         image = d['image']
         label = d['label']
         image = image.to(device,dtype=torch.float)
@@ -108,7 +116,7 @@ def train(dataset, dataloader, model, optimizer, device, loss_fn):
         r = np.random.rand(1)
         if args.beta > 0 and r < args.cutmix_prob:
             # generate mixed sample
-            lam = np.random.beta(args.beta, args.beta)
+            lam = np.clip(np.random.beta(args.beta, args.beta), 0.3, 0.7)
             rand_index = torch.randperm(image.size()[0]).cuda()
             target_a = target
             target_b = target[rand_index]
@@ -132,13 +140,13 @@ def train(dataset, dataloader, model, optimizer, device, loss_fn):
     return losses.avg
 
 
-def evaluate(dataset, dataloader, model, device,loss_fn, tag):
+def evaluate(dataset_size, dataloader, model, device,loss_fn, tag):
     model.eval()
     losses = AverageMeter()
     image_pred_list = []
     image_target_list = []
     with torch.no_grad():
-        for batch_ind, d in tqdm(enumerate(dataloader),total=int(len(dataset))/dataloader.batch_size):
+        for batch_ind, d in tqdm(enumerate(dataloader),total=dataset_size/dataloader.batch_size):
             image = d['image']
             label = d['label']
             image = image.to(device,dtype=torch.float)
@@ -177,7 +185,7 @@ def model_dispatcher(base_model):
 
     elif base_model == 'resnet34': 
         return models.ResNet34(pretrained=True, n_class=3)
-        
+    
     elif base_model == 'se_resnext101_32x4d_sSE': 
         return models.se_resnext101_32x4d_sSE(pretrained=True, n_class=3)
 
@@ -199,6 +207,16 @@ class AverageMeter(object):
         self.count += n
         self.avg = self.sum / self.count
 
+def get_train_valid_indice(dataset_size=581777, test_size=0.2, random_state=42):
+    df_tr = pd.read_csv(args.train_file)
+    
+    indice = df_tr.index
+    label = df_tr.label
+
+    train_indice, valid_indice, train_y, valid_y= train_test_split(indice, label, test_size=test_size, random_state=42, stratify=label)
+
+    return train_indice, valid_indice
+
 def main():
 
     if args.device =='cuda':
@@ -209,10 +227,18 @@ def main():
     model.to(args.device)
     # print(f'Loading pretrained model: {args.base_model}')
 
-    train_dataset = ImageExpDataset(
-        fold_file = args.fold_file,
+    train_indices, val_indices = get_train_valid_indice(test_size=args.test_size, random_state=args.random_state)
+
+    train_size = len(train_indices)
+    valid_size = len(val_indices)
+
+    train_sampler = SubsetRandomSampler(train_indices)
+    valid_sampler = SubsetRandomSampler(val_indices)
+
+    train_dataset = ImageExp2Dataset(
+        phase = 'train',
+        train_file = args.train_file,
         image_file_path = args.image_file,
-        folds=TRAIN_FOLDS,
         image_height=args.image_height,
         image_width=args.image_width,
         mean=MODEL_MEAN,
@@ -222,14 +248,14 @@ def main():
     train_dataloader = DataLoader(
         dataset=train_dataset,
         batch_size=args.train_batch_size,
-        shuffle=True,
         num_workers=args.num_workers,
+        sampler=train_sampler
     )
 
-    valid_dataset = ImageExpDataset(
-        fold_file=args.fold_file,
+    valid_dataset = ImageExp2Dataset(
+        phase = 'valid',
+        train_file = args.train_file,
         image_file_path=args.image_file,
-        folds=VALID_FOLDS,
         image_height=args.image_height,
         image_width=args.image_width,
         mean=MODEL_MEAN,
@@ -239,8 +265,8 @@ def main():
     valid_dataloader = DataLoader(
         dataset=valid_dataset,
         batch_size=args.test_batch_size,
-        shuffle=False,
         num_workers=args.num_workers,
+        sampler=valid_sampler
     )
 
     optimizer = Adam(model.parameters(),lr=args.lr, weight_decay=args.weight_decay)
@@ -256,9 +282,8 @@ def main():
     # tr_accu_list = []
     best_epoch = 0
     for epoch in range(args.epochs):
-        tr_loss = train(dataset=train_dataset,dataloader=train_dataloader,model=model,optimizer=optimizer,device=args.device,loss_fn=loss_fn)
-        # tr_loss, tr_accu = evaluate(dataset=train_dataset, dataloader=train_dataloader, model=model, device=args.device,loss_fn=loss_fn, tag='train')
-        val_loss, val_accu = evaluate(dataset=valid_dataset, dataloader=valid_dataloader, model=model, device=args.device,loss_fn=loss_fn, tag='valid')
+        tr_loss = train(dataset_size=train_size ,dataloader=train_dataloader, model=model, optimizer=optimizer, device=args.device, loss_fn=loss_fn)
+        val_loss, val_accu = evaluate(dataset_size=valid_size, dataloader=valid_dataloader, model=model, device=args.device, loss_fn=loss_fn, tag='valid')
         print(f'Epoch_{epoch+1} Train Loss:{tr_loss}')
         print(f'Epoch_{epoch+1} Valid Loss:{val_loss}')
         scheduler.step(val_loss)
