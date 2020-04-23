@@ -121,15 +121,14 @@ class ImageExpDataset:
             # training set
             self.aug = albumentations.Compose([
                 albumentations.Resize(image_height, image_width, always_apply=True),
-
+                albumentations.RandomShadow(shadow_roi=(0, 0.85, 1, 1), p=0.5),
+                albumentations.RandomBrightnessContrast(brightness_limit=0.10, contrast_limit=0.10, p=0.5),
+                albumentations.ShiftScaleRotate(shift_limit=0.0625,
+                                                scale_limit=0.1,
+                                                rotate_limit=5,
+                                                p=0.9),
                 albumentations.Normalize(mean, std, always_apply=True)
             ])
-            # albumentations.RandomShadow(shadow_roi=(0, 0.85, 1, 1), p=0.5),
-            # albumentations.RandomBrightnessContrast(brightness_limit=0.10, contrast_limit=0.10, p=0.5),
-            # albumentations.ShiftScaleRotate(shift_limit=0.0625,
-            #                                 scale_limit=0.1,
-            #                                 rotate_limit=5,
-            #                                 p=0.9),
 
     def __len__(self):
         return len(self.img_id)
