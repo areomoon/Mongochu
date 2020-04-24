@@ -207,7 +207,7 @@ class AverageMeter(object):
         self.count += n
         self.avg = self.sum / self.count
 
-def get_train_valid_indice(dataset_size=581777, test_size=0.2, random_state=42):
+def get_train_valid_indice(test_size=0.2, random_state=42):
     df_tr = pd.read_csv(args.train_file)
     
     indice = df_tr.index
