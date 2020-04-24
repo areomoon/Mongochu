@@ -120,6 +120,7 @@ class ImageExpDataset:
         else:
             # training set
             self.aug = albumentations.Compose([
+                albumentations.Resize(height=image_height, width=image_width, always_apply=True),
                 albumentations.VerticalFlip(p=0.5),
                 albumentations.HorizontalFlip(p=0.5),
                 albumentations.RandomBrightnessContrast(brightness_limit=0.10, contrast_limit=0.10, p=0.5),
@@ -127,8 +128,7 @@ class ImageExpDataset:
                                                 scale_limit=0.1,
                                                 rotate_limit=5,
                                                 p=0.5),
-                albumentations.RandomCrop(height=250,width=320,p=0.5),
-                albumentations.Resize(height=image_height,width=image_width,always_apply=True),
+                albumentations.RandomCrop(height=180,width=180,p=0.5),
                 albumentations.Normalize(mean, std, always_apply=True)
             ])
 
