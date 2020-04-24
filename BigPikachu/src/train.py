@@ -174,7 +174,7 @@ def main():
     )
 
     optimizer = Adam(model.parameters(),lr=args.lr, weight_decay=args.weight_decay)
-    scheduler = lr_scheduler.ReduceLROnPlateau(optimizer, mode='max', patience=5, factor=0.3)
+    scheduler = lr_scheduler.ReduceLROnPlateau(optimizer, mode='max', patience=4, factor=0.1)
 
     if torch.cuda.device_count() > 1 :
         model = nn.DataParallel()
