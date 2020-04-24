@@ -127,7 +127,8 @@ class ImageExpDataset:
                                                 scale_limit=0.1,
                                                 rotate_limit=5,
                                                 p=0.5),
-                albumentations.RandomSizedCrop(min_max_height=(300,360),height=image_height,width=image_width,w2h_ratio=1.3,p=0.5),
+                albumentations.RandomCrop(height=250,width=320,p=0.5),
+                albumentations.Resize(height=image_height,width=image_width,always_apply=True),
                 albumentations.Normalize(mean, std, always_apply=True)
             ])
 
