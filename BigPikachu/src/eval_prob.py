@@ -98,7 +98,7 @@ def main():
 
     df_pred = pd.DataFrame(preds, columns=['A', 'B', 'C'])
     df_id = pd.DataFrame(ids, columns=['image_ids'])
-    sub = pd.concate([df_id, df_pred], axis=1)
+    sub = pd.concat([df_id, df_pred], axis=1)
     sub.to_csv(f'{args.output_name}.csv',index=False)
 
 if __name__ == '__main__':
