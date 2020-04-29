@@ -88,8 +88,8 @@ def main():
 
             image = image.to(args.device, dtype=torch.float)
             outputs = model(image)
-            pred_prob = torch.nn.Softmax()(outputs)
-            
+            pred_prob = torch.nn.Softmax(dim=1)(outputs)
+
             image_id_list.append(img_id)
             image_pred_list.append(pred_prob)
 
