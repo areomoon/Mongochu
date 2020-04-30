@@ -1,0 +1,10 @@
+numpy
+pandas
+torch
+opencv-python
+albumentations
+pretrainedmodels
+iterative-stratification
+scikit-learn
+jupyter
+torchtoolbox
