@@ -23,12 +23,18 @@ def main():
     df_all = pd.concat([pd.read_csv(f) for f in file_path]) 
 
     if args.voting == 'soft':
+        # First, calculate mean prob for each class by image_id
+        # Second, choose the class with the highest image_id
         soft_label = df_all.groupby('image_ids').mean().idxmax(axis=1)
         sub = pd.DataFrame(soft_label, columns = ['label']).reset_index(drop=False)
     
     elif args.voting == 'hard':
         df_all = df_all.set_index('image_ids')
+        # get predicted class from probabilities by argmax
         df_all['label'] = df_all[['A', 'B', 'C']].apply(lambda x: np.argmax(x, axis=0), axis=1)
+
+        # count frequency of each class by bincount
+        # get majority vote by argmax
         hard_label = df_all.groupby('image_ids')['label'].apply(lambda x: np.argmax(np.bincount(x)))
 
         class_map = {0:'A',1:'B',2:'C'}
