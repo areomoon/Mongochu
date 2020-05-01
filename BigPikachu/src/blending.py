@@ -1,5 +1,7 @@
 import os
 import glob
+import argparse
+import numpy as np
 import pandas as pd
 
 parser = argparse.ArgumentParser(description='blending algo for mango classification')
@@ -21,7 +23,7 @@ def main():
     df_all = pd.concat([pd.read_csv(f) for f in file_path]) 
 
     if args.voting == 'soft':
-        soft_label = df_all.groupby('image_id').mean().idxmax(axis=1)
+        soft_label = df_all.groupby('image_ids').mean().idxmax(axis=1)
         sub = pd.DataFrame(soft_label, columns = ['label']).reset_index(drop=False)
     
     elif args.voting == 'hard':
@@ -31,7 +33,7 @@ def main():
 
         class_map = {0:'A',1:'B',2:'C'}
         sub = hard_label.map(class_map).reset_index(drop=False)
-        
+
     sub.to_csv(f'{args.output_name}.csv',index=False)
 
 if __name__ == "__main__":
