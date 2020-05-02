@@ -86,7 +86,7 @@ class VGG16_binary(nn.Module):
             nn.ReLU(True),
             nn.Dropout(0.5),
 
-            nn.Linear(64, 2),
+            nn.Linear(64, n_class),
             nn.Sigmoid()
         )
 

@@ -190,7 +190,7 @@ def model_dispatcher(base_model):
     elif base_model == 'vgg16':
         return models.VGG16(pretrained=True, n_class=3)
     
-    elif base_model == 'VGG16_binary':
+    elif base_model == 'vgg16_binary':
         return models.VGG16_binary(pretrained=True, n_class=1)
 
     elif base_model == 'resnet34': 
