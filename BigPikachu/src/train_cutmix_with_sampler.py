@@ -11,7 +11,7 @@ from dataset import ImageExp2Dataset
 from torch.utils.data import DataLoader
 from torch.optim import Adam,lr_scheduler
 from torch.utils.data.sampler import SubsetRandomSampler
-from sklearn.metrics import confusion_matrix,accuracy_score
+from sklearn.metrics import confusion_matrix, accuracy_score
 from sklearn.model_selection import train_test_split
 from torchtoolbox.nn import LabelSmoothingLoss
 
@@ -171,7 +171,12 @@ def evaluate(dataset_size, dataloader, model, device,loss_fn, tag):
     # Evaludation Metrics
     pred = torch.cat(image_pred_list).cpu().numpy()
     tgt = torch.cat(image_target_list).cpu().numpy()
-    cfm = np.round(confusion_matrix(y_true=tgt,y_pred=pred,labels=[0,1,2]),3)
+    
+    if not args.binclass:
+        cfm = np.round(confusion_matrix(y_true=tgt, y_pred=pred, labels=[0,1,2]), 3)
+    else:
+        cfm = np.round(confusion_matrix(y_true=tgt, y_pred=pred, labels=[0,1]), 3)
+
     accu = accuracy_score(y_true=tgt,y_pred=pred)
     if tag == 'train':
         print(f'Confusion Matrix of {tag}')
