@@ -87,7 +87,7 @@ class VGG16_binary(nn.Module):
             nn.Dropout(0.5),
 
             nn.Linear(64, n_class),
-            nn.Sigmoid()
+            # nn.Sigmoid()
         )
 
         self._initialize_weights()

@@ -105,8 +105,9 @@ def loss_fn(binclass, outputs, target):
     if not binclass:
         loss = nn.CrossEntropyLoss()(outputs, target)
     else:
-        logits_rev = torch.log(outputs/(1-outputs))
-        loss = nn.BCEWithLogitsLoss()(logits_rev, target.unsqueeze(1))
+        # logits_rev = torch.log(outputs/(1-outputs))
+        # loss = nn.BCEWithLogitsLoss()(logits_rev, target.unsqueeze(1))
+        loss = nn.CrossEntropyLoss()(outputs, target)
     return loss
 
 
@@ -191,7 +192,7 @@ def model_dispatcher(base_model):
         return models.VGG16(pretrained=True, n_class=3)
     
     elif base_model == 'vgg16_binary':
-        return models.VGG16_binary(pretrained=True, n_class=1)
+        return models.VGG16_binary(pretrained=True, n_class=2)
 
     elif base_model == 'resnet34': 
         return models.ResNet34(pretrained=True, n_class=3)
