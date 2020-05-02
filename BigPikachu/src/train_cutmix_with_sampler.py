@@ -132,11 +132,11 @@ def train(dataset_size, dataloader, model, optimizer, device, loss_fn):
             # adjust lambda to exactly match pixel ratio
             lam = 1 - ((bbx2 - bbx1) * (bby2 - bby1) / (image.size()[-1] * image.size()[-2]))
             # compute output
-            output = model(image)
+            outputs = model(image)
             loss = loss_fn(args.binclass, outputs, target) * lam + loss_fn(args.binclass, outputs, target) * (1. - lam)
         else:
             # compute output
-            output = model(image)
+            outputs = model(image)
             loss = loss_fn(args.binclass, outputs, target)
 
         losses.update(loss.item(), image.size(0))
