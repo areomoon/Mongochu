@@ -146,12 +146,22 @@ class ImageExpDataset:
         }
 
 class ImageExp2Dataset:
-    def __init__(self, phase, train_file, image_file_path, image_height, image_width, mean, std):
+    def __init__(self, phase, train_file, image_file_path, image_height, image_width, mean, std, binclass):
         self.image_file_path = image_file_path
 
         df = pd.read_csv(train_file)
 
-        class_map = {'A':0,'B':1,'C':2}
+        if binclass == 'A':
+            class_map = {'A':1,'B':0,'C':0}
+
+        elif binclass == 'B':
+            class_map = {'A':0,'B':1,'C':0}
+
+        elif binclass == 'C'
+            class_map = {'A':0,'B':0,'C':1}
+
+        else:
+            class_map = {'A':0,'B':1,'C':2}
 
         self.img_id = df['image_id'].apply(lambda x: x.split('.')[0]).values # just take id of image_id
         self.labels = df['label'].apply(lambda x: x[-1]).map(class_map).values # encoding labels

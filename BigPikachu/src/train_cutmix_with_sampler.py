@@ -74,6 +74,9 @@ parser.add_argument('--beta', default=1.0, type=float,
 parser.add_argument('--cutmix_prob', default=1.0, type=float,
                     help='cutmix probability')
 
+parser.add_argument('--binclass', default=None, type=str,
+                    help='specify class for binary classification')
+
 args = parser.parse_args()
 
 
@@ -98,8 +101,12 @@ def rand_bbox(size, lam):
     return bbx1, bby1, bbx2, bby2
 
 
-def loss_fn(outputs,target):
-    loss = nn.CrossEntropyLoss()(outputs, target)
+def loss_fn(binclass, outputs,target):
+    if not binclass:
+        loss = nn.CrossEntropyLoss()(outputs, target)
+    else:
+        logits_rev = torch.log(outputs/(1-outputs))
+        loss = nn.BCEWithLogitsLoss()(logits_rev, target)
     return loss
 
 
@@ -182,6 +189,9 @@ def model_dispatcher(base_model):
 
     elif base_model == 'vgg16':
         return models.VGG16(pretrained=True, n_class=3)
+    
+    elif base_model == 'VGG16_binary':
+        return models.VGG16_binary(pretrained=True, n_class=2)
 
     elif base_model == 'resnet34': 
         return models.ResNet34(pretrained=True, n_class=3)
@@ -242,7 +252,8 @@ def main():
         image_height=args.image_height,
         image_width=args.image_width,
         mean=MODEL_MEAN,
-        std=MODEL_STD
+        std=MODEL_STD,
+        binclass = args.binclass
     )
 
     train_dataloader = DataLoader(
@@ -259,7 +270,8 @@ def main():
         image_height=args.image_height,
         image_width=args.image_width,
         mean=MODEL_MEAN,
-        std=MODEL_STD
+        std=MODEL_STD,
+        binclass = args.binclass
     )
 
     valid_dataloader = DataLoader(
