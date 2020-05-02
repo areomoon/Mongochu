@@ -157,7 +157,7 @@ class ImageExp2Dataset:
         elif binclass == 'B':
             class_map = {'A':0,'B':1,'C':0}
 
-        elif binclass == 'C'
+        elif binclass == 'C':
             class_map = {'A':0,'B':0,'C':1}
 
         else:
