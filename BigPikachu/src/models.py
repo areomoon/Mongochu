@@ -65,7 +65,7 @@ class VGG16(nn.Module):
 
 class VGG16_binary(nn.Module):
     def __init__(self, pretrained, n_class):
-        super(VGG16, self).__init__()
+        super(VGG16_binary, self).__init__()
         if pretrained is True:
             self.model = pretrainedmodels.__dict__["vgg16"](pretrained='imagenet')
         else:
