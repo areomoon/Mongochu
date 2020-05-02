@@ -101,13 +101,8 @@ def rand_bbox(size, lam):
     return bbx1, bby1, bbx2, bby2
 
 
-def loss_fn(binclass, outputs, target):
-    if not binclass:
-        loss = nn.CrossEntropyLoss()(outputs, target)
-    else:
-        # logits_rev = torch.log(outputs/(1-outputs))
-        # loss = nn.BCEWithLogitsLoss()(logits_rev, target.unsqueeze(1))
-        loss = nn.CrossEntropyLoss()(outputs, target)
+def loss_fn(outputs, target):
+    loss = nn.CrossEntropyLoss()(outputs, target)
     return loss
 
 
@@ -134,11 +129,11 @@ def train(dataset_size, dataloader, model, optimizer, device, loss_fn):
             lam = 1 - ((bbx2 - bbx1) * (bby2 - bby1) / (image.size()[-1] * image.size()[-2]))
             # compute output
             outputs = model(image)
-            loss = loss_fn(args.binclass, outputs, target) * lam + loss_fn(args.binclass, outputs, target) * (1. - lam)
+            loss = loss_fn(outputs, target) * lam + loss_fn(outputs, target) * (1. - lam)
         else:
             # compute output
             outputs = model(image)
-            loss = loss_fn(args.binclass, outputs, target)
+            loss = loss_fn(outputs, target)
 
         losses.update(loss.item(), image.size(0))
 
@@ -161,7 +156,7 @@ def evaluate(dataset_size, dataloader, model, device,loss_fn, tag):
             target = label.to(device, dtype=torch.long)
             outputs = model(image)
 
-            loss = loss_fn(args.binclass, outputs, target)
+            loss = loss_fn(outputs, target)
             losses.update(loss.item(), image.size(0))
 
             pred_label = torch.argmax(outputs, dim=1)
