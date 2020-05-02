@@ -106,7 +106,7 @@ def loss_fn(binclass, outputs, target):
         loss = nn.CrossEntropyLoss()(outputs, target)
     else:
         logits_rev = torch.log(outputs/(1-outputs))
-        loss = nn.BCEWithLogitsLoss()(logits_rev, target)
+        loss = nn.BCEWithLogitsLoss()(logits_rev, target.view(-1))
     return loss
 
 
