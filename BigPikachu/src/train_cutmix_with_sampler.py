@@ -129,7 +129,7 @@ def train(dataset_size, dataloader, model, optimizer, device, loss_fn):
             lam = 1 - ((bbx2 - bbx1) * (bby2 - bby1) / (image.size()[-1] * image.size()[-2]))
             # compute output
             outputs = model(image)
-            loss = loss_fn(outputs, target) * lam + loss_fn(outputs, target) * (1. - lam)
+            loss = loss_fn(outputs, target_a) * lam + loss_fn(outputs, target_b) * (1. - lam)
         else:
             # compute output
             outputs = model(image)
