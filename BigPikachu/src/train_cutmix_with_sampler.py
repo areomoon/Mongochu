@@ -7,7 +7,7 @@ import torch
 import torch.nn as nn
 from tqdm import tqdm
 import argparse
-from dataset import ImageExp2Dataset
+from dataset import ImageSamplerDataset
 from torch.utils.data import DataLoader
 from torch.optim import Adam,lr_scheduler
 from torch.utils.data.sampler import SubsetRandomSampler
@@ -246,7 +246,7 @@ def main():
     train_sampler = SubsetRandomSampler(train_indices)
     valid_sampler = SubsetRandomSampler(val_indices)
 
-    train_dataset = ImageExp2Dataset(
+    train_dataset = ImageSamplerDataset(
         phase = 'train',
         train_file = args.train_file,
         image_file_path = args.image_file,
@@ -264,7 +264,7 @@ def main():
         sampler=train_sampler
     )
 
-    valid_dataset = ImageExp2Dataset(
+    valid_dataset = ImageSamplerDataset(
         phase = 'valid',
         train_file = args.train_file,
         image_file_path=args.image_file,
