@@ -1,3 +1,6 @@
+---
+tags: AI Mongo
+---
 # Mongochu
 
 ## Setup 
@@ -51,22 +54,63 @@ python create_image_pkl.py --jpg_file_path ../AImongo_img/C1-P1_Train --pkl_file
 
 ## Train
 
-Create ```src/weights``` folder to save model weights
-```
-mkdir src/weights
+Train **multi-class** ```vgg16``` model.
+```python
+!python train_cutmix_with_sampler.py \
+--train_file /kaggle/input/aimongo/AImongo_img/train.csv \ 
+--image_file /kaggle/input/aimongo/AImongo_img/C1-P1_Train \
+--lr 1e-4  \
+--epochs 2 \
+--image_height 224 \
+--image_width 224 \
+--train_batch_size 64 \
+--base_model vgg16 \
+--beta 1 \
+--cutmix_prob 0.1 \
+--test_size 0.2 \
+--random_state 2020
 ```
 
-Under working directory ```areomoon/src/``` run the following code:
-```
-python train.py --fold_file ../AImongo_img/train_folds.csv  --pkl_file ../AImongo_img/train_pkl_files
+Train **binary(one-vs-rest)** ```vgg16``` model.
+```python
+!python train_cutmix_with_sampler.py \
+--train_file /kaggle/input/aimongo/AImongo_img/train.csv \ 
+--image_file /kaggle/input/aimongo/AImongo_img/C1-P1_Train \
+--lr 1e-4  \
+--epochs 2 \
+--image_height 224 \
+--image_width 224 \
+--train_batch_size 64 \
+--base_model vgg16_binary \
+--binclass A \
+--beta 1 \
+--cutmix_prob 0.1 \
+--test_size 0.2 \
+--random_state 2020
 ```
 
 ## Inference
-Run the following code and save the ```submission.csv``` file in working directory ```areomoon/src/```
+Output predicted classes for samples in Dev.  
+Save the ```vgg16_eval_submission.csv``` file under working directory ```BigPikachu/src/```
+```python
+!python eval.py \
+--image_file /kaggle/input/aimongo/AImongo_img/C1-P1_Dev \  
+--model_weights vgg16_fold_4.bin \
+--image_height 224 \
+--image_width 224 \
+--base_model vgg16_eval
 ```
-python eval.py --image_file ../AImongo_img/C1-P1_Dev  --model_weights resnet34_fold_4.bin
+Output predicted probabilities of each classes for samples in Dev.  
+Save the ```vgg16_prob_v1.csv``` file under working directory ```BigPikachu/src/```
+```python
+!python eval_prob.py \
+--image_file /kaggle/input/aimongo/AImongo_img/C1-P1_Dev \
+--model_weights vgg16_fold_4.bin \
+--image_height 224 \
+--image_width 224 \
+--base_model vgg16_eval \
+--output_name vgg16_prob_v1
 ```
-
 ## Evaluation 
 
 Refer to ```areomoon/eval_metrics.ipynb```
