@@ -114,7 +114,7 @@ class ImageExpDataset:
             # validation set
             self.aug = albumentations.Compose([
                 albumentations.Resize(image_height,image_width,always_apply=True),
-                albumentations.Normalize(mean,std,always_apply=True),
+                #albumentations.Normalize(mean,std,always_apply=True),
 
             ])
         else:
@@ -123,10 +123,9 @@ class ImageExpDataset:
                 albumentations.Resize(image_height, image_width, always_apply=True),
                 albumentations.HorizontalFlip(p=0.5),
                 albumentations.VerticalFlip(p=0.5),
-                albumentations.ToGray(always_apply=True),
-                albumentations.RandomShadow(shadow_roi=(0, 0.85, 1, 1), p=0.5),
-                albumentations.RandomContrast(limit=.9, always_apply=True),
-                albumentations.RandomBrightnessContrast(brightness_limit=0.10, contrast_limit=0.10, p=0.5),
+                #albumentations.ToGray(always_apply=True),
+                #albumentations.RandomShadow(shadow_roi=(0, 0.85, 1, 1), p=0.5),
+                albumentations.RandomBrightnessContrast(brightness_limit=(0.10,0.10), contrast_limit=(-0.30,-0.30), always_apply=True),
                 albumentations.ShiftScaleRotate(shift_limit=0.0625,
                                                 scale_limit=0.1,
                                                 rotate_limit=5,
