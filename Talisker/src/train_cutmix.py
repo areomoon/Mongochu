@@ -161,7 +161,7 @@ def evaluate(dataset, dataloader, model, device,loss_fn, tag):
         print(f'Confusion Matrix of {tag}')
         print(cfm)
         print('General Accuracy score on Train: {:5.4f}'.format(accu))
-        return final_loss/counter, accu
+        return accu
     elif tag == 'valid':
         print(f'Confusion Matrix of {tag}')
         print(cfm)

@@ -169,7 +169,7 @@ def evaluate(dataset_size, dataloader, model, device,loss_fn, tag):
         print(f'Confusion Matrix of {tag}')
         print(cfm)
         print('General Accuracy score on Train: {:5.4f}'.format(accu))
-        return final_loss/counter, accu
+        return accu
     elif tag == 'valid':
         print(f'Confusion Matrix of {tag}')
         print(cfm)
@@ -282,7 +282,8 @@ def main():
     # tr_accu_list = []
     best_epoch = 0
     for epoch in range(args.epochs):
-        tr_loss, tr_accu = train(dataset_size=train_size ,dataloader=train_dataloader, model=model, optimizer=optimizer, device=args.device, loss_fn=loss_fn, tag='train')
+        tr_loss = train(dataset_size=train_size ,dataloader=train_dataloader, model=model, optimizer=optimizer, device=args.device, loss_fn=loss_fn)
+        tr_accu = evaluate(dataset_size=train_size, dataloader=train_dataloader, model=model, device=args.device, loss_fn=loss_fn, tag='train')
         val_loss, val_accu = evaluate(dataset_size=valid_size, dataloader=valid_dataloader, model=model, device=args.device, loss_fn=loss_fn, tag='valid')
         print(f'Epoch_{epoch+1} Train Loss:{tr_loss}')
         print(f'Epoch_{epoch+1} Valid Loss:{val_loss}')
