@@ -209,7 +209,7 @@ def main():
     model.to(args.device)
     # print(f'Loading pretrained model: {args.base_model}')
 
-    train_dataset = ImageExpDataset(
+    train_dataset = ImageExp2Dataset(
         fold_file = args.fold_file,
         image_file_path = args.image_file,
         folds=TRAIN_FOLDS,

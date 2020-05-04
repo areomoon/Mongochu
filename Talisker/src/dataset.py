@@ -114,7 +114,7 @@ class ImageExpDataset:
             # validation set
             self.aug = albumentations.Compose([
                 albumentations.Resize(image_height,image_width,always_apply=True),
-                #albumentations.Normalize(mean,std,always_apply=True),
+                albumentations.Normalize(mean,std,always_apply=True),
 
             ])
         else:
@@ -125,12 +125,13 @@ class ImageExpDataset:
                 albumentations.VerticalFlip(p=0.5),
                 #albumentations.ToGray(always_apply=True),
                 #albumentations.RandomShadow(shadow_roi=(0, 0.85, 1, 1), p=0.5),
-                albumentations.RandomBrightnessContrast(brightness_limit=(0.20,-0.20), contrast_limit=(0.20,-0.20), p=.5),
+                albumentations.IAASharpen(alpha=(0.2, 0.5), lightness=(0.5, 1.0), always_apply=False, p=0.5),
+                albumentations.RandomBrightnessContrast(brightness_limit=(0.30,-0.10), contrast_limit=(0.20,-0.20), p=.5),
                 albumentations.ShiftScaleRotate(shift_limit=0.0625,
                                                 scale_limit=0.1,
                                                 rotate_limit=5,
                                                 p=0.5),
-                albumentations.InvertImg(p=.5),
+                #albumentations.InvertImg(p=.5),
                 albumentations.Normalize(mean, std, always_apply=True)
             ])
 
@@ -173,12 +174,13 @@ class ImageExp2Dataset:
                 albumentations.VerticalFlip(p=0.5),
                 #albumentations.ToGray(always_apply=True),
                 #albumentations.RandomShadow(shadow_roi=(0, 0.85, 1, 1), p=0.5),
-                albumentations.RandomBrightnessContrast(brightness_limit=(0.20,-0.20), contrast_limit=(0.20,-0.20), p=.5),
+                albumentations.IAASharpen(alpha=(0.2, 0.5), lightness=(0.5, 2.0), always_apply=False, p=0.5),
+                albumentations.RandomBrightnessContrast(brightness_limit=(0.30,-0.10), contrast_limit=(0.20,-0.20), p=.5),
                 albumentations.ShiftScaleRotate(shift_limit=0.0625,
                                                 scale_limit=0.1,
                                                 rotate_limit=5,
                                                 p=0.5),
-                albumentations.InvertImg(p=.5),
+                #albumentations.InvertImg(p=.5),
                 albumentations.Normalize(mean, std, always_apply=True)
             ])
 
