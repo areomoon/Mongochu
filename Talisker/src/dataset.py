@@ -114,6 +114,7 @@ class ImageExpDataset:
             # validation set
             self.aug = albumentations.Compose([
                 albumentations.Resize(image_height,image_width,always_apply=True),
+                albumentations.RandomBrightnessContrast(brightness_limit=(0.30,0.30), contrast_limit=(0.20,0.20), always_apply=True),
                 albumentations.Normalize(mean,std,always_apply=True),
 
             ])
