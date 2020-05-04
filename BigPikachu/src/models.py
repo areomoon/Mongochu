@@ -151,10 +151,10 @@ class SE_ResNext101_32x4d(nn.Module):
         return output
     
     def _initialize_weights(self):
-    for m in self.modules():
-        if isinstance(m, nn.Linear):
-            nn.init.normal_(m.weight, 0, 0.01)
-            nn.init.constant_(m.bias, 0)
+        for m in self.modules():
+            if isinstance(m, nn.Linear):
+                nn.init.normal_(m.weight, 0, 0.01)
+                nn.init.constant_(m.bias, 0)
 
 class sSE_Block(nn.Module):
     """
