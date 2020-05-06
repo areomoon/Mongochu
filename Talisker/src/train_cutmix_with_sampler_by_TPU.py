@@ -113,7 +113,7 @@ def loss_fn(outputs,target):
 
 
 def train(dataset_size, dataloader, model, optimizer, device, loss_fn):
-    tracker = xm.RateTracker()
+
     model.train()
     losses = AverageMeter()
 
@@ -147,7 +147,6 @@ def train(dataset_size, dataloader, model, optimizer, device, loss_fn):
         optimizer.zero_grad()
         loss.backward()
         xm.optimizer_step(optimizer)
-        tracker.add(data.shape[0])
         scheduler.step()
         
     return losses.avg
