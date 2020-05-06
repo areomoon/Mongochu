@@ -146,7 +146,6 @@ def train(dataset_size, dataloader, model, optimizer, device, loss_fn):
         optimizer.zero_grad()
         loss.backward()
         xm.optimizer_step(optimizer)
-        scheduler.step()
         
     return losses.avg
 
