@@ -113,13 +113,14 @@ def loss_fn(outputs,target):
 
 
 def train(dataset_size, dataloader, model, optimizer, device, loss_fn):
+    tracker = xm.RateTracker()
     model.train()
     losses = AverageMeter()
 
     for batch_ind, d in tqdm(enumerate(dataloader), total=dataset_size/dataloader.batch_size):
         image = d['image']
         label = d['label']
-        image = image.to(device,dtype=torch.float)
+        image = image.to(device, dtype=torch.float)
         target = label.to(device, dtype=torch.long)
 
         r = np.random.rand(1)
@@ -145,11 +146,14 @@ def train(dataset_size, dataloader, model, optimizer, device, loss_fn):
 
         optimizer.zero_grad()
         loss.backward()
-        optimizer.step()       
+        xm.optimizer_step(optimizer)
+        tracker.add(data.shape[0])
+        scheduler.step()
+        
     return losses.avg
 
 
-def evaluate(dataset_size, dataloader, model, device,loss_fn, tag):
+def evaluate(dataset_size, dataloader, model, device, loss_fn, tag):
     model.eval()
     losses = AverageMeter()
     image_pred_list = []
@@ -158,11 +162,11 @@ def evaluate(dataset_size, dataloader, model, device,loss_fn, tag):
         for batch_ind, d in tqdm(enumerate(dataloader),total=dataset_size/dataloader.batch_size):
             image = d['image']
             label = d['label']
-            image = image.to(device,dtype=torch.float)
+            image = image.to(device, dtype=torch.float)
             target = label.to(device, dtype=torch.long)
             outputs = model(image)
 
-            loss = loss_fn(outputs,target)
+            loss = loss_fn(outputs, target)
             losses.update(loss.item(), image.size(0))
 
             pred_label = torch.argmax(outputs, dim=1)
@@ -284,8 +288,10 @@ def main():
     )
     
     xm.master_print(f"Train for {len(train_dataloader)} steps per epoch") #TPU
+    # Scale learning rate to num cores
+    learning_rate = args.lr * xm.xrt_world_size()
     
-    optimizer = Adam(model.parameters(),lr=args.lr, weight_decay=args.weight_decay)
+    optimizer = Adam(model.parameters(),lr=learning_rate, weight_decay=args.weight_decay)
     scheduler = lr_scheduler.ReduceLROnPlateau(optimizer, mode='max', patience=5, factor=0.3)
 
     #if torch.cuda.device_count() > 1 :
@@ -298,10 +304,15 @@ def main():
     # tr_accu_list = []
     best_epoch = 0
     for epoch in range(args.epochs):
-        tr_loss = train(dataset_size=train_size ,dataloader=train_dataloader, model=model, optimizer=optimizer, device=device,
+        #prarallel loader for training step in TPU
+        para_tr_loader = pl.ParallelLoader(train_dataloader, [device])
+        tr_loss = train(dataset_size=train_size ,dataloader=para_tr_loader, model=model, optimizer=optimizer, device=device,
                         loss_fn=loss_fn)
         #tr_accu = evaluate(dataset_size=train_size, dataloader=train_dataloader, model=model, device=device, loss_fn=loss_fn, tag='train')
-        val_loss, val_accu = evaluate(dataset_size=valid_size, dataloader=valid_dataloader, model=model, device=device,
+        
+        #prarallel loader for testing step in TPU
+        para_val_loader = pl.ParallelLoader(valid_dataloader, [device])
+        val_loss, val_accu = evaluate(dataset_size=valid_size, dataloader=para_val_loader, model=model, device=device,
                                       loss_fn=loss_fn, tag='valid')
         print(f'Epoch_{epoch+1} Train Loss:{tr_loss}')
         print(f'Epoch_{epoch+1} Valid Loss:{val_loss}')
@@ -316,6 +327,7 @@ def main():
             print(f'save {args.base_model} model on epoch {epoch+1}')
             torch.save(model.state_dict(), os.path.join(args.save_dir, f'{args.base_model}_fold_{VALID_FOLDS[0]}.bin'))
             val_accu_benchmark = val_accu
+            xm.save(model.state_dict(), "./model.pt")
     print(f'Save the best model on epoch {best_epoch}')
 
     stored_metrics = {'train': {
@@ -336,4 +348,8 @@ def main():
 
 if __name__ == '__main__':
     print(args)
-    main()
+    
+    #Turn on TPUs
+    FLAGS={}
+    xmp.spawn(main(), args=(FLAGS,), nprocs=8, start_method='fork')
+    
