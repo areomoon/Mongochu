@@ -306,14 +306,14 @@ def main():
     for epoch in range(args.epochs):
         #prarallel loader for training step in TPU
         para_tr_loader = pl.ParallelLoader(train_dataloader, [device])
-        tr_loss = train(dataset_size=train_size ,dataloader=para_tr_loader, model=model, optimizer=optimizer, device=device,
-                        loss_fn=loss_fn)
+        tr_loss = train(dataset_size=train_size ,dataloader=para_tr_loader.per_device_loader(device),
+                        model=model, optimizer=optimizer, device=device, loss_fn=loss_fn)
         #tr_accu = evaluate(dataset_size=train_size, dataloader=train_dataloader, model=model, device=device, loss_fn=loss_fn, tag='train')
         
         #prarallel loader for testing step in TPU
         para_val_loader = pl.ParallelLoader(valid_dataloader, [device])
-        val_loss, val_accu = evaluate(dataset_size=valid_size, dataloader=para_val_loader, model=model, device=device,
-                                      loss_fn=loss_fn, tag='valid')
+        val_loss, val_accu = evaluate(dataset_size=valid_size, dataloader=para_val_loader.per_device_loader(device), model=model,
+                                      device=device, loss_fn=loss_fn, tag='valid')
         print(f'Epoch_{epoch+1} Train Loss:{tr_loss}')
         print(f'Epoch_{epoch+1} Valid Loss:{val_loss}')
         scheduler.step(val_loss)
