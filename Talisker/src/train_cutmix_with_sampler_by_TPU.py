@@ -38,10 +38,10 @@ parser.add_argument('--train_file', default='../AIMango_img/train.csv', type=str
 parser.add_argument('--image_file', default='../AIMango_img/C1-P1_Train', type=str,
                     help='path to input data')
 
-parser.add_argument('--image_height', default=137, type=int,
+parser.add_argument('--image_height', default=128, type=int,
                     help='input image height')
 
-parser.add_argument('--image_width', default=236, type=int,
+parser.add_argument('--image_width', default=128, type=int,
                     help='input image width')
 
 parser.add_argument('--num_workers', default=4, type=int,
@@ -84,7 +84,6 @@ parser.add_argument('--cutmix_prob', default=1.0, type=float,
                     help='cutmix probability')
 
 args = parser.parse_args()
-
 
 LSLoss = LabelSmoothingLoss(3, smoothing=0.1)
 
@@ -249,9 +248,6 @@ def main():
     train_size = len(train_indices)
     valid_size = len(val_indices)
 
-    train_sampler = SubsetRandomSampler(train_indices)
-    valid_sampler = SubsetRandomSampler(val_indices)
-
     train_dataset = ImageExp2Dataset(
         phase = 'train',
         train_file = args.train_file,
@@ -261,6 +257,12 @@ def main():
         mean=MODEL_MEAN,
         std=MODEL_STD
     )
+    
+    train_sampler = torch.utils.data.distributed.DistributedSampler(
+        train_dataset,
+        num_replicas=xm.xrt_world_size(),
+        rank=xm.get_ordinal(),
+        shuffle=True)
 
     train_dataloader = DataLoader(
         dataset=train_dataset,
@@ -278,6 +280,8 @@ def main():
         mean=MODEL_MEAN,
         std=MODEL_STD
     )
+    
+    valid_sampler = SubsetRandomSampler(val_indices)
 
     valid_dataloader = DataLoader(
         dataset=valid_dataset,
@@ -351,4 +355,3 @@ if __name__ == '__main__':
     #Turn on TPUs
     FLAGS={}
     xmp.spawn(main(), args=(FLAGS,), nprocs=8, start_method='fork')
-    
