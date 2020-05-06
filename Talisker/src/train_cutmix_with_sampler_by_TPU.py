@@ -231,11 +231,12 @@ def main():
     if args.device =='cuda':
         torch.backends.cudnn.benchmark = True #  should add to speed up the code when input array shape doesn't vary
         print('Using cudnn.benchmark.')
-        device = args.device
-        
+        device = args.device 
     elif args.device =='tpu':
         device = xm.xla_device()
         print('Using Pytorch/XLA for TPU')
+    else:
+        device = args.device 
 
     model = model_dispatcher(args.base_model)
     model.to(device)
@@ -288,7 +289,7 @@ def main():
     scheduler = lr_scheduler.ReduceLROnPlateau(optimizer, mode='max', patience=5, factor=0.3)
 
     #if torch.cuda.device_count() > 1 :
-    model = nn.DataParallel()
+    #model = nn.DataParallel()
 
     val_accu_benchmark = 0.34
     val_loss_list = []
