@@ -14,7 +14,7 @@ from torch.utils.data.sampler import SubsetRandomSampler
 from sklearn.metrics import confusion_matrix,accuracy_score
 from sklearn.model_selection import train_test_split
 from torchtoolbox.nn import LabelSmoothingLoss
-import models
+
 
 MODEL_MEAN = (0.485,0.456,0.406)
 MODEL_STD = (0.229,0.224,0.225)
@@ -187,8 +187,8 @@ def model_dispatcher(base_model):
     elif base_model == 'resnet34': 
         return models.ResNet34(pretrained=True, n_class=3)
     
-    elif base_model == 'se_resnext101_32x4d_sSE': 
-        return models.se_resnext101_32x4d_sSE(pretrained=True, n_class=3)
+    elif base_model == 'SE_ResNext101_32x4d_sSE': 
+        return models.SE_ResNext101_32x4d_sSE(pretrained=True, n_class=3)
 
 class AverageMeter(object):
     """Computes and stores the average and current value"""
