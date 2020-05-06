@@ -346,11 +346,13 @@ def main():
     pickle.dump(stored_metrics, file)
     file.close()
 
-
+def _mp_fn(rank, flags):
+    torch.set_default_tensor_type('torch.FloatTensor')
+    res = main()
 
 if __name__ == '__main__':
     print(args)
     
     #Turn on TPUs
     FLAGS={}
-    xmp.spawn(main(), args=(FLAGS,), nprocs=8, start_method='fork')
+    xmp.spawn(_mp_fn, args=(FLAGS,), nprocs=8, start_method='fork')
