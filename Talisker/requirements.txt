@@ -8,3 +8,4 @@ iterative-stratification
 scikit-learn
 jupyter
 torchtoolbox
+torch_xla
