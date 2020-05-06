@@ -14,6 +14,7 @@ from torch.utils.data.sampler import SubsetRandomSampler
 from sklearn.metrics import confusion_matrix,accuracy_score
 from sklearn.model_selection import train_test_split
 from torchtoolbox.nn import LabelSmoothingLoss
+import models
 
 MODEL_MEAN = (0.485,0.456,0.406)
 MODEL_STD = (0.229,0.224,0.225)
