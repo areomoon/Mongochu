@@ -60,3 +60,23 @@ python eval_prob.py \
 --base_model vgg16_eval \
 --output_name vgg16_prob_v1
 ```
+
+### Blending
+Put all the files of predicted probabilities for each class under the ```folder_path```.  
+Then chose hard or soft voting for blending.  
+Please refer to [sklearn.VotingClassifier](https://scikit-learn.org/stable/modules/generated/sklearn.ensemble.VotingClassifier.html)  
+- hard blending
+```
+python blending.py \
+--folder_path ./pred \
+--voting hard \
+--output_name hard_blend
+```
+
+- soft blending
+```
+python blending.py \
+--folder_path ./pred \
+--voting soft \
+--output_name soft_blend
+```
