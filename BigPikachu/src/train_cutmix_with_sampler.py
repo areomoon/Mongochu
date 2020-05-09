@@ -7,6 +7,7 @@ import torch
 import torch.nn as nn
 from tqdm import tqdm
 import argparse
+from utils import model_dispatcher
 from dataset import ImageSamplerDataset
 from torch.utils.data import DataLoader
 from torch.optim import Adam,lr_scheduler
@@ -76,6 +77,9 @@ parser.add_argument('--cutmix_prob', default=1.0, type=float,
 
 parser.add_argument('--binclass', default=None, type=str,
                     help='specify class for binary classification')
+
+parser.add_argument('--nclass', default=3, type=int,
+                    help='number of classes')
 
 args = parser.parse_args()
 
@@ -189,22 +193,6 @@ def evaluate(dataset_size, dataloader, model, device,loss_fn, tag):
         print('General Accuracy score on Valid: {:5.4f}'.format(accu))
         return losses.avg, accu
 
-def model_dispatcher(base_model):
-    if base_model == 'se_resnext101_32x4d':
-        return models.SE_ResNext101_32x4d(pretrained=True, n_class=3)
-
-    elif base_model == 'vgg16':
-        return models.VGG16(pretrained=True, n_class=3)
-    
-    elif base_model == 'vgg16_binary':
-        return models.VGG16_binary(pretrained=True, n_class=2)
-
-    elif base_model == 'resnet34': 
-        return models.ResNet34(pretrained=True, n_class=3)
-    
-    elif base_model == 'se_resnext101_32x4d_sSE': 
-        return models.se_resnext101_32x4d_sSE(pretrained=True, n_class=3)
-
 class AverageMeter(object):
     """Computes and stores the average and current value"""
 
@@ -239,7 +227,7 @@ def main():
         torch.backends.cudnn.benchmark = True #  should add to speed up the code when input array shape doesn't vary
         print('Using cudnn.benchmark.')
 
-    model = model_dispatcher(args.base_model)
+    model = model_dispatcher(True, args.base_model, args.nclass)
     model.to(args.device)
     # print(f'Loading pretrained model: {args.base_model}')
 

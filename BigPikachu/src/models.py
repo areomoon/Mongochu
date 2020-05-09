@@ -63,51 +63,6 @@ class VGG16(nn.Module):
                 nn.init.normal_(m.weight, 0, 0.01)
                 nn.init.constant_(m.bias, 0)
 
-class VGG16_binary(nn.Module):
-    def __init__(self, pretrained, n_class):
-        super(VGG16_binary, self).__init__()
-        if pretrained is True:
-            self.model = pretrainedmodels.__dict__["vgg16"](pretrained='imagenet')
-        else:
-            self.model = pretrainedmodels.__dict__["vgg16"](pretrained=None)
-
-        self.l0 = nn.Linear(512, n_class)
-
-        self.classifier = nn.Sequential(
-            nn.Linear(512, 256),
-            nn.ReLU(True),
-            nn.Dropout(0.5),
-
-            nn.Linear(256, 128),
-            nn.ReLU(True),
-            nn.Dropout(0.5),
-
-            nn.Linear(128, 64),
-            nn.ReLU(True),
-            nn.Dropout(0.5),
-
-            nn.Linear(64, n_class),
-            # nn.Sigmoid()
-        )
-
-        self._initialize_weights()
-
-    def forward(self, x):
-        batch_size, _, _, _ = x.shape
-        x = self.model._features(x)
-        x = F.adaptive_avg_pool2d(x, 1).reshape(batch_size,-1)
-
-        # output = self.l0(x)
-        output = self.classifier(x)
-
-        return output
-
-    def _initialize_weights(self):
-        for m in self.modules():
-            if isinstance(m, nn.Linear):
-                nn.init.normal_(m.weight, 0, 0.01)
-                nn.init.constant_(m.bias, 0)
-
 class SE_ResNext101_32x4d(nn.Module):
     def __init__(self,pretrained, n_class):
         super(SE_ResNext101_32x4d, self).__init__()
