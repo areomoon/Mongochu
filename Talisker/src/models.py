@@ -1,4 +1,5 @@
 import torch.nn as nn
+import torchvision
 import pretrainedmodels
 from torch.nn import functional as F
 
@@ -9,7 +10,7 @@ class ResNet34(nn.Module):
             self.model = pretrainedmodels.__dict__["resnet34"](pretrained='imagenet')
         else:
             self.model = pretrainedmodels.__dict__["resnet34"](pretrained=None)
-        self.l0 = nn.Linear(512,n_class)
+        self.l0 = nn.Linear(512, n_class)
 
     def forward(self, x):
         batch_size, _, _, _ = x.shape
@@ -64,7 +65,7 @@ class VGG16(nn.Module):
                 nn.init.constant_(m.bias, 0)
 
 class SE_ResNext101_32x4d(nn.Module):
-    def __init__(self,pretrained, n_class):
+    def __init__(self, pretrained, n_class):
         super(SE_ResNext101_32x4d, self).__init__()
         if pretrained is True:
             self.model = pretrainedmodels.__dict__["se_resnext101_32x4d"](pretrained='imagenet')
@@ -113,7 +114,7 @@ class SE_ResNext101_32x4d_sSE(nn.Module):
         self.dense = nn.Linear(2048,128)
         self.dropout = nn.Dropout(0.3)
 
-        self.l0 = nn.Linear(128,n_class)
+        self.l0 = nn.Linear(128, n_class)
 
     def forward(self, x):
         '''
@@ -132,3 +133,24 @@ class SE_ResNext101_32x4d_sSE(nn.Module):
 
         return output
 
+class densenet201(nn.Module):
+
+    def __init__(self):
+        super(densenet201, self).__init__()
+        
+        self.base_model = torchvision.models.densenet201(pretrained=True)
+        self.base_model.classifier = nn.Identity()
+        self.fc = nn.Sequential(
+                    nn.Linear(1920, 1024, bias = True),
+                    nn.BatchNorm1d(1024),
+                    nn.ReLU(inplace=True),
+                    nn.Dropout(0.3),
+                    nn.Linear(1024, 512, bias = True),
+                    nn.BatchNorm1d(512),
+                    nn.ReLU(inplace=True),
+                    nn.Dropout(0.3),
+                    nn.Linear(512, 104))
+        
+    def forward(self, inputs):
+        x = self.base_model(inputs)
+        return self.fc(x)

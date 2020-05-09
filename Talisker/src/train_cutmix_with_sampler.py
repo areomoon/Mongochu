@@ -189,7 +189,10 @@ def model_dispatcher(base_model):
     
     elif base_model == 'SE_ResNext101_32x4d_sSE': 
         return models.SE_ResNext101_32x4d_sSE(pretrained=True, n_class=3)
-
+    
+    elif base_model == 'densenet201': 
+        return models.densenet201()
+    
 class AverageMeter(object):
     """Computes and stores the average and current value"""
 
@@ -284,7 +287,7 @@ def main():
     best_epoch = 0
     for epoch in range(args.epochs):
         tr_loss = train(dataset_size=train_size ,dataloader=train_dataloader, model=model, optimizer=optimizer, device=args.device, loss_fn=loss_fn)
-        tr_accu = evaluate(dataset_size=train_size, dataloader=train_dataloader, model=model, device=args.device, loss_fn=loss_fn, tag='train')
+        #tr_accu = evaluate(dataset_size=train_size, dataloader=train_dataloader, model=model, device=args.device, loss_fn=loss_fn, tag='train')
         val_loss, val_accu = evaluate(dataset_size=valid_size, dataloader=valid_dataloader, model=model, device=args.device, loss_fn=loss_fn, tag='valid')
         print(f'Epoch_{epoch+1} Train Loss:{tr_loss}')
         print(f'Epoch_{epoch+1} Valid Loss:{val_loss}')
