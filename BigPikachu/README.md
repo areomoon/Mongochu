@@ -14,6 +14,7 @@ python train_cutmix_with_sampler.py \
 --image_width 224 \
 --train_batch_size 64 \
 --base_model vgg16 \
+--nclass 3 \
 --beta 1 \
 --cutmix_prob 0.1 \
 --test_size 0.2 \
@@ -30,8 +31,9 @@ python train_cutmix_with_sampler.py \
 --image_height 224 \
 --image_width 224 \
 --train_batch_size 64 \
---base_model vgg16_binary \
+--base_model vgg16 \
 --binclass A \
+--nclass 2 \
 --beta 1 \
 --cutmix_prob 0.1 \
 --test_size 0.2 \
@@ -40,24 +42,28 @@ python train_cutmix_with_sampler.py \
 
 ### Inference
 - Output predicted classes for samples in Dev.  
-Save the ```vgg16_eval_submission.csv``` file under working directory ```BigPikachu/src/```
+Save the ```vgg16_eval_submission.csv``` file under working directory ```BigPikachu/src/```.  
+**Notes: modify ```nclass``` for binary/multiclass.**
 ```
 python eval.py \
 --image_file /kaggle/input/aimongo/AImongo_img/C1-P1_Dev \  
 --model_weights vgg16_fold_4.bin \
 --image_height 224 \
 --image_width 224 \
---base_model vgg16_eval
+--base_model vgg16 \
+--nclass 3
 ```
 - Output predicted probabilities of each classes for samples in Dev.  
-Save the ```vgg16_prob_v1.csv``` file under working directory ```BigPikachu/src/```
+Save the ```vgg16_prob_v1.csv``` file under working directory ```BigPikachu/src/```.  
+**Notes: currently don't support binary classification.**
 ```
 python eval_prob.py \
 --image_file /kaggle/input/aimongo/AImongo_img/C1-P1_Dev \
 --model_weights vgg16_fold_4.bin \
 --image_height 224 \
 --image_width 224 \
---base_model vgg16_eval \
+--base_model vgg16 \
+--nclass 3 \
 --output_name vgg16_prob_v1
 ```
 
