@@ -222,15 +222,16 @@ class ImageSamplerDataset:
             # training set
             self.aug = albumentations.Compose([
                 albumentations.Resize(image_height, image_width, always_apply=True),
-                albumentations.RandomShadow(shadow_roi=(0, 0.85, 1, 1), p=0.5),
-                albumentations.RandomBrightnessContrast(brightness_limit=0.10, contrast_limit=0.10, p=0.5),
+                albumentations.RandomShadow(shadow_roi=(0, 0.85, 1, 1), p=0.4),
+                albumentations.RandomBrightnessContrast(brightness_limit=0.30, contrast_limit=0.30, p=0.4),
                 albumentations.ShiftScaleRotate(shift_limit=0.0625,
-                                                scale_limit=0.1,
+                                                scale_limit=(0.0, 0.5),
                                                 rotate_limit=5,
-                                                p=0.9),
-                albumentations.Normalize(mean, std, always_apply=True)
+                                                p=0.4),
+                albumentations.Normalize(mean, std, always_apply=True),
+                # albumentations.ChannelShuffle(always_apply=False, p=0.1),
+                albumentations.HueSaturationValue(always_apply=False, p=0.3, hue_shift_limit=(-20, 20), sat_shift_limit=(-30, 30), val_shift_limit=(-20, 20))
             ])
-
 
     def __len__(self):
         return len(self.img_id)
