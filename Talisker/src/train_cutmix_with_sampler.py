@@ -108,7 +108,7 @@ def train(dataset_size, dataloader, model, optimizer, device, loss_fn):
     model.train()
     losses = AverageMeter()
 
-    for batch_ind, d in tqdm(enumerate(dataloader), total=dataset_size/dataloader.batch_size):
+    for batch_ind, d in tqdm(enumerate(dataloader), total=dataset_size/dataloader.batch_size, position=0):
         image = d['image']
         label = d['label']
         image = image.to(device,dtype=torch.float)
@@ -147,7 +147,7 @@ def evaluate(dataset_size, dataloader, model, device,loss_fn, tag):
     image_pred_list = []
     image_target_list = []
     with torch.no_grad():
-        for batch_ind, d in tqdm(enumerate(dataloader),total=dataset_size/dataloader.batch_size):
+        for batch_ind, d in tqdm(enumerate(dataloader),total=dataset_size/dataloader.batch_size, position=0):
             image = d['image']
             label = d['label']
             image = image.to(device,dtype=torch.float)

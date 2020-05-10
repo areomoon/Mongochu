@@ -131,18 +131,19 @@ class ImageExpDataset:
                 albumentations.VerticalFlip(p=0.5),
                 #albumentations.ToGray(always_apply=True),
                 #albumentations.RandomShadow(shadow_roi=(0, 0.85, 1, 1), p=0.5),
-                #albumentations.IAASharpen(alpha=(0.3, 0.3), lightness=(0.5, 0.5), always_apply=True),
-                #albumentations.RandomBrightnessContrast(brightness_limit=(0.10,0.10), contrast_limit=(0.20,0.20), p=.5),
+                #albumentations.CLAHE(always_apply=False, p=1.0, clip_limit=(1, 51), tile_grid_size=(10, 10)),
+                #albumentations.IAASharpen(alpha=(0.2, 0.5), lightness=(0.5, 2.0), always_apply=False, p=0.5),
+                albumentations.RandomBrightnessContrast(brightness_limit=(0.30,-0.10), contrast_limit=(0.20,-0.20), p=.5),
                 albumentations.ShiftScaleRotate(shift_limit=0.0625,
                                                 scale_limit=0.1,
                                                 rotate_limit=5,
                                                 p=0.5),
+                albumentations.ElasticTransform(always_apply=False, 
+                                                p=.3, alpha=1.0, sigma=50.0, alpha_affine=50.0, interpolation=0, 
+                                                border_mode=0, value=(0, 0, 0), mask_value=None, approximate=False),
+                albumentations.JpegCompression(always_apply=False, p=.5, quality_lower=0, quality_upper=100),
+                albumentations.Equalize(always_apply=False, p=1.0, mode='cv', by_channels=True),
                 #albumentations.InvertImg(p=.5),
-                albumentations.HueSaturationValue(hue_shift_limit=0,
-                                                  sat_shift_limit=(100,100),
-                                                  val_shift_limit=(100,100),
-                                                  always_apply=True),
-                albumentations.RGBShift(r_shift_limit=0, g_shift_limit=0, b_shift_limit=(-20,-20), always_apply=True),
                 albumentations.Normalize(mean, std, always_apply=True)
             ])
 
@@ -215,7 +216,7 @@ class ImageExp2Dataset:
             # validation set
             self.aug = albumentations.Compose([
                 albumentations.Resize(image_height,image_width,always_apply=True),
-                albumentations.CLAHE(always_apply=False, p=1.0, clip_limit=(1, 51), tile_grid_size=(10, 10)),
+                albumentations.Equalize(always_apply=False, p=1.0, mode='cv', by_channels=True),
                 albumentations.Normalize(mean,std,always_apply=True),
 
             ])
@@ -227,13 +228,17 @@ class ImageExp2Dataset:
                 albumentations.VerticalFlip(p=0.5),
                 #albumentations.ToGray(always_apply=True),
                 #albumentations.RandomShadow(shadow_roi=(0, 0.85, 1, 1), p=0.5),
-                albumentations.CLAHE(always_apply=False, p=1.0, clip_limit=(1, 51), tile_grid_size=(10, 10)),
-                albumentations.IAASharpen(alpha=(0.2, 0.5), lightness=(0.5, 2.0), always_apply=False, p=0.5),
+                #albumentations.CLAHE(always_apply=False, p=1.0, clip_limit=(1, 51), tile_grid_size=(10, 10)),
                 albumentations.RandomBrightnessContrast(brightness_limit=(0.30,-0.10), contrast_limit=(0.20,-0.20), p=.5),
                 albumentations.ShiftScaleRotate(shift_limit=0.0625,
                                                 scale_limit=0.1,
                                                 rotate_limit=5,
                                                 p=0.5),
+                albumentations.ElasticTransform(always_apply=False, 
+                                                p=.3, alpha=1.0, sigma=50.0, alpha_affine=50.0, interpolation=0, 
+                                                border_mode=0, value=(0, 0, 0), mask_value=None, approximate=False),
+                albumentations.JpegCompression(always_apply=False, p=.5, quality_lower=0, quality_upper=100),
+                albumentations.Equalize(always_apply=False, p=1.0, mode='cv', by_channels=True),
                 #albumentations.InvertImg(p=.5),
                 albumentations.Normalize(mean, std, always_apply=True)
             ])
