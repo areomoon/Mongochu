@@ -144,8 +144,6 @@ def train(dataset_size, dataloader, model, optimizer, device, loss_fn):
         loss.backward()
         optimizer.step()
 
-    del image, label, target
-
     return losses.avg
 
 
@@ -177,8 +175,6 @@ def evaluate(dataset_size, dataloader, model, device,loss_fn, tag):
         cfm = np.round(confusion_matrix(y_true=tgt, y_pred=pred, labels=[0,1,2]), 3)
     else:
         cfm = np.round(confusion_matrix(y_true=tgt, y_pred=pred, labels=[0,1]), 3)
-
-    del image, label, target
     
     accu = accuracy_score(y_true=tgt,y_pred=pred)
     if tag == 'train':
