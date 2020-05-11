@@ -9,7 +9,7 @@ import argparse
 from utils import model_dispatcher
 from dataset import ImageSamplerDataset
 from torch.utils.data import DataLoader
-from torch.optim import Adam,lr_scheduler
+from torch.optim import Adam,lr_scheduler, AdamW
 from torch.utils.data.sampler import SubsetRandomSampler
 from sklearn.metrics import confusion_matrix, accuracy_score
 from sklearn.model_selection import train_test_split
@@ -274,7 +274,7 @@ def main():
         sampler=valid_sampler
     )
 
-    optimizer = Adam(model.parameters(),lr=args.lr, weight_decay=args.weight_decay)
+    optimizer = AdamW(model.parameters(),lr=args.lr, weight_decay=args.weight_decay)
     scheduler = lr_scheduler.ReduceLROnPlateau(optimizer, mode='max', patience=5, factor=0.3)
 
     if torch.cuda.device_count() > 1 :
