@@ -75,6 +75,9 @@ parser.add_argument('--beta', default=1.0, type=float,
 parser.add_argument('--cutmix_prob', default=1.0, type=float,
                     help='cutmix probability')
 
+parser.add_argument('--pretrained', default=True, type=bool,
+                    help='import model is pretrained or not')
+
 args = parser.parse_args()
 
 
@@ -108,7 +111,7 @@ def train(dataset_size, dataloader, model, optimizer, device, loss_fn):
     model.train()
     losses = AverageMeter()
 
-    for batch_ind, d in tqdm(enumerate(dataloader), total=dataset_size/dataloader.batch_size, position=0):
+    for batch_ind, d in tqdm(enumerate(dataloader), total=dataset_size/dataloader.batch_size):
         image = d['image']
         label = d['label']
         image = image.to(device,dtype=torch.float)
@@ -147,7 +150,7 @@ def evaluate(dataset_size, dataloader, model, device,loss_fn, tag):
     image_pred_list = []
     image_target_list = []
     with torch.no_grad():
-        for batch_ind, d in tqdm(enumerate(dataloader),total=dataset_size/dataloader.batch_size, position=0):
+        for batch_ind, d in tqdm(enumerate(dataloader),total=dataset_size/dataloader.batch_size):
             image = d['image']
             label = d['label']
             image = image.to(device,dtype=torch.float)
@@ -179,16 +182,19 @@ def evaluate(dataset_size, dataloader, model, device,loss_fn, tag):
 
 def model_dispatcher(base_model):
     if base_model == 'se_resnext101_32x4d':
-        return models.SE_ResNext101_32x4d(pretrained=True, n_class=3)
+        return models.SE_ResNext101_32x4d(pretrained=args.pretrained, n_class=3)
 
     elif base_model == 'vgg16':
-        return models.VGG16(pretrained=True, n_class=3)
+        return models.VGG16(pretrained=args.pretrained, n_class=3)
 
     elif base_model == 'resnet34': 
-        return models.ResNet34(pretrained=True, n_class=3)
+        return models.ResNet34(pretrained=args.pretrained, n_class=3)
     
     elif base_model == 'SE_ResNext101_32x4d_sSE': 
-        return models.SE_ResNext101_32x4d_sSE(pretrained=True, n_class=3)
+        return models.SE_ResNext101_32x4d_sSE(pretrained=args.pretrained, n_class=3)
+    
+    elif base_model == 'pnasnet5large': 
+        return models.pnasnet5large(pretrained=args.pretrained, n_class=3)
     
     elif base_model == 'densenet201': 
         return models.densenet201()
@@ -287,7 +293,7 @@ def main():
     best_epoch = 0
     for epoch in range(args.epochs):
         tr_loss = train(dataset_size=train_size ,dataloader=train_dataloader, model=model, optimizer=optimizer, device=args.device, loss_fn=loss_fn)
-        #tr_accu = evaluate(dataset_size=train_size, dataloader=train_dataloader, model=model, device=args.device, loss_fn=loss_fn, tag='train')
+        tr_accu = evaluate(dataset_size=train_size, dataloader=train_dataloader, model=model, device=args.device, loss_fn=loss_fn, tag='train')
         val_loss, val_accu = evaluate(dataset_size=valid_size, dataloader=valid_dataloader, model=model, device=args.device, loss_fn=loss_fn, tag='valid')
         print(f'Epoch_{epoch+1} Train Loss:{tr_loss}')
         print(f'Epoch_{epoch+1} Valid Loss:{val_loss}')

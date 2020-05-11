@@ -133,6 +133,25 @@ class SE_ResNext101_32x4d_sSE(nn.Module):
 
         return output
 
+class pnasnet5large(nn.Module):
+    def __init__(self, pretrained, n_class):
+        super(pnasnet5large, self).__init__()
+        if pretrained:
+            self.model = pretrainedmodels.__dict__["pnasnet5large"](pretrained='imagenet')
+        else:
+            self.model = pretrainedmodels.__dict__["pnasnet5large"](pretrained=None)
+        
+        self.l0 = nn.Linear(2048, n_class)
+        
+    def forward(self, x):
+        batch_size, _, _, _ = x.shape
+        x = self.model.features(x)
+        x = F.adaptive_avg_pool2d(x, 1).reshape(batch_size, -1)
+        output = self.l0(x)
+
+        return output
+        
+
 class densenet201(nn.Module):
 
     def __init__(self):
