@@ -75,8 +75,8 @@ parser.add_argument('--beta', default=1.0, type=float,
 parser.add_argument('--cutmix_prob', default=1.0, type=float,
                     help='cutmix probability')
 
-parser.add_argument('--pretrained', default=True, type=bool,
-                    help='import model is pretrained or not')
+parser.add_argument('--pretrained', default=1, type=int,
+                    help='import model is pretrained or not, type 1 or 0')
 
 args = parser.parse_args()
 
@@ -181,20 +181,21 @@ def evaluate(dataset_size, dataloader, model, device,loss_fn, tag):
         return losses.avg, accu
 
 def model_dispatcher(base_model):
+    pretrained = bool(args.pretrained)
     if base_model == 'se_resnext101_32x4d':
-        return models.SE_ResNext101_32x4d(pretrained=args.pretrained, n_class=3)
+        return models.SE_ResNext101_32x4d(pretrained=pretrained, n_class=3)
 
     elif base_model == 'vgg16':
-        return models.VGG16(pretrained=args.pretrained, n_class=3)
+        return models.VGG16(pretrained=pretrained, n_class=3)
 
     elif base_model == 'resnet34': 
-        return models.ResNet34(pretrained=args.pretrained, n_class=3)
+        return models.ResNet34(pretrained=pretrained, n_class=3)
     
     elif base_model == 'SE_ResNext101_32x4d_sSE': 
-        return models.SE_ResNext101_32x4d_sSE(pretrained=args.pretrained, n_class=3)
+        return models.SE_ResNext101_32x4d_sSE(pretrained=pretrained, n_class=3)
     
     elif base_model == 'pnasnet5large': 
-        return models.pnasnet5large(pretrained=args.pretrained, n_class=3)
+        return models.pnasnet5large(pretrained=pretrained, n_class=3)
     
     elif base_model == 'densenet201': 
         return models.densenet201()

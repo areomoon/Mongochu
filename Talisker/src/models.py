@@ -141,7 +141,7 @@ class pnasnet5large(nn.Module):
         else:
             self.model = pretrainedmodels.__dict__["pnasnet5large"](pretrained=None)
         
-        self.l0 = nn.Linear(2048, n_class)
+        self.l0 = nn.Linear(4320, n_class)
         
     def forward(self, x):
         batch_size, _, _, _ = x.shape
