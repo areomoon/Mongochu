@@ -230,6 +230,7 @@ class ImageSamplerDataset:
                                                 scale_limit=(0.0, 0.5),
                                                 rotate_limit=0,
                                                 p=0.5),
+                albumentations.Flip(always_apply=False, p=0.4),
                 albumentations.Normalize(mean, std, always_apply=True)
                 # albumentations.ChannelShuffle(always_apply=False, p=0.2),
                 # albumentations.HueSaturationValue(always_apply=False, p=0.5, hue_shift_limit=(-20, 20), sat_shift_limit=(-30, 30), val_shift_limit=(-20, 20))
