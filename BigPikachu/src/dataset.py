@@ -221,9 +221,10 @@ class ImageSamplerDataset:
         elif phase == 'train':
             # training set
             self.aug = albumentations.Compose([
+                albumentations.CenterCrop(always_apply=False, p=0.4, height=600, width=600),
                 albumentations.Resize(image_height, image_width, always_apply=True),
                 # albumentations.RandomShadow(shadow_roi=(0, 0.85, 1, 1), p=0.5),
-                albumentations.ToGray(always_apply=False, p=0.3),
+                albumentations.ToGray(always_apply=False, p=0.2),
                 albumentations.RandomBrightnessContrast(brightness_limit=0.20, contrast_limit=0.50, p=0.5),
                 albumentations.ShiftScaleRotate(shift_limit=0,
                                                 scale_limit=(0.0, 0.5),

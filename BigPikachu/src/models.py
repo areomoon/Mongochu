@@ -78,11 +78,7 @@ class SE_ResNext101_32x4d(nn.Module):
             nn.ReLU(True),
             nn.Dropout(0.5),
 
-            nn.Linear(512, 256),
-            nn.ReLU(True),
-            nn.Dropout(0.5),
-
-            nn.Linear(256, 128),
+            nn.Linear(512, 128),
             nn.ReLU(True),
             nn.Dropout(0.5),
 
