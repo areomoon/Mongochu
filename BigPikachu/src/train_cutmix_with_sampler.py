@@ -1,17 +1,17 @@
 import os
 import pickle
-import models
 import pandas as pd
 import numpy as np
 import torch
 import torch.nn as nn
 from tqdm import tqdm
 import argparse
-from dataset import ImageExp2Dataset
+from utils import model_dispatcher
+from dataset import ImageSamplerDataset
 from torch.utils.data import DataLoader
-from torch.optim import Adam,lr_scheduler
+from torch.optim import Adam,lr_scheduler, AdamW
 from torch.utils.data.sampler import SubsetRandomSampler
-from sklearn.metrics import confusion_matrix,accuracy_score
+from sklearn.metrics import confusion_matrix, accuracy_score
 from sklearn.model_selection import train_test_split
 from torchtoolbox.nn import LabelSmoothingLoss
 
@@ -74,6 +74,12 @@ parser.add_argument('--beta', default=1.0, type=float,
 parser.add_argument('--cutmix_prob', default=1.0, type=float,
                     help='cutmix probability')
 
+parser.add_argument('--binclass', default=None, type=str,
+                    help='specify class for binary classification')
+
+parser.add_argument('--nclass', default=3, type=int,
+                    help='number of classes')
+
 args = parser.parse_args()
 
 
@@ -98,7 +104,7 @@ def rand_bbox(size, lam):
     return bbx1, bby1, bbx2, bby2
 
 
-def loss_fn(outputs,target):
+def loss_fn(outputs, target):
     loss = nn.CrossEntropyLoss()(outputs, target)
     return loss
 
@@ -125,18 +131,19 @@ def train(dataset_size, dataloader, model, optimizer, device, loss_fn):
             # adjust lambda to exactly match pixel ratio
             lam = 1 - ((bbx2 - bbx1) * (bby2 - bby1) / (image.size()[-1] * image.size()[-2]))
             # compute output
-            output = model(image)
-            loss = loss_fn(output, target_a) * lam + loss_fn(output, target_b) * (1. - lam)
+            outputs = model(image)
+            loss = loss_fn(outputs, target_a) * lam + loss_fn(outputs, target_b) * (1. - lam)
         else:
             # compute output
-            output = model(image)
-            loss = loss_fn(output, target)
+            outputs = model(image)
+            loss = loss_fn(outputs, target)
 
         losses.update(loss.item(), image.size(0))
 
         optimizer.zero_grad()
         loss.backward()
-        optimizer.step()       
+        optimizer.step()
+
     return losses.avg
 
 
@@ -153,7 +160,7 @@ def evaluate(dataset_size, dataloader, model, device,loss_fn, tag):
             target = label.to(device, dtype=torch.long)
             outputs = model(image)
 
-            loss = loss_fn(outputs,target)
+            loss = loss_fn(outputs, target)
             losses.update(loss.item(), image.size(0))
 
             pred_label = torch.argmax(outputs, dim=1)
@@ -163,7 +170,12 @@ def evaluate(dataset_size, dataloader, model, device,loss_fn, tag):
     # Evaludation Metrics
     pred = torch.cat(image_pred_list).cpu().numpy()
     tgt = torch.cat(image_target_list).cpu().numpy()
-    cfm = np.round(confusion_matrix(y_true=tgt,y_pred=pred,labels=[0,1,2]),3)
+    
+    if not args.binclass:
+        cfm = np.round(confusion_matrix(y_true=tgt, y_pred=pred, labels=[0,1,2]), 3)
+    else:
+        cfm = np.round(confusion_matrix(y_true=tgt, y_pred=pred, labels=[0,1]), 3)
+    
     accu = accuracy_score(y_true=tgt,y_pred=pred)
     if tag == 'train':
         print(f'Confusion Matrix of {tag}')
@@ -175,19 +187,6 @@ def evaluate(dataset_size, dataloader, model, device,loss_fn, tag):
         print(cfm)
         print('General Accuracy score on Valid: {:5.4f}'.format(accu))
         return losses.avg, accu
-
-def model_dispatcher(base_model):
-    if base_model == 'se_resnext101_32x4d':
-        return models.SE_ResNext101_32x4d(pretrained=True, n_class=3)
-
-    elif base_model == 'vgg16':
-        return models.VGG16(pretrained=True, n_class=3)
-
-    elif base_model == 'resnet34': 
-        return models.ResNet34(pretrained=True, n_class=3)
-    
-    elif base_model == 'se_resnext101_32x4d_sSE': 
-        return models.se_resnext101_32x4d_sSE(pretrained=True, n_class=3)
 
 class AverageMeter(object):
     """Computes and stores the average and current value"""
@@ -223,7 +222,7 @@ def main():
         torch.backends.cudnn.benchmark = True #  should add to speed up the code when input array shape doesn't vary
         print('Using cudnn.benchmark.')
 
-    model = model_dispatcher(args.base_model)
+    model = model_dispatcher(True, args.base_model, args.nclass)
     model.to(args.device)
     # print(f'Loading pretrained model: {args.base_model}')
 
@@ -235,14 +234,15 @@ def main():
     train_sampler = SubsetRandomSampler(train_indices)
     valid_sampler = SubsetRandomSampler(val_indices)
 
-    train_dataset = ImageExp2Dataset(
+    train_dataset = ImageSamplerDataset(
         phase = 'train',
         train_file = args.train_file,
         image_file_path = args.image_file,
         image_height=args.image_height,
         image_width=args.image_width,
         mean=MODEL_MEAN,
-        std=MODEL_STD
+        std=MODEL_STD,
+        binclass = args.binclass
     )
 
     train_dataloader = DataLoader(
@@ -252,14 +252,15 @@ def main():
         sampler=train_sampler
     )
 
-    valid_dataset = ImageExp2Dataset(
+    valid_dataset = ImageSamplerDataset(
         phase = 'valid',
         train_file = args.train_file,
         image_file_path=args.image_file,
         image_height=args.image_height,
         image_width=args.image_width,
         mean=MODEL_MEAN,
-        std=MODEL_STD
+        std=MODEL_STD,
+        binclass = args.binclass
     )
 
     valid_dataloader = DataLoader(
@@ -269,7 +270,7 @@ def main():
         sampler=valid_sampler
     )
 
-    optimizer = Adam(model.parameters(),lr=args.lr, weight_decay=args.weight_decay)
+    optimizer = AdamW(model.parameters(),lr=args.lr, weight_decay=args.weight_decay)
     scheduler = lr_scheduler.ReduceLROnPlateau(optimizer, mode='max', patience=5, factor=0.3)
 
     if torch.cuda.device_count() > 1 :

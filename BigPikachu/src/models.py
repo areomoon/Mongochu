@@ -73,6 +73,20 @@ class SE_ResNext101_32x4d(nn.Module):
 
         self.l0 = nn.Linear(2048,n_class)
 
+        self.classifier = nn.Sequential(
+            nn.Linear(2048, 512),
+            nn.ReLU(True),
+            nn.Dropout(0.5),
+
+            nn.Linear(512, 128),
+            nn.ReLU(True),
+            nn.Dropout(0.5),
+
+            nn.Linear(128, n_class),
+        )
+
+        self._initialize_weights()
+
     def forward(self, x):
         '''
         WIP
@@ -82,9 +96,16 @@ class SE_ResNext101_32x4d(nn.Module):
         batch_size, _, _, _ = x.shape
         x = self.model.features(x)
         x = F.adaptive_avg_pool2d(x, 1).reshape(batch_size,-1)
-        output = self.l0(x)
+        # output = self.l0(x)
+        output = self.classifier(x)
 
         return output
+    
+    def _initialize_weights(self):
+        for m in self.modules():
+            if isinstance(m, nn.Linear):
+                nn.init.normal_(m.weight, 0, 0.01)
+                nn.init.constant_(m.bias, 0)
 
 class sSE_Block(nn.Module):
     """

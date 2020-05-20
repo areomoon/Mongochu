@@ -189,3 +189,62 @@ class ImageExp2Dataset:
             'image': torch.tensor(image, dtype=torch.float),
             'label': torch.tensor(self.labels[item], dtype=torch.long)
         }
+
+class ImageSamplerDataset:
+    def __init__(self, phase, train_file, image_file_path, image_height, image_width, mean, std, binclass):
+        self.image_file_path = image_file_path
+
+        df = pd.read_csv(train_file)
+
+        if binclass == 'A':
+            class_map = {'A':1,'B':0,'C':0}
+
+        elif binclass == 'B':
+            class_map = {'A':0,'B':1,'C':0}
+
+        elif binclass == 'C':
+            class_map = {'A':0,'B':0,'C':1}
+
+        else:
+            class_map = {'A':0,'B':1,'C':2}
+
+        self.img_id = df['image_id'].apply(lambda x: x.split('.')[0]).values # just take id of image_id
+        self.labels = df['label'].apply(lambda x: x[-1]).map(class_map).values # encoding labels
+
+        if phase == 'valid':
+            # validation set
+            self.aug = albumentations.Compose([
+                albumentations.Resize(image_height,image_width,always_apply=True),
+                albumentations.Normalize(mean,std,always_apply=True),
+
+            ])
+        elif phase == 'train':
+            # training set
+            self.aug = albumentations.Compose([
+                albumentations.CenterCrop(always_apply=False, p=0.4, height=600, width=600),
+                albumentations.Resize(image_height, image_width, always_apply=True),
+                # albumentations.RandomShadow(shadow_roi=(0, 0.85, 1, 1), p=0.5),
+                albumentations.ToGray(always_apply=False, p=0.2),
+                albumentations.RandomBrightnessContrast(brightness_limit=0.20, contrast_limit=0.50, p=0.5),
+                albumentations.ShiftScaleRotate(shift_limit=0,
+                                                scale_limit=(0.0, 0.5),
+                                                rotate_limit=0,
+                                                p=0.5),
+                albumentations.Flip(always_apply=False, p=0.4),
+                albumentations.Normalize(mean, std, always_apply=True)
+                # albumentations.ChannelShuffle(always_apply=False, p=0.2),
+                # albumentations.HueSaturationValue(always_apply=False, p=0.5, hue_shift_limit=(-20, 20), sat_shift_limit=(-30, 30), val_shift_limit=(-20, 20))
+            ])
+
+    def __len__(self):
+        return len(self.img_id)
+
+    def __getitem__(self, item):
+        img_bgr = cv2.imread(f"{self.image_file_path}/{self.img_id[item]}.jpg")
+        img_rgb = img_bgr[:, :, [2, 1, 0]]
+        image = self.aug(image=np.array(img_rgb))['image']
+        image = np.transpose(image, [2, 0, 1]).astype(float)  # for using torchvision model
+        return {
+            'image': torch.tensor(image, dtype=torch.float),
+            'label': torch.tensor(self.labels[item], dtype=torch.long)
+        }

@@ -6,7 +6,7 @@ import torch
 from tqdm import tqdm
 import argparse
 from dataset import ImageTestDataset
-from model_dispatcher import MODEL_DISPATCHER
+from utils import model_dispatcher
 from torch.utils.data import DataLoader
 
 MODEL_MEAN = (0.485,0.456,0.406)
@@ -35,12 +35,6 @@ parser.add_argument('--base_model', default='vgg16_eval', type=str,
 parser.add_argument('--lr', default=1e-4, type=float,
                     help='learning rate')
 
-# parser.add_argument('--epochs', default=3, type=int,
-#                     help='Number of epoch for training')
-#
-# parser.add_argument('--train_batch_size', default=128, type=int,
-#                     help='Batch size for training')
-
 parser.add_argument('--test_batch_size', default=128, type=int,
                     help='Batch size for training')
 
@@ -53,11 +47,14 @@ parser.add_argument('--model_weights', default=None, type=str,
 parser.add_argument('--output_name', default='vgg16_prob', type=str,
                     help='name of probability prediction file')
 
+parser.add_argument('--nclass', default=3, type=int,
+                    help='number of classes')
+
 args = parser.parse_args()
 
 
 def main():
-    model = MODEL_DISPATCHER[args.base_model]
+    model = model_dispatcher(False, args.base_model, args.nclass)
     model.to(args.device)
     model.load_state_dict(torch.load(os.path.join(args.save_dir,args.model_weights)))
     model.eval()
