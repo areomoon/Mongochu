@@ -74,14 +74,13 @@ class SE_ResNext101_32x4d(nn.Module):
         self.l0 = nn.Linear(2048,n_class)
 
         self.classifier = nn.Sequential(
+            nn.BatchNorm1d(2048, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True),
+            Dropout(p=0.25, inplace=False),
             nn.Linear(2048, 512),
             nn.ReLU(True),
-            nn.Dropout(0.5),
-
-            nn.Linear(512, 128),
-            nn.ReLU(True),
-            nn.Dropout(0.5),
-
+            
+            nn.BatchNorm1d(2048, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True),
+            nn.Dropout(p=0.25, inplace=False),
             nn.Linear(128, n_class),
         )
 
