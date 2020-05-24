@@ -7,6 +7,7 @@ import os
 import glob
 import cv2
 from albumentations.core.transforms_interface import ImageOnlyTransform
+from albumentations import torch as AT
 
 def cutoutside(img,bin_width, fill_value):
     # Make a copy of the input image since we don't want to modify it directly
@@ -214,27 +215,26 @@ class ImageSamplerDataset:
         if phase == 'valid':
             # validation set
             self.aug = albumentations.Compose([
-                albumentations.Resize(image_height,image_width,always_apply=True),
-                albumentations.Normalize(mean,std,always_apply=True),
-
-            ])
+                albumentations.Resize(image_height, image_width),
+                albumentations.Normalize(mean, std),
+                AT.ToTensor()
+                ])
         elif phase == 'train':
             # training set
             self.aug = albumentations.Compose([
-                albumentations.CenterCrop(always_apply=False, p=0.4, height=600, width=600),
-                albumentations.Resize(image_height, image_width, always_apply=True),
-                # albumentations.RandomShadow(shadow_roi=(0, 0.85, 1, 1), p=0.5),
-                albumentations.ToGray(always_apply=False, p=0.2),
-                albumentations.RandomBrightnessContrast(brightness_limit=0.20, contrast_limit=0.50, p=0.5),
-                albumentations.ShiftScaleRotate(shift_limit=0,
-                                                scale_limit=(0.0, 0.5),
-                                                rotate_limit=0,
-                                                p=0.5),
-                albumentations.Flip(always_apply=False, p=0.4),
-                albumentations.Normalize(mean, std, always_apply=True)
-                # albumentations.ChannelShuffle(always_apply=False, p=0.2),
-                # albumentations.HueSaturationValue(always_apply=False, p=0.5, hue_shift_limit=(-20, 20), sat_shift_limit=(-30, 30), val_shift_limit=(-20, 20))
-            ])
+                albumentations.Resize(image_height, image_width),
+                albumentations.RandomRotate90(p=0.5),
+                albumentations.Transpose(p=0.5),
+                albumentations.Flip(p=0.5),
+                albumentations.OneOf([
+                    albumentations.CLAHE(clip_limit=2), albumentations.IAASharpen(), albumentations.IAAEmboss(), 
+                    albumentations.RandomBrightness(), albumentations.RandomContrast(),
+                    albumentations.JpegCompression(), albumentations.Blur(), albumentations.GaussNoise()], p=0.5), 
+                albumentations.HueSaturationValue(p=0.5), 
+                albumentations.ShiftScaleRotate(shift_limit=0.15, scale_limit=0.15, rotate_limit=45, p=0.5),
+                albumentations.Normalize(mean, std),
+                AT.ToTensor()
+                ])
 
     def __len__(self):
         return len(self.img_id)
