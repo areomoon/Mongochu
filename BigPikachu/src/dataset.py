@@ -96,6 +96,27 @@ class ImageTestDataset:
             'image_id' : self.image_ids[item]
         }
 
+class ImageTTADataset:
+    def __init__(self, file_path, transform):
+        self.image_files = glob.glob(os.path.join(file_path, '*.jpg'))
+        self.image_ids = [os.path.basename(f).split('.')[0] for f in self.image_files]
+
+        # validation set
+        self.aug = transform
+
+    def __len__(self):
+        return len(self.image_ids)
+
+    def __getitem__(self, item):
+        img_bgr = cv2.imread(self.image_files[item])
+        img_rgb = img_bgr[:, :, [2, 1, 0]]
+        img = self.aug(image=np.array(img_rgb))['image']
+        img_float = np.transpose(img, [2, 0, 1]).astype(float) # for using torchvision model
+        return {
+            'image' : torch.tensor(img_float, dtype=torch.float),
+            'image_id' : self.image_ids[item]
+        }
+
 class ImageExpDataset:
     def __init__(self,fold_file, image_file_path, folds, image_height, image_width, mean, std):
         self.image_file_path = image_file_path
