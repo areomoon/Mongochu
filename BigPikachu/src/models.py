@@ -1,3 +1,4 @@
+import torch
 import torch.nn as nn
 import pretrainedmodels
 from torch.nn import functional as F
@@ -74,28 +75,24 @@ class SE_ResNext101_32x4d(nn.Module):
         self.l0 = nn.Linear(2048,n_class)
 
         self.classifier = nn.Sequential(
-            nn.BatchNorm1d(2048, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True),
-            Dropout(p=0.25, inplace=False),
-            nn.Linear(2048, 512),
+            nn.BatchNorm1d(4096, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True),
+            nn.Dropout(p=0.25, inplace=False),
+            nn.Linear(4096, 512),
             nn.ReLU(True),
             
-            nn.BatchNorm1d(2048, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True),
-            nn.Dropout(p=0.25, inplace=False),
-            nn.Linear(128, n_class),
+            nn.BatchNorm1d(512, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True),
+            nn.Dropout(p=0.5, inplace=False),
+            nn.Linear(512, n_class)
         )
 
         self._initialize_weights()
 
     def forward(self, x):
-        '''
-        WIP
-        :param x:
-        :return:
-        '''
         batch_size, _, _, _ = x.shape
         x = self.model.features(x)
-        x = F.adaptive_avg_pool2d(x, 1).reshape(batch_size,-1)
-        # output = self.l0(x)
+        ap = F.adaptive_avg_pool2d(x, 1).reshape(batch_size,-1)
+        mp = F.AdaptiveMaxPool2d(x, 1).reshape(batch_size,-1)
+        x = torch.cat((ap, mp), 1)
         output = self.classifier(x)
 
         return output
