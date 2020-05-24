@@ -7,7 +7,6 @@ import os
 import glob
 import cv2
 from albumentations.core.transforms_interface import ImageOnlyTransform
-from albumentations import torch as AT
 
 def cutoutside(img,bin_width, fill_value):
     # Make a copy of the input image since we don't want to modify it directly
@@ -217,7 +216,7 @@ class ImageSamplerDataset:
             self.aug = albumentations.Compose([
                 albumentations.Resize(image_height, image_width),
                 albumentations.Normalize(mean, std),
-                AT.ToTensor()
+                albumentations.ToFloat()
                 ])
         elif phase == 'train':
             # training set
@@ -233,7 +232,7 @@ class ImageSamplerDataset:
                 albumentations.HueSaturationValue(p=0.5), 
                 albumentations.ShiftScaleRotate(shift_limit=0.15, scale_limit=0.15, rotate_limit=45, p=0.5),
                 albumentations.Normalize(mean, std),
-                AT.ToTensor()
+                albumentations.ToFloat()
                 ])
 
     def __len__(self):
