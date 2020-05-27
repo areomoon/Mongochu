@@ -12,43 +12,43 @@ import albumentations
 
 parser = argparse.ArgumentParser(description='Mango Defection Classification With Pytorch')
 
-parser.add_argument('--image_file', default = None, type=str,
+parser.add_argument('--image_file', default = '../BigPikachu/AImongo_img/C1-P1_Dev', type=str,
                     help='path to input data')
 
-parser.add_argument('--image_height', default=137, type=int,
+parser.add_argument('--image_height', default=224, type=int,
                     help='input image height')
 
-parser.add_argument('--image_width', default=236, type=int,
+parser.add_argument('--image_width', default=224, type=int,
                     help='input image width')
 
 parser.add_argument('--num_workers', default=4, type=int,
                     help='Number of workers for loading image')
 
-parser.add_argument('--device', default='cuda', type=str,
+parser.add_argument('--device', default='cpu', type=str,
                     help='device for train and eval')
 
-parser.add_argument('--base_model', default='vgg16_eval', type=str,
+parser.add_argument('--base_model', default='vgg16', type=str,
                     help='base model to use')
 
 parser.add_argument('--test_batch_size', default=128, type=int,
                     help='Batch size for training')
 
-parser.add_argument('--save_dir', default='../weights', type=str,
+parser.add_argument('--save_dir', default='./weights', type=str,
                     help='directory to save model')
 
-parser.add_argument('--model_weights', default=None, type=str,
+parser.add_argument('--model_weights', default='vgg16_fold_4_new_aug.bin', type=str,
                     help='model weights to load')
 
 parser.add_argument('--nclass', default=3, type=int,
                     help='number of classes')
 
-parser.add_argument('--num_tta', default=32, type=int,
+parser.add_argument('--num_tta', default=8, type=int,
                     help='number of TTA')
 
 args = parser.parse_args()
 
 data_transforms = albumentations.Compose([
-    albumentations.Resize(args.image_height, argsimage_width),
+    albumentations.Resize(args.image_height, args.image_width),
     albumentations.RandomRotate90(p=0.5),
     albumentations.Transpose(p=0.5),
     albumentations.Flip(p=0.5),
@@ -63,13 +63,13 @@ data_transforms = albumentations.Compose([
     ])
 
 data_transforms_test = albumentations.Compose([
-    albumentations.Resize(args.image_height, argsimage_width),
+    albumentations.Resize(args.image_height, args.image_width),
     albumentations.Normalize(mean=[0.485, 0.456, 0.406],std=[0.229, 0.224, 0.225]),
     albumentations.ToFloat()
     ])
 
 data_transforms_tta0 = albumentations.Compose([
-    albumentations.Resize(args.image_height, argsimage_width),
+    albumentations.Resize(args.image_height, args.image_width),
     albumentations.RandomRotate90(p=0.5),
     albumentations.Transpose(p=0.5),
     albumentations.Flip(p=0.5),
@@ -78,21 +78,21 @@ data_transforms_tta0 = albumentations.Compose([
     ])
 
 data_transforms_tta1 = albumentations.Compose([
-    albumentations.Resize(args.image_height, argsimage_width),
+    albumentations.Resize(args.image_height, args.image_width),
     albumentations.RandomRotate90(p=1),
     albumentations.Normalize(mean=[0.485, 0.456, 0.406],std=[0.229, 0.224, 0.225]),
     albumentations.ToFloat()
     ])
 
 data_transforms_tta2 = albumentations.Compose([
-    albumentations.Resize(args.image_height, argsimage_width),
+    albumentations.Resize(args.image_height, args.image_width),
     albumentations.Transpose(p=1),
     albumentations.Normalize(mean=[0.485, 0.456, 0.406],std=[0.229, 0.224, 0.225]),
     albumentations.ToFloat()
     ])
 
 data_transforms_tta3 = albumentations.Compose([
-    albumentations.Resize(args.image_height, argsimage_width),
+    albumentations.Resize(args.image_height, args.image_width),
     albumentations.Flip(p=1),
     albumentations.Normalize(mean=[0.485, 0.456, 0.406],std=[0.229, 0.224, 0.225]),
     albumentations.ToFloat()
