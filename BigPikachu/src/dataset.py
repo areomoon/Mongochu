@@ -96,6 +96,27 @@ class ImageTestDataset:
             'image_id' : self.image_ids[item]
         }
 
+class ImageTTADataset:
+    def __init__(self, file_path, transform):
+        self.image_files = glob.glob(os.path.join(file_path, '*.jpg'))
+        self.image_ids = [os.path.basename(f).split('.')[0] for f in self.image_files]
+
+        # validation set
+        self.aug = transform
+
+    def __len__(self):
+        return len(self.image_ids)
+
+    def __getitem__(self, item):
+        img_bgr = cv2.imread(self.image_files[item])
+        img_rgb = img_bgr[:, :, [2, 1, 0]]
+        img = self.aug(image=np.array(img_rgb))['image']
+        img_float = np.transpose(img, [2, 0, 1]).astype(float) # for using torchvision model
+        return {
+            'image' : torch.tensor(img_float, dtype=torch.float),
+            'image_id' : self.image_ids[item]
+        }
+
 class ImageExpDataset:
     def __init__(self,fold_file, image_file_path, folds, image_height, image_width, mean, std):
         self.image_file_path = image_file_path
@@ -214,27 +235,26 @@ class ImageSamplerDataset:
         if phase == 'valid':
             # validation set
             self.aug = albumentations.Compose([
-                albumentations.Resize(image_height,image_width,always_apply=True),
-                albumentations.Normalize(mean,std,always_apply=True),
-
-            ])
+                albumentations.Resize(image_height, image_width),
+                albumentations.Normalize(mean, std),
+                albumentations.ToFloat()
+                ])
         elif phase == 'train':
             # training set
             self.aug = albumentations.Compose([
-                albumentations.CenterCrop(always_apply=False, p=0.4, height=600, width=600),
-                albumentations.Resize(image_height, image_width, always_apply=True),
-                # albumentations.RandomShadow(shadow_roi=(0, 0.85, 1, 1), p=0.5),
-                albumentations.ToGray(always_apply=False, p=0.2),
-                albumentations.RandomBrightnessContrast(brightness_limit=0.20, contrast_limit=0.50, p=0.5),
-                albumentations.ShiftScaleRotate(shift_limit=0,
-                                                scale_limit=(0.0, 0.5),
-                                                rotate_limit=0,
-                                                p=0.5),
-                albumentations.Flip(always_apply=False, p=0.4),
-                albumentations.Normalize(mean, std, always_apply=True)
-                # albumentations.ChannelShuffle(always_apply=False, p=0.2),
-                # albumentations.HueSaturationValue(always_apply=False, p=0.5, hue_shift_limit=(-20, 20), sat_shift_limit=(-30, 30), val_shift_limit=(-20, 20))
-            ])
+                albumentations.Resize(image_height, image_width),
+                albumentations.RandomRotate90(p=0.5),
+                albumentations.Transpose(p=0.5),
+                albumentations.Flip(p=0.5),
+                albumentations.OneOf([
+                    albumentations.CLAHE(clip_limit=2), albumentations.IAASharpen(), albumentations.IAAEmboss(), 
+                    albumentations.RandomBrightness(), albumentations.RandomContrast(),
+                    albumentations.JpegCompression(), albumentations.Blur(), albumentations.GaussNoise()], p=0.5), 
+                albumentations.HueSaturationValue(p=0.5), 
+                albumentations.ShiftScaleRotate(shift_limit=0.15, scale_limit=0.15, rotate_limit=45, p=0.5),
+                albumentations.Normalize(mean, std),
+                albumentations.ToFloat()
+                ])
 
     def __len__(self):
         return len(self.img_id)
