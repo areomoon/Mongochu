@@ -74,7 +74,7 @@ class SE_ResNext101_32x4d(nn.Module):
 
         self.l0 = nn.Linear(2048,n_class)
 
-        self.classifier = nn.Sequential(
+        self.classifier_new = nn.Sequential(
             nn.BatchNorm1d(4096, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True),
             nn.Dropout(p=0.25, inplace=False),
             nn.Linear(4096, 512),
@@ -85,14 +85,31 @@ class SE_ResNext101_32x4d(nn.Module):
             nn.Linear(512, n_class)
         )
 
+        self.classifier = nn.Sequential(
+            nn.Linear(2048, 512),
+            nn.ReLU(True),
+            nn.Dropout(0.5),
+
+            nn.Linear(512, 256),
+            nn.ReLU(True),
+            nn.Dropout(0.5),
+
+            nn.Linear(256, 128),
+            nn.ReLU(True),
+            nn.Dropout(0.5),
+
+            nn.Linear(128, n_class),
+        )
+
         self._initialize_weights()
 
     def forward(self, x):
         batch_size, _, _, _ = x.shape
         x = self.model.features(x)
-        ap = F.adaptive_avg_pool2d(x, 1).reshape(batch_size,-1)
-        mp = F.adaptive_max_pool2d(x, 1).reshape(batch_size,-1)
-        x = torch.cat((ap, mp), 1)
+        x = F.adaptive_avg_pool2d(x, 1).reshape(batch_size,-1)
+        # ap = F.adaptive_avg_pool2d(x, 1).reshape(batch_size,-1)
+        # mp = F.adaptive_max_pool2d(x, 1).reshape(batch_size,-1)
+        # x = torch.cat((ap, mp), 1)
         output = self.classifier(x)
 
         return output
