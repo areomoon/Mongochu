@@ -102,6 +102,10 @@ def main():
     model = model_dispatcher(False, args.base_model, args.nclass)
     model.to(args.device)
     model.load_state_dict(torch.load(os.path.join(args.save_dir,args.model_weights)))
+
+    # checkpoint = torch.load(os.path.join(args.save_dir,args.model_weights), map_location=args.device)
+    # model.load_state_dict(checkpoint)
+
     model.eval()
     print(f'Loading pretrained model: {args.base_model} for eval')
 
@@ -112,48 +116,47 @@ def main():
 
         elif num_tta == 1:
             test_dataset = ImageTTADataset(file_path = args.image_file, transform=data_transforms_tta1)
-            test_dataloader = DataLoader(test_dataset, batch_size=batch_size, shuffle=False, num_workers=args.num_workers)
+            test_dataloader = DataLoader(test_dataset, batch_size=args.test_batch_size, shuffle=False, num_workers=args.num_workers)
 
         elif num_tta == 2:
             test_dataset = ImageTTADataset(file_path = args.image_file, transform=data_transforms_tta2)
-            test_dataloader = DataLoader(test_dataset, batch_size=batch_size, shuffle=False, num_workers=args.num_workers)
+            test_dataloader = DataLoader(test_dataset, batch_size=args.test_batch_size, shuffle=False, num_workers=args.num_workers)
 
         elif num_tta == 3:
             test_dataset = ImageTTADataset(file_path = args.image_file, transform=data_transforms_tta3)
-            test_dataloader = DataLoader(test_dataset, batch_size=batch_size, shuffle=False, num_workers=args.num_workers)
+            test_dataloader = DataLoader(test_dataset, batch_size=args.test_batch_size, shuffle=False, num_workers=args.num_workers)
 
         elif num_tta < 8:
             test_dataset = ImageTTADataset(file_path = args.image_file, transform=data_transforms_tta0)
-            test_dataloader = DataLoader(test_dataset, batch_size=batch_size, shuffle=False, num_workers=args.num_workers)
+            test_dataloader = DataLoader(test_dataset, batch_size=args.test_batch_size, shuffle=False, num_workers=args.num_workers)
 
         else:
             test_dataset = ImageTTADataset(file_path = args.image_file, transform=data_transforms)
-            test_dataloader =DataLoader(test_dataset, batch_size=batch_size, shuffle=False, num_workers=args.num_workers)
+            test_dataloader =DataLoader(test_dataset, batch_size=args.test_batch_size, shuffle=False, num_workers=args.num_workers)
 
 
-    image_id_list = []
-    image_pred_list = []
+        image_id_list = []
+        image_pred_list = []
 
-    with torch.no_grad():
-        for batch_id, d in enumerate(tqdm(test_dataloader)):
-            image = d['image']
-            img_id = d['image_id']
+        with torch.no_grad():
+            for d in test_dataloader:
+                image = d['image']
+                img_id = d['image_id']
 
-            image = image.to(args.device, dtype=torch.float)
-            outputs = model(image)
-            pred_prob = torch.nn.Softmax(dim=1)(outputs)
+                image = image.to(args.device, dtype=torch.float)
+                outputs = model(image)
+                pred_prob = torch.nn.Softmax(dim=1)(outputs)
 
-            image_id_list.append(img_id)
-            image_pred_list.append(pred_prob/args.num_tta)
-        
-        if num_tta == 0:
-            ids = list(chain(*image_id_list))
-            preds = torch.cat(image_pred_list).cpu().numpy()
+                image_id_list.append(img_id)
+                image_pred_list.append(pred_prob/args.num_tta)
             
+                if num_tta == 0:
+                    ids = list(chain(*image_id_list))
+                    preds = torch.cat(image_pred_list).cpu().numpy()
 
-        else:
-            preds_tmp = torch.cat(image_pred_list).cpu().numpy()
-            preds += preds_tmp
+                else:
+                    preds_tmp = torch.cat(image_pred_list).cpu().numpy()
+                    preds += preds_tmp
 
         print(num_tta)
 
