@@ -45,7 +45,7 @@ parser.add_argument('--nclass', default=3, type=int,
 parser.add_argument('--num_tta', default=8, type=int,
                     help='number of TTA')
 
-parser.add_argument('--output_name', default='TTA_submission', type=int,
+parser.add_argument('--output_name', default='TTA_submission', type=str,
                     help='output name of submission')
 
 args = parser.parse_args()
