@@ -35,12 +35,6 @@ parser.add_argument('--base_model', default='vgg16_eval', type=str,
 parser.add_argument('--lr', default=1e-4, type=float,
                     help='learning rate')
 
-# parser.add_argument('--epochs', default=3, type=int,
-#                     help='Number of epoch for training')
-#
-# parser.add_argument('--train_batch_size', default=128, type=int,
-#                     help='Batch size for training')
-
 parser.add_argument('--test_batch_size', default=128, type=int,
                     help='Batch size for training')
 
