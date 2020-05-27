@@ -80,7 +80,7 @@ def main():
             img_id = d['image_id']
 
             image = image.to(args.device, dtype=torch.float)
-            img_features = model.model._feature(image)
+            img_features = model.model._features(image)
 
             image_id_list.append(img_id)
             image_feat_list.append(img_features.cpu().numpy())
