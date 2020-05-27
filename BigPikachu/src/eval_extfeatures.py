@@ -80,8 +80,8 @@ def main():
             img_id = d['image_id']
 
             image = image.to(args.device, dtype=torch.float)
-            img_features = model(image).imgfeatures
-
+            model(image)
+            img_features = model.imgfeatures
             image_id_list.append(img_id)
             image_feat_list.append(img_features.cpu().numpy())
     print(image_feat_list[0].shape)
