@@ -50,11 +50,12 @@ class VGG16(nn.Module):
 
     def forward(self, x):
         batch_size, _, _, _ = x.shape
+        self.imgfeatures = None
         x = self.model._features(x)
-        x = F.adaptive_avg_pool2d(x, 1).reshape(batch_size,-1)
-
+        features = F.adaptive_avg_pool2d(x, 1).reshape(batch_size,-1)
+        self.imgfeatures = features
         # output = self.l0(x)
-        output = self.classifier(x)
+        output = self.classifier(features)
 
         return output
 
