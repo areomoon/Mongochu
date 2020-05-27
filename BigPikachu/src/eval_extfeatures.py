@@ -51,7 +51,6 @@ args = parser.parse_args()
 
 def main():
     model = model_dispatcher(False, args.base_model, args.nclass)
-    model = model.model
     model.to(args.device)
     model.load_state_dict(torch.load(os.path.join(args.save_dir,args.model_weights)))
     model.eval()
@@ -81,7 +80,7 @@ def main():
             img_id = d['image_id']
 
             image = image.to(args.device, dtype=torch.float)
-            img_features = model.feature(image)
+            img_features = model.model._feature(image)
 
             image_id_list.append(img_id)
             image_feat_list.append(img_features.cpu().numpy())
