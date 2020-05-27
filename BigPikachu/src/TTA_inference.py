@@ -153,13 +153,13 @@ def main():
                 image_id_list.append(img_id)
                 image_pred_list.append(pred_prob/args.num_tta)
             
-                if num_tta == 0:
-                    ids = list(chain(*image_id_list))
-                    preds = torch.cat(image_pred_list).cpu().numpy()
+            if num_tta == 0:
+                ids = list(chain(*image_id_list))
+                preds = torch.cat(image_pred_list).cpu().numpy()
 
-                else:
-                    preds_tmp = torch.cat(image_pred_list).cpu().numpy()
-                    preds += preds_tmp
+            else:
+                preds_tmp = torch.cat(image_pred_list).cpu().numpy()
+                preds += preds_tmp
 
         print(num_tta)
 
