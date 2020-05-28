@@ -83,9 +83,8 @@ def main():
             model(image)
             img_features = model.imgfeatures
             image_id_list.append(img_id)
-            image_feat_list.append(img_features.cpu().numpy())
-    print(image_feat_list[0].shape)
-    preds = torch.cat(image_feat_list)
+            image_feat_list.extend(img_features.cpu().numpy().tolist())
+    preds = image_feat_list
 
     ids = list(chain(*image_id_list))
 
