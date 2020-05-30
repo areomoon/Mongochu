@@ -193,7 +193,7 @@ class  EfficientNet_B6(nn.Module):
 
     def forward(self, x):
         batch_size, _, _, _ = x.shape
-        x = self.model.features(x)
+        x = self.model.extract_features(x)
         x = F.adaptive_avg_pool2d(x, 1).reshape(batch_size,-1)
         output = self.classifier(x)
 
