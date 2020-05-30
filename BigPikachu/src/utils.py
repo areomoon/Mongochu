@@ -1,3 +1,5 @@
+import torch
+import random
 import models
 
 def model_dispatcher(if_pretrain, base_model, nclass):
@@ -12,3 +14,6 @@ def model_dispatcher(if_pretrain, base_model, nclass):
     
     elif base_model == 'se_resnext101_32x4d_sSE': 
         return models.se_resnext101_32x4d_sSE(pretrained=if_pretrain, n_class=nclass)
+
+    elif base_model == 'EfficientNet_B6': 
+        return models.EfficientNet_B6(pretrained=if_pretrain, n_class=nclass)
