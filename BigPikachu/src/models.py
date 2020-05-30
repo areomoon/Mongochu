@@ -167,10 +167,12 @@ class SE_ResNext101_32x4d_sSE(nn.Module):
 
         return output
 
-class  EfficientNet_B6(nn.Module):
-    def __init__(self,pretrained, n_class):
+class EfficientNet_B6(nn.Module):
+    def __init__(self, pretrained, n_class):
         super(EfficientNet_B6, self).__init__()
         if pretrained is True:
+            self.model = EfficientNet.from_pretrained('efficientnet-b6')
+        else:
             self.model = EfficientNet.from_pretrained('efficientnet-b6')
 
         self.l0 = nn.Linear(2304,n_class)
