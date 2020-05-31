@@ -105,7 +105,8 @@ def rand_bbox(size, lam):
 
 
 def loss_fn(outputs, target):
-    loss = nn.CrossEntropyLoss()(outputs, target)
+    class_weights = torch.tensor([[1, 2, 1]]).type(torch.FloatTensor).cuda() # hardcode class weight here
+    loss = nn.CrossEntropyLoss(weight=class_weights)(outputs, target)
     return loss
 
 
