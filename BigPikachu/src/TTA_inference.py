@@ -68,7 +68,7 @@ data_transforms = albumentations.Compose([
 data_transforms_test = albumentations.Compose([
     albumentations.Resize(args.image_height, args.image_width),
     albumentations.Normalize(mean=[0.485, 0.456, 0.406],std=[0.229, 0.224, 0.225]),
-    albumentations.ToFloat()
+    # albumentations.ToFloat()
     ])
 
 data_transforms_tta0 = albumentations.Compose([
@@ -77,28 +77,28 @@ data_transforms_tta0 = albumentations.Compose([
     albumentations.Transpose(p=0.5),
     albumentations.Flip(p=0.5),
     albumentations.Normalize(mean=[0.485, 0.456, 0.406],std=[0.229, 0.224, 0.225]),
-    albumentations.ToFloat()
+    # albumentations.ToFloat()
     ])
 
 data_transforms_tta1 = albumentations.Compose([
     albumentations.Resize(args.image_height, args.image_width),
     albumentations.RandomRotate90(p=1),
     albumentations.Normalize(mean=[0.485, 0.456, 0.406],std=[0.229, 0.224, 0.225]),
-    albumentations.ToFloat()
+    # albumentations.ToFloat()
     ])
 
 data_transforms_tta2 = albumentations.Compose([
     albumentations.Resize(args.image_height, args.image_width),
     albumentations.Transpose(p=1),
     albumentations.Normalize(mean=[0.485, 0.456, 0.406],std=[0.229, 0.224, 0.225]),
-    albumentations.ToFloat()
+    # albumentations.ToFloat()
     ])
 
 data_transforms_tta3 = albumentations.Compose([
     albumentations.Resize(args.image_height, args.image_width),
     albumentations.Flip(p=1),
     albumentations.Normalize(mean=[0.485, 0.456, 0.406],std=[0.229, 0.224, 0.225]),
-    albumentations.ToFloat()
+    # albumentations.ToFloat()
     ])
 
 def main():
