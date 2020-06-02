@@ -112,7 +112,9 @@ def loss_fn(outputs, target):
 def focal_loss_fn(outputs, target):
     alpha = 2
     gamma = 0.25
+    epsilon = 1e-07
     
+    outputs = torch.clamp(outputs, epsilon, 1 - epsilon)
     ce_loss = nn.functional.cross_entropy(outputs, target, reduction='none')
     pt = torch.exp(-ce_loss)
     focal_loss = (alpha * (1-pt)**gamma * ce_loss).mean()
