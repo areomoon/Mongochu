@@ -6,7 +6,7 @@ import torch
 import torch.nn as nn
 from tqdm import tqdm
 import argparse
-from utils import model_dispatcher
+from utils import model_dispatcher, onehot
 from dataset import ImageSamplerDataset
 from torch.utils.data import DataLoader
 from torch.optim import Adam,lr_scheduler, AdamW
@@ -108,6 +108,14 @@ def loss_fn(outputs, target):
     class_weights = torch.tensor([[1, 2, 1]]).type(torch.FloatTensor).cuda() # hardcode class weight here
     loss = nn.CrossEntropyLoss(weight=class_weights)(outputs, target)
     return loss
+
+def focal_loss_fn(outputs, target):
+    alpha = 2
+    gamma = 0.25
+    
+    ce_loss = nn.functional.cross_entropy(outputs, targets, reduction='none') # important to add reduction='none' to keep per-batch-item loss
+    pt = torch.exp(-ce_loss)
+    focal_loss = (alpha * (1-pt)**gamma * ce_loss).mean() # mean over the batch one_hot = onehot()
 
 
 def train(dataset_size, dataloader, model, optimizer, device, loss_fn):
@@ -284,8 +292,8 @@ def main():
     # tr_accu_list = []
     best_epoch = 0
     for epoch in range(args.epochs):
-        tr_loss = train(dataset_size=train_size ,dataloader=train_dataloader, model=model, optimizer=optimizer, device=args.device, loss_fn=loss_fn)
-        val_loss, val_accu = evaluate(dataset_size=valid_size, dataloader=valid_dataloader, model=model, device=args.device, loss_fn=loss_fn, tag='valid')
+        tr_loss = train(dataset_size=train_size ,dataloader=train_dataloader, model=model, optimizer=optimizer, device=args.device, loss_fn=focal_loss_fn)
+        val_loss, val_accu = evaluate(dataset_size=valid_size, dataloader=valid_dataloader, model=model, device=args.device, loss_fn=focal_loss_fn, tag='valid')
         print(f'Epoch_{epoch+1} Train Loss:{tr_loss}')
         print(f'Epoch_{epoch+1} Valid Loss:{val_loss}')
         scheduler.step(val_loss)
