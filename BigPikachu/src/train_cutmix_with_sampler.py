@@ -111,23 +111,17 @@ def loss_fn(outputs, target):
     return loss
 
 def focal_loss_fn(outputs, target):
-    gamma = 0.25
-    epsilon = 1e-07
+    alpha = 0.25
+    gamma = 2
 
     target = target.view(-1,1)
-    logpt = nn.functional.log_softmax(outputs)
+    logpt = nn.functional.log_softmax(outputs, dim=1)
     logpt = logpt.gather(1, target)
     logpt = logpt.view(-1)
     pt = Variable(logpt.data.exp())
 
-    loss = -1 * (1-pt)**gamma * logpt
+    loss = -alpha * (1-pt)**gamma * logpt
     return loss.mean()
-
-    # outputs = torch.clamp(outputs, epsilon, 1 - epsilon)
-    # ce_loss = nn.functional.cross_entropy(outputs, target, reduction='none')
-    # pt = torch.exp(-ce_loss)
-    # focal_loss = (alpha * (1-pt)**gamma * ce_loss).mean()
-    # return focal_loss
 
 def train(dataset_size, dataloader, model, optimizer, device, loss_fn):
     model.train()
