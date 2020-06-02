@@ -5,6 +5,7 @@ import numpy as np
 import torch
 import torch.nn as nn
 from tqdm import tqdm
+from torch.autograd import Variable
 import argparse
 from utils import model_dispatcher, onehot
 from dataset import ImageSamplerDataset
@@ -110,15 +111,23 @@ def loss_fn(outputs, target):
     return loss
 
 def focal_loss_fn(outputs, target):
-    alpha = 2
     gamma = 0.25
     epsilon = 1e-07
-    
-    outputs = torch.clamp(outputs, epsilon, 1 - epsilon)
-    ce_loss = nn.functional.cross_entropy(outputs, target, reduction='none')
-    pt = torch.exp(-ce_loss)
-    focal_loss = (alpha * (1-pt)**gamma * ce_loss).mean()
-    return focal_loss
+
+    target = target.view(-1,1)
+    logpt = nn.functional.log_softmax(outputs)
+    logpt = logpt.gather(1, target)
+    logpt = logpt.view(-1)
+    pt = Variable(logpt.data.exp())
+
+    loss = -1 * (1-pt)**gamma * logpt
+    return loss.mean()
+
+    # outputs = torch.clamp(outputs, epsilon, 1 - epsilon)
+    # ce_loss = nn.functional.cross_entropy(outputs, target, reduction='none')
+    # pt = torch.exp(-ce_loss)
+    # focal_loss = (alpha * (1-pt)**gamma * ce_loss).mean()
+    # return focal_loss
 
 def train(dataset_size, dataloader, model, optimizer, device, loss_fn):
     model.train()
