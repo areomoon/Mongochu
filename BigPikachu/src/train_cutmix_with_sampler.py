@@ -111,7 +111,7 @@ def loss_fn(outputs, target):
     return loss
 
 def focal_loss_fn(outputs, target):
-    alpha = torch.tensor(0.25, dtype=torch.float64, device=torch.device('cuda'))
+    alpha = torch.tensor(1.0, dtype=torch.float64, device=torch.device('cuda'))
     gamma = torch.tensor(2.0, dtype=torch.float64, device=torch.device('cuda'))
 
     target = target.view(-1,1)
