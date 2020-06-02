@@ -113,7 +113,7 @@ def focal_loss_fn(outputs, target):
     alpha = 2
     gamma = 0.25
     
-    ce_loss = nn.functional.cross_entropy(outputs, targets, reduction='none') # important to add reduction='none' to keep per-batch-item loss
+    ce_loss = nn.functional.cross_entropy(outputs, target, reduction='none') # important to add reduction='none' to keep per-batch-item loss
     pt = torch.exp(-ce_loss)
     focal_loss = (alpha * (1-pt)**gamma * ce_loss).mean() # mean over the batch one_hot = onehot()
 
