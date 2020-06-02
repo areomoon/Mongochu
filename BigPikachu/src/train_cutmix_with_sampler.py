@@ -111,8 +111,8 @@ def loss_fn(outputs, target):
     return loss
 
 def focal_loss_fn(outputs, target):
-    alpha = torch.cuda.FloatTensor(0.25, dtype=torch.float64, device='cuda')
-    gamma = torch.cuda.FloatTensor(2.0, dtype=torch.float64, device='cuda')
+    alpha = torch.cuda.FloatTensor(0.25, dtype=torch.float64, device=torch.device('cuda'))
+    gamma = torch.cuda.FloatTensor(2.0, dtype=torch.float64, device=torch.device('cuda'))
 
     target = target.view(-1,1)
     logpt = nn.functional.log_softmax(outputs, dim=1)
