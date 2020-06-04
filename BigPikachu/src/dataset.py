@@ -237,7 +237,7 @@ class ImageSamplerDataset:
             self.aug = albumentations.Compose([
                 albumentations.Resize(image_height, image_width),
                 albumentations.Normalize(mean, std),
-                albumentations.ToFloat()
+                # albumentations.ToFloat()
                 ])
         elif phase == 'train':
             # training set
@@ -250,10 +250,10 @@ class ImageSamplerDataset:
                     albumentations.CLAHE(clip_limit=2), albumentations.IAASharpen(), albumentations.IAAEmboss(), 
                     albumentations.RandomBrightness(), albumentations.RandomContrast(),
                     albumentations.JpegCompression(), albumentations.Blur(), albumentations.GaussNoise()], p=0.5), 
-                albumentations.HueSaturationValue(p=0.5), 
+                # albumentations.HueSaturationValue(p=0.5), 
                 albumentations.ShiftScaleRotate(shift_limit=0.15, scale_limit=0.15, rotate_limit=45, p=0.5),
                 albumentations.Normalize(mean, std),
-                albumentations.ToFloat()
+                # albumentations.ToFloat()
                 ])
 
     def __len__(self):

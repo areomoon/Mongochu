@@ -5,8 +5,9 @@ import numpy as np
 import torch
 import torch.nn as nn
 from tqdm import tqdm
+from torch.autograd import Variable
 import argparse
-from utils import model_dispatcher
+from utils import model_dispatcher, onehot
 from dataset import ImageSamplerDataset
 from torch.utils.data import DataLoader
 from torch.optim import Adam,lr_scheduler, AdamW
@@ -105,9 +106,22 @@ def rand_bbox(size, lam):
 
 
 def loss_fn(outputs, target):
-    loss = nn.CrossEntropyLoss()(outputs, target)
+    class_weights = torch.tensor([[1, 2, 1]]).type(torch.FloatTensor).cuda() # hardcode class weight here
+    loss = nn.CrossEntropyLoss(weight=class_weights)(outputs, target)
     return loss
 
+def focal_loss_fn(outputs, target):
+    alpha = torch.tensor(1.0, dtype=torch.float64, device=torch.device('cuda'))
+    gamma = torch.tensor(2.0, dtype=torch.float64, device=torch.device('cuda'))
+
+    target = target.view(-1,1)
+    logpt = nn.functional.log_softmax(outputs, dim=1)
+    logpt = logpt.gather(1, target)
+    logpt = logpt.view(-1)
+    pt = Variable(logpt.data.exp())
+
+    loss = -alpha * (1-pt)**gamma * logpt
+    return loss.mean()
 
 def train(dataset_size, dataloader, model, optimizer, device, loss_fn):
     model.train()
@@ -283,8 +297,8 @@ def main():
     # tr_accu_list = []
     best_epoch = 0
     for epoch in range(args.epochs):
-        tr_loss = train(dataset_size=train_size ,dataloader=train_dataloader, model=model, optimizer=optimizer, device=args.device, loss_fn=loss_fn)
-        val_loss, val_accu = evaluate(dataset_size=valid_size, dataloader=valid_dataloader, model=model, device=args.device, loss_fn=loss_fn, tag='valid')
+        tr_loss = train(dataset_size=train_size ,dataloader=train_dataloader, model=model, optimizer=optimizer, device=args.device, loss_fn=focal_loss_fn)
+        val_loss, val_accu = evaluate(dataset_size=valid_size, dataloader=valid_dataloader, model=model, device=args.device, loss_fn=focal_loss_fn, tag='valid')
         print(f'Epoch_{epoch+1} Train Loss:{tr_loss}')
         print(f'Epoch_{epoch+1} Valid Loss:{val_loss}')
         scheduler.step(val_loss)

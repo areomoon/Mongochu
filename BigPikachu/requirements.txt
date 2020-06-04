@@ -5,6 +5,7 @@ opencv-python
 albumentations
 pretrainedmodels
 iterative-stratification
+efficientnet-pytorch
 scikit-learn
 jupyter
 torchtoolbox
