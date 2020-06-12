@@ -112,7 +112,8 @@ class SE_ResNext101_32x4d(nn.Module):
         # ap = F.adaptive_avg_pool2d(x, 1).reshape(batch_size,-1)
         # mp = F.adaptive_max_pool2d(x, 1).reshape(batch_size,-1)
         # x = torch.cat((ap, mp), 1)
-        output = self.classifier(x)
+        # output = self.classifier(x)
+        output = self.l0(x)
 
         return output
     
