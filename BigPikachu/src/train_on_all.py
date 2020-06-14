@@ -232,101 +232,49 @@ def get_train_valid_indice(test_size=0.2, random_state=42):
 
 def main():
 
-    if args.device =='cuda':
-        torch.backends.cudnn.benchmark = True #  should add to speed up the code when input array shape doesn't vary
-        print('Using cudnn.benchmark.')
+    if device =='cuda':
+    torch.backends.cudnn.benchmark = True #  should add to speed up the code when input array shape doesn't vary
+    print('Using cudnn.benchmark.')
 
-    model = model_dispatcher(True, args.base_model, args.nclass)
-    model.to(args.device)
-    # print(f'Loading pretrained model: {args.base_model}')
+    model = model_dispatcher(True, base_model, nclass)
+    model.to(device)
 
-    train_indices, val_indices = get_train_valid_indice(test_size=args.test_size, random_state=args.random_state)
-
-    train_size = len(train_indices)
-    valid_size = len(val_indices)
-
-    train_sampler = SubsetRandomSampler(train_indices)
-    valid_sampler = SubsetRandomSampler(val_indices)
+    train_size = len(pd.read_csv(train_file))
+    print(train_size)
 
     train_dataset = ImageSamplerDataset(
         phase = 'train',
-        train_file = args.train_file,
-        image_file_path = args.image_file,
-        image_height=args.image_height,
-        image_width=args.image_width,
+        train_file = train_file,
+        image_file_path = image_file,
+        image_height=image_height,
+        image_width=image_width,
         mean=MODEL_MEAN,
         std=MODEL_STD,
-        binclass = args.binclass
+        binclass = binclass
     )
 
     train_dataloader = DataLoader(
         dataset=train_dataset,
-        batch_size=args.train_batch_size,
-        num_workers=args.num_workers,
-        sampler=train_sampler
+        batch_size=train_batch_size,
+        num_workers=num_workers
     )
 
-    valid_dataset = ImageSamplerDataset(
-        phase = 'valid',
-        train_file = args.train_file,
-        image_file_path=args.image_file,
-        image_height=args.image_height,
-        image_width=args.image_width,
-        mean=MODEL_MEAN,
-        std=MODEL_STD,
-        binclass = args.binclass
-    )
-
-    valid_dataloader = DataLoader(
-        dataset=valid_dataset,
-        batch_size=args.test_batch_size,
-        num_workers=args.num_workers,
-        sampler=valid_sampler
-    )
-
-    optimizer = AdamW(model.parameters(),lr=args.lr, weight_decay=args.weight_decay)
-    scheduler = lr_scheduler.ReduceLROnPlateau(optimizer, mode='max', patience=5, factor=0.3)
+    optimizer = AdamW(model.parameters(), lr=lr, weight_decay=weight_decay)
+    scheduler_cosine = CosineAnnealingLR(optimizer, epochs)
 
     if torch.cuda.device_count() > 1 :
         model = nn.DataParallel()
 
-    val_accu_benchmark = 0.34
-    val_loss_list = []
-    val_accu_list = []
-    tr_loss_list = []
-    # tr_accu_list = []
-    best_epoch = 0
-    for epoch in range(args.epochs):
-        tr_loss = train(dataset_size=train_size ,dataloader=train_dataloader, model=model, optimizer=optimizer, device=args.device, loss_fn=focal_loss_fn)
-        val_loss, val_accu = evaluate(dataset_size=valid_size, dataloader=valid_dataloader, model=model, device=args.device, loss_fn=focal_loss_fn, tag='valid')
+
+    for epoch in range(epochs):
+        tr_loss = train(dataset_size=train_size ,dataloader=train_dataloader, model=model, optimizer=optimizer, device=device, loss_fn=focal_loss_fn)
         print(f'Epoch_{epoch+1} Train Loss:{tr_loss}')
-        print(f'Epoch_{epoch+1} Valid Loss:{val_loss}')
-        scheduler.step(val_loss)
-        
-        tr_loss_list.append(tr_loss)
-        # tr_accu_list.append(tr_accu)       
-        val_loss_list.append(val_loss)
-        val_accu_list.append(val_accu)
-        if val_accu > val_accu_benchmark:
-            best_epoch = epoch+1
-            print(f'save {args.base_model} model on epoch {epoch+1}')
-            torch.save(model.state_dict(), os.path.join(args.save_dir, f'{args.base_model}_fold_{VALID_FOLDS[0]}.bin'))
-            val_accu_benchmark = val_accu
-    print(f'Save the best model on epoch {best_epoch}')
 
-    stored_metrics = {'train': {
-                                'tr_loss_list': tr_loss_list
-                                # , 'tr_accu_list': tr_accu_list
-                            },
-                    'valid': {
-                                'val_loss_list': val_loss_list, 'val_accu_list': val_accu_list
-                             }
-                  }
+        scheduler_cosine.step(epoch)
 
-    # pickle a variable to a file
-    file = open(os.path.join(args.save_dir, 'stored_metrics.pickle'), 'wb')
-    pickle.dump(stored_metrics, file)
-    file.close()
+    torch.save(model.state_dict(), os.path.join(save_dir, f'{base_model}_on_all_epoch11.bin'))
+    print('train on all is complete')
+
 
 
 
