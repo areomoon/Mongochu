@@ -232,47 +232,47 @@ def get_train_valid_indice(test_size=0.2, random_state=42):
 
 def main():
 
-    if device =='cuda':
+    if args.device =='cuda':
         torch.backends.cudnn.benchmark = True #  should add to speed up the code when input array shape doesn't vary
         print('Using cudnn.benchmark.')
 
-    model = model_dispatcher(True, base_model, nclass)
-    model.to(device)
+    model = model_dispatcher(True, args.base_model, args.nclass)
+    model.to(args.device)
 
     train_size = len(pd.read_csv(train_file))
     print(train_size)
 
     train_dataset = ImageSamplerDataset(
         phase = 'train',
-        train_file = train_file,
-        image_file_path = image_file,
-        image_height=image_height,
-        image_width=image_width,
-        mean=MODEL_MEAN,
-        std=MODEL_STD,
-        binclass = binclass
+        train_file = args.train_file,
+        image_file_path = args.image_file,
+        image_height=args.image_height,
+        image_width=args.image_width,
+        mean = MODEL_MEAN,
+        std = MODEL_STD,
+        binclass = args.binclass
     )
 
     train_dataloader = DataLoader(
-        dataset=train_dataset,
-        batch_size=train_batch_size,
-        num_workers=num_workers
+        dataset = train_dataset,
+        batch_size = args.train_batch_size,
+        num_workers = args.num_workers
     )
 
-    optimizer = AdamW(model.parameters(), lr=lr, weight_decay=weight_decay)
-    scheduler_cosine = CosineAnnealingLR(optimizer, epochs)
+    optimizer = AdamW(model.parameters(), lr=args.lr, weight_decay=args.weight_decay)
+    scheduler_cosine = CosineAnnealingLR(optimizer, args.epochs)
 
     if torch.cuda.device_count() > 1 :
         model = nn.DataParallel()
 
 
-    for epoch in range(epochs):
-        tr_loss = train(dataset_size=train_size ,dataloader=train_dataloader, model=model, optimizer=optimizer, device=device, loss_fn=focal_loss_fn)
+    for epoch in range(args.epochs):
+        tr_loss = train(dataset_size=train_size ,dataloader=train_dataloader, model=model, optimizer=optimizer, device=args.device, loss_fn=focal_loss_fn)
         print(f'Epoch_{epoch+1} Train Loss:{tr_loss}')
 
         scheduler_cosine.step(epoch)
 
-    torch.save(model.state_dict(), os.path.join(save_dir, f'{base_model}_on_all_epoch11.bin'))
+    torch.save(model.state_dict(), os.path.join(args.save_dir, f'{args.base_model}_on_all_epoch11.bin'))
     print('train on all is complete')
 
 
