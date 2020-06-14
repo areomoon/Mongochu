@@ -63,7 +63,7 @@ parser.add_argument('--test_batch_size', default=128, type=int,
 parser.add_argument('--test_size', default=0.2, type=float,
                     help='proportion of test size')
 
-parser.add_argument('--random_state', default=42, type=float,
+parser.add_argument('--random_state', default=42, type=int,
                     help='random seed for train test split')
 
 parser.add_argument('--save_dir', default='../weights', type=str,
