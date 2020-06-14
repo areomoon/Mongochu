@@ -10,11 +10,12 @@ import argparse
 from utils import model_dispatcher, onehot
 from dataset import ImageSamplerDataset
 from torch.utils.data import DataLoader
-from torch.optim import Adam,lr_scheduler, AdamW
+from torch.optim import Adam, AdamW
 from torch.utils.data.sampler import SubsetRandomSampler
 from sklearn.metrics import confusion_matrix, accuracy_score
 from sklearn.model_selection import train_test_split
 from torchtoolbox.nn import LabelSmoothingLoss
+from torch.optim.lr_scheduler import StepLR, ReduceLROnPlateau, CosineAnnealingLR
 
 MODEL_MEAN = (0.485,0.456,0.406)
 MODEL_STD = (0.229,0.224,0.225)
