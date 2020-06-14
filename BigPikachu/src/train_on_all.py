@@ -233,8 +233,8 @@ def get_train_valid_indice(test_size=0.2, random_state=42):
 def main():
 
     if device =='cuda':
-    torch.backends.cudnn.benchmark = True #  should add to speed up the code when input array shape doesn't vary
-    print('Using cudnn.benchmark.')
+        torch.backends.cudnn.benchmark = True #  should add to speed up the code when input array shape doesn't vary
+        print('Using cudnn.benchmark.')
 
     model = model_dispatcher(True, base_model, nclass)
     model.to(device)
