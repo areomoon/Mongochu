@@ -239,7 +239,7 @@ def main():
     model = model_dispatcher(True, args.base_model, args.nclass)
     model.to(args.device)
 
-    train_size = len(pd.read_csv(train_file))
+    train_size = len(pd.read_csv(args.train_file))
     print(train_size)
 
     train_dataset = ImageSamplerDataset(
