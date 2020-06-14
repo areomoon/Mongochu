@@ -76,32 +76,32 @@ class SE_ResNext101_32x4d(nn.Module):
 
         self.l0 = nn.Linear(2048,n_class)
 
-        self.classifier_new = nn.Sequential(
-            nn.BatchNorm1d(4096, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True),
-            nn.Dropout(p=0.25, inplace=False),
-            nn.Linear(4096, 512),
-            nn.ReLU(True),
+        # self.classifier_new = nn.Sequential(
+        #     nn.BatchNorm1d(4096, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True),
+        #     nn.Dropout(p=0.25, inplace=False),
+        #     nn.Linear(4096, 512),
+        #     nn.ReLU(True),
             
-            nn.BatchNorm1d(512, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True),
-            nn.Dropout(p=0.5, inplace=False),
-            nn.Linear(512, n_class)
-        )
+        #     nn.BatchNorm1d(512, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True),
+        #     nn.Dropout(p=0.5, inplace=False),
+        #     nn.Linear(512, n_class)
+        # )
 
-        self.classifier = nn.Sequential(
-            nn.Linear(2048, 512),
-            nn.ReLU(True),
-            nn.Dropout(0.5),
+        # self.classifier = nn.Sequential(
+        #     nn.Linear(2048, 512),
+        #     nn.ReLU(True),
+        #     nn.Dropout(0.5),
 
-            nn.Linear(512, 256),
-            nn.ReLU(True),
-            nn.Dropout(0.5),
+        #     nn.Linear(512, 256),
+        #     nn.ReLU(True),
+        #     nn.Dropout(0.5),
 
-            nn.Linear(256, 128),
-            nn.ReLU(True),
-            nn.Dropout(0.5),
+        #     nn.Linear(256, 128),
+        #     nn.ReLU(True),
+        #     nn.Dropout(0.5),
 
-            nn.Linear(128, n_class),
-        )
+        #     nn.Linear(128, n_class),
+        # )
 
         self._initialize_weights()
 
@@ -112,7 +112,8 @@ class SE_ResNext101_32x4d(nn.Module):
         # ap = F.adaptive_avg_pool2d(x, 1).reshape(batch_size,-1)
         # mp = F.adaptive_max_pool2d(x, 1).reshape(batch_size,-1)
         # x = torch.cat((ap, mp), 1)
-        output = self.classifier(x)
+        # output = self.classifier(x)
+        output = self.l0(x)
 
         return output
     

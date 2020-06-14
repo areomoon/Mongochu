@@ -10,11 +10,12 @@ import argparse
 from utils import model_dispatcher, onehot
 from dataset import ImageSamplerDataset
 from torch.utils.data import DataLoader
-from torch.optim import Adam,lr_scheduler, AdamW
+from torch.optim import Adam, AdamW
 from torch.utils.data.sampler import SubsetRandomSampler
 from sklearn.metrics import confusion_matrix, accuracy_score
 from sklearn.model_selection import train_test_split
 from torchtoolbox.nn import LabelSmoothingLoss
+from torch.optim.lr_scheduler import StepLR, ReduceLROnPlateau, CosineAnnealingLR
 
 MODEL_MEAN = (0.485,0.456,0.406)
 MODEL_STD = (0.229,0.224,0.225)
@@ -238,15 +239,9 @@ def main():
 
     model = model_dispatcher(True, args.base_model, args.nclass)
     model.to(args.device)
-    # print(f'Loading pretrained model: {args.base_model}')
 
-    train_indices, val_indices = get_train_valid_indice(test_size=args.test_size, random_state=args.random_state)
-
-    train_size = len(train_indices)
-    valid_size = len(val_indices)
-
-    train_sampler = SubsetRandomSampler(train_indices)
-    valid_sampler = SubsetRandomSampler(val_indices)
+    train_size = len(pd.read_csv(args.train_file))
+    print(train_size)
 
     train_dataset = ImageSamplerDataset(
         phase = 'train',
@@ -254,79 +249,33 @@ def main():
         image_file_path = args.image_file,
         image_height=args.image_height,
         image_width=args.image_width,
-        mean=MODEL_MEAN,
-        std=MODEL_STD,
+        mean = MODEL_MEAN,
+        std = MODEL_STD,
         binclass = args.binclass
     )
 
     train_dataloader = DataLoader(
-        dataset=train_dataset,
-        batch_size=args.train_batch_size,
-        num_workers=args.num_workers,
-        sampler=train_sampler
+        dataset = train_dataset,
+        batch_size = args.train_batch_size,
+        num_workers = args.num_workers
     )
 
-    valid_dataset = ImageSamplerDataset(
-        phase = 'valid',
-        train_file = args.train_file,
-        image_file_path=args.image_file,
-        image_height=args.image_height,
-        image_width=args.image_width,
-        mean=MODEL_MEAN,
-        std=MODEL_STD,
-        binclass = args.binclass
-    )
-
-    valid_dataloader = DataLoader(
-        dataset=valid_dataset,
-        batch_size=args.test_batch_size,
-        num_workers=args.num_workers,
-        sampler=valid_sampler
-    )
-
-    optimizer = AdamW(model.parameters(),lr=args.lr, weight_decay=args.weight_decay)
-    scheduler = lr_scheduler.ReduceLROnPlateau(optimizer, mode='max', patience=5, factor=0.3)
+    optimizer = AdamW(model.parameters(), lr=args.lr, weight_decay=args.weight_decay)
+    scheduler_cosine = CosineAnnealingLR(optimizer, args.epochs)
 
     if torch.cuda.device_count() > 1 :
         model = nn.DataParallel()
 
-    val_accu_benchmark = 0.34
-    val_loss_list = []
-    val_accu_list = []
-    tr_loss_list = []
-    # tr_accu_list = []
-    best_epoch = 0
+
     for epoch in range(args.epochs):
         tr_loss = train(dataset_size=train_size ,dataloader=train_dataloader, model=model, optimizer=optimizer, device=args.device, loss_fn=focal_loss_fn)
-        val_loss, val_accu = evaluate(dataset_size=valid_size, dataloader=valid_dataloader, model=model, device=args.device, loss_fn=focal_loss_fn, tag='valid')
         print(f'Epoch_{epoch+1} Train Loss:{tr_loss}')
-        print(f'Epoch_{epoch+1} Valid Loss:{val_loss}')
-        scheduler.step(val_loss)
-        
-        tr_loss_list.append(tr_loss)
-        # tr_accu_list.append(tr_accu)       
-        val_loss_list.append(val_loss)
-        val_accu_list.append(val_accu)
-        if val_accu > val_accu_benchmark:
-            best_epoch = epoch+1
-            print(f'save {args.base_model} model on epoch {epoch+1}')
-            torch.save(model.state_dict(), os.path.join(args.save_dir, f'{args.base_model}_fold_{VALID_FOLDS[0]}.bin'))
-            val_accu_benchmark = val_accu
-    print(f'Save the best model on epoch {best_epoch}')
 
-    stored_metrics = {'train': {
-                                'tr_loss_list': tr_loss_list
-                                # , 'tr_accu_list': tr_accu_list
-                            },
-                    'valid': {
-                                'val_loss_list': val_loss_list, 'val_accu_list': val_accu_list
-                             }
-                  }
+        scheduler_cosine.step(epoch)
 
-    # pickle a variable to a file
-    file = open(os.path.join(args.save_dir, 'stored_metrics.pickle'), 'wb')
-    pickle.dump(stored_metrics, file)
-    file.close()
+    torch.save(model.state_dict(), os.path.join(args.save_dir, f'{args.base_model}_on_all_epoch11.bin'))
+    print('train on all is complete')
+
 
 
 
